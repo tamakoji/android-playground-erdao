@@ -1,0 +1,16 @@
+#summary One-sentence summary of this page.
+#labels Featured,Phase-Design
+
+= Introduction =
+GoogleMaps and Public geotagged content mashup app to discover popular places.
+
+<img src="http://android-playground-erdao.googlecode.com/svn/wiki/img/photspot_sc01.png" width="160">
+<img src="http://android-playground-erdao.googlecode.com/svn/wiki/img/photspot_sc02.png" width="160">
+<img src="http://android-playground-erdao.googlecode.com/svn/wiki/img/photspot_sc03.png" width="160">
+
+= Details =
+
+Add your content here.  Format your content with:
+  * Text in *bold* or _italic_
+  * Headings, paragraphs, and lists
+  * Automatic links to other wiki pages
