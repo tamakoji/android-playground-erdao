@@ -15,4 +15,7 @@
 -->
 <resources>
     <string name="app_name">SnapFace</string>
+	<string name="menu_Preferences">Preferences</string>
+	<string name="PreferencesDlgTitle">Set Detection Level</string>
+	<string name="SnapFacePreference">SnapFacePreference</string>
 </resources>

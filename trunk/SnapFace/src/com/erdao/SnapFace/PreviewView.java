@@ -41,6 +41,7 @@ import android.net.Uri;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.provider.MediaStore.Images.Media;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -57,6 +58,13 @@ class PreviewView extends SurfaceView implements SurfaceHolder.Callback, Preview
 	private SurfaceHolder surfacehldr_;
 	private Camera camera_;
 	private boolean lockPreview_ = true;
+	private int mode_;
+	private final int PREVIEW_WIDTH_FINE = 320;
+	private final int PREVIEW_HEIGHT_FINE = 240;
+	private final int PREVIEW_WIDTH_NORMAL = 160;
+	private final int PREVIEW_HEIGHT_NORMAL= 120;
+	private int prevSettingWidth_;
+	private int prevSettingHeight_;
 	private int previewWidth_;
 	private int previewHeight_;
 	private boolean takingPicture_ = false;
@@ -81,9 +89,10 @@ class PreviewView extends SurfaceView implements SurfaceHolder.Callback, Preview
 	private int[] rgbs_;
 
 	/* Constructor */
-	public PreviewView(Context context) {
+	public PreviewView(Context context, int mode) {
 		super(context);
 		context_ = context;
+		mode_ = mode;
 		previewWidth_ = previewHeight_ = 1;
 		faces_ = new FaceDetector.Face[MAX_FACE];
 		layer_ = new OverlayLayer(context);
@@ -134,31 +143,7 @@ class PreviewView extends SurfaceView implements SurfaceHolder.Callback, Preview
 	/* surfaceChanged */
 	public void surfaceChanged(SurfaceHolder holder, int format, int w, int h) {
 //		Log.i("DEBUG","surfaceChanged");
-		/* set parameters for onPreviewFrame */
- 		Camera.Parameters params = camera_.getParameters();
- 		/* set preview size small for fast analysis. let say QQVGA
- 		 * by setting smaller image size, small faces will not be detected. */
- 		params.setPreviewSize(160, 120);
- 		params.setPictureSize(640, 480);
-		camera_.setParameters(params);
-		/* need to re-get for real size... why?
-		 * (actual preview size will be 176x144 wich is 11:9) */
- 		params = camera_.getParameters();
- 		Size size = params.getPreviewSize();
-		previewWidth_ = size.width;
-		previewHeight_ = size.height;
-//		Log.i("DEBUG","preview size, w:"+previewWidth_+",h:"+previewHeight_);
-		// allocate work memory for analysis
-		bufflen_ = previewWidth_*previewHeight_;
-		grayBuff_ = ByteBuffer.allocate(bufflen_);
-		rgbs_ = new int[bufflen_];
-		fdet_ = new FaceDetector( previewWidth_,previewHeight_, MAX_FACE ); 
-		/* start Preview */
-		camera_.startPreview();
-		camera_.setPreviewCallback(this);
-		/* one-shot autofoucs */
-		camera_.autoFocus(this);
-		lockPreview_ = false;
+		resetCameraSettings();
 	}
 
 	/* onPreviewFrame */
@@ -221,8 +206,51 @@ class PreviewView extends SurfaceView implements SurfaceHolder.Callback, Preview
 		return false;
 	}
 	
+	public void setResolution(int which){
+		mode_ = which;
+		lockPreview_ = true;
+		camera_.stopPreview();
+		resetCameraSettings();
+	}
+	
 	/* Jni entry point */
 	private native int grayToRgb(byte src[],int dst[]);
+	
+	/* resetCameraSettings */
+	private void resetCameraSettings(){
+		if( mode_ == 0 ){
+			prevSettingWidth_ = PREVIEW_WIDTH_FINE;
+			prevSettingHeight_ = PREVIEW_HEIGHT_FINE;
+		}else{
+			prevSettingWidth_ = PREVIEW_WIDTH_NORMAL;
+			prevSettingHeight_ = PREVIEW_HEIGHT_NORMAL;
+		}
+		/* set parameters for onPreviewFrame */
+ 		Camera.Parameters params = camera_.getParameters();
+ 		/* set preview size small for fast analysis. let say QQVGA
+ 		 * by setting smaller image size, small faces will not be detected. */
+ 		params.setPreviewSize(prevSettingWidth_, prevSettingHeight_);
+ 		params.setPictureSize(640, 480);
+		camera_.setParameters(params);
+		/* need to re-get for real size... why?
+		 * (actual preview size will be 176x144 wich is 11:9) */
+ 		params = camera_.getParameters();
+ 		Size size = params.getPreviewSize();
+		previewWidth_ = size.width;
+		previewHeight_ = size.height;
+		Log.i("DEBUG","preview size, w:"+previewWidth_+",h:"+previewHeight_);
+		// allocate work memory for analysis
+		bufflen_ = previewWidth_*previewHeight_;
+		grayBuff_ = ByteBuffer.allocate(bufflen_);
+		rgbs_ = new int[bufflen_];
+		fdet_ = new FaceDetector( previewWidth_,previewHeight_, MAX_FACE ); 
+		/* start Preview */
+		camera_.startPreview();
+		camera_.setPreviewCallback(this);
+		/* one-shot autofoucs */
+		camera_.autoFocus(this);
+		lockPreview_ = false;
+	}
 	
 	/* takePicture */
 	private void takePicture() {
