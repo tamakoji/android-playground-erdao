@@ -228,7 +228,7 @@ public class PhotSpotActivity extends MapActivity {
 	/* create Menu */
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
-		super.onCreateOptionsMenu(menu);
+		super.onPrepareOptionsMenu(menu);
 		menu.clear();
 		if(clusterer_==null){
 				MenuItem menu_SearchPhotSpot = menu.add(0,R.id.menu_FindSpots,0,R.string.menu_SearchPhotSpot);
