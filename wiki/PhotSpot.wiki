@@ -6,7 +6,7 @@ PhotSpot is a GoogleMaps and public geotagged photo content mashup app to discov
 It clusteres the geo information and show them on the map as balloon marker.
 Clustering the marker is essential for application those want to manage many geotagged content on the screen, though displaying all the markers makes UI slow and let user hard to see the information.
 
-= Tricks and Issues =
+= Detail =
 For clustering, ported javascript version of [http://code.google.com/p/gmaps-utility-library/ markerclusterer] to java code.
 There are other things in android SDK1.5r3 does not support and needed to tweak a bit.
 Hope apis will get richer in the future.
