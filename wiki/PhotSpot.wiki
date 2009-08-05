@@ -9,6 +9,9 @@ Clustering the marker is essential for application those want to manage many geo
 = Tricks and Issues =
 For clustering, ported javascript version of [http://code.google.com/p/gmaps-utility-library/ markerclusterer] to java code.
 There are other things in android SDK1.5r3 does not support and needed to tweak a bit.
+Hope apis will get richer in the future.
+  * There are no Bounds class
+  like GLatLngBounds in javascript, there is no bound handling class for android. just made substitute class for it.
   * Map move/zoom event handling
   In javascript version of google maps, it can register event handler such as "moveend" and "zoomend" but not in android. for that I needed to hook the draw event of the marker to check the current screen projection (bounds) to know if it is moving or staying still.
   * ItemizedOverlay are easy but not customizable well enough
