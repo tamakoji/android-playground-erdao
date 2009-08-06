@@ -14,10 +14,8 @@
      limitations under the License.
 -->
 <resources>
-    <string name="app_name">SnapFace</string>
-	<string name="menu_Preferences">Preferences</string>
-	<string name="PreferencesDlgTitle">Set Level</string>
-	<string name="SnapFacePreference">SnapFacePreference</string>
-	<string name="SetPictureAsIntent_Name">set picture as</string>
-	<string name="SetPictureAsIntent_FailCreate">This picture cannot be set</string>
+	<string-array name="select_preference">
+        <item>Fine (detect small faces but slow)</item>
+        <item>Normal(recommended)</item>
+    </string-array>
 </resources>

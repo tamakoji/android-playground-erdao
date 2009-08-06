@@ -41,7 +41,6 @@ import android.net.Uri;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.provider.MediaStore.Images.Media;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -79,12 +78,11 @@ class PreviewView extends SurfaceView implements SurfaceHolder.Callback, Preview
 	private PointF selFacePt_ = null;
 
 	/* Face Detection Threads */
-	private FaceDetectThread detectThread_ = null;
 	private boolean isThreadWorking_ = false;
 	private Handler handler_;
 	
 	/* buffers for vision analysis */
-	private ByteBuffer grayBuff_;
+	private byte[] grayBuff_;
 	private int bufflen_;
 	private int[] rgbs_;
 
@@ -101,7 +99,6 @@ class PreviewView extends SurfaceView implements SurfaceHolder.Callback, Preview
 		surfacehldr_.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
 		handler_ = new Handler();
 		System.loadLibrary("snapface-jni");
-		detectThread_ = new FaceDetectThread(handler_);
 	}
 
 	/* Overlay instance access method for Activity */
@@ -150,15 +147,18 @@ class PreviewView extends SurfaceView implements SurfaceHolder.Callback, Preview
 	public void onPreviewFrame(byte[] _data, Camera _camera) {
 		if(lockPreview_)
 			return;
+		if(_data.length < bufflen_)
+			return;
 		// run only one analysis thread at one time
 		if(!isThreadWorking_){
 			isThreadWorking_ = true;
 			// copy only Y buffer
-			grayBuff_.clear();
-			grayBuff_.put(_data, 0, bufflen_);
+			ByteBuffer bbuffer = ByteBuffer.wrap(_data);
+			bbuffer.get(grayBuff_, 0, bufflen_);
 			// start thread
-			detectThread_.setBuffer(grayBuff_.array());
-			detectThread_.run();
+			FaceDetectThread detectThread = new FaceDetectThread(handler_);
+			detectThread.setBuffer(grayBuff_);
+			detectThread.start();
 		}
 	}
 
@@ -238,10 +238,10 @@ class PreviewView extends SurfaceView implements SurfaceHolder.Callback, Preview
  		Size size = params.getPreviewSize();
 		previewWidth_ = size.width;
 		previewHeight_ = size.height;
-		Log.i("DEBUG","preview size, w:"+previewWidth_+",h:"+previewHeight_);
+//		Log.i("DEBUG","preview size, w:"+previewWidth_+",h:"+previewHeight_);
 		// allocate work memory for analysis
 		bufflen_ = previewWidth_*previewHeight_;
-		grayBuff_ = ByteBuffer.allocate(bufflen_);
+		grayBuff_ = new byte[bufflen_];
 		rgbs_ = new int[bufflen_];
 		fdet_ = new FaceDetector( previewWidth_,previewHeight_, MAX_FACE ); 
 		/* start Preview */
@@ -308,8 +308,14 @@ class PreviewView extends SurfaceView implements SurfaceHolder.Callback, Preview
 					Uri uri = SaveBitmapToFile(facebmp);
 					if(uri!=null){
 						/* Open up Picture Viewer for further actions (i.e. set as contact icon ) */
-						Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-						context_.startActivity(intent);
+						//Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+						//context_.startActivity(intent);
+						Intent intent = new Intent(Intent.ACTION_ATTACH_DATA, uri);
+						try {
+							context_.startActivity(Intent.createChooser(intent,context_.getString(R.string.SetPictureAsIntent_Name)));
+						} catch (android.content.ActivityNotFoundException ex) {
+							Toast.makeText(context_, R.string.SetPictureAsIntent_FailCreate, Toast.LENGTH_SHORT).show();
+						}
 						return;
 					}
 					break;

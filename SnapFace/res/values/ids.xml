@@ -14,10 +14,6 @@
      limitations under the License.
 -->
 <resources>
-    <string name="app_name">SnapFace</string>
-	<string name="menu_Preferences">Preferences</string>
-	<string name="PreferencesDlgTitle">Set Level</string>
-	<string name="SnapFacePreference">SnapFacePreference</string>
-	<string name="SetPictureAsIntent_Name">set picture as</string>
-	<string name="SetPictureAsIntent_FailCreate">This picture cannot be set</string>
+	<item type="id" name="menu_Preferences" />
+	<item type="id" name="PreferencesDlg" />
 </resources>
