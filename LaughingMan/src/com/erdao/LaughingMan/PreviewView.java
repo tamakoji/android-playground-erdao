@@ -46,6 +46,13 @@ class PreviewView extends SurfaceView implements SurfaceHolder.Callback, Preview
 	private SurfaceHolder surfacehldr_;
 	private Camera camera_;
 	private boolean lockPreview_ = true;
+	private int mode_;
+	private final int PREVIEW_WIDTH_FINE = 320;
+	private final int PREVIEW_HEIGHT_FINE = 240;
+	private final int PREVIEW_WIDTH_NORMAL = 160;
+	private final int PREVIEW_HEIGHT_NORMAL= 120;
+	private int prevSettingWidth_;
+	private int prevSettingHeight_;
 	private int previewWidth_;
 	private int previewHeight_;
 
@@ -58,19 +65,19 @@ class PreviewView extends SurfaceView implements SurfaceHolder.Callback, Preview
 	private FaceDetector fdet_;
 
 	/* Face Detection Threads */
-	private FaceDetectThread detectThread_ = null;
 	private boolean isThreadWorking_ = false;
 	private Handler handler_;
 	
 	/* buffers for vision analysis */
-	private ByteBuffer grayBuff_;
+	private byte[] grayBuff_;
 	private int bufflen_;
 	private int[] rgbs_;
 
 	/* Constructor */
-	public PreviewView(Context context) {
+	public PreviewView(Context context, int mode) {
 		super(context);
 		context_ = context;
+		mode_ = mode;
 		previewWidth_ = previewHeight_ = 1;
 		faces_ = new FaceDetector.Face[MAX_FACE];
 		layer_ = new OverlayLayer(context);
@@ -78,8 +85,7 @@ class PreviewView extends SurfaceView implements SurfaceHolder.Callback, Preview
 		surfacehldr_.addCallback(this);
 		surfacehldr_.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
 		handler_ = new Handler();
-        System.loadLibrary("laughingman-jni");
-		detectThread_ = new FaceDetectThread(handler_);
+		System.loadLibrary("laughingman-jni");
 	}
 
 	/* Overlay instance access method for Activity */
@@ -118,11 +124,53 @@ class PreviewView extends SurfaceView implements SurfaceHolder.Callback, Preview
 	/* surfaceChanged */
 	public void surfaceChanged(SurfaceHolder holder, int format, int w, int h) {
 //		Log.i("DEBUG","surfaceChanged");
+		resetCameraSettings();
+	}
+
+	/* onPreviewFrame */
+	public void onPreviewFrame(byte[] _data, Camera _camera) {
+		if(lockPreview_)
+			return;
+		if(_data.length < bufflen_)
+			return;
+		// run only one analysis thread at one time
+		if(!isThreadWorking_){
+			isThreadWorking_ = true;
+			// copy only Y buffer
+			ByteBuffer bbuffer = ByteBuffer.wrap(_data);
+			bbuffer.get(grayBuff_, 0, bufflen_);
+			// start thread
+			FaceDetectThread detectThread = new FaceDetectThread(handler_);
+			detectThread.setBuffer(grayBuff_);
+			detectThread.start();
+		}
+	}
+
+	
+	public void setResolution(int which){
+		mode_ = which;
+		lockPreview_ = true;
+		camera_.stopPreview();
+		resetCameraSettings();
+	}
+	
+	/* Jni entry point */
+	private native int grayToRgb(byte src[],int dst[]);
+	
+	/* resetCameraSettings */
+	private void resetCameraSettings(){
+		if( mode_ == 0 ){
+			prevSettingWidth_ = PREVIEW_WIDTH_FINE;
+			prevSettingHeight_ = PREVIEW_HEIGHT_FINE;
+		}else{
+			prevSettingWidth_ = PREVIEW_WIDTH_NORMAL;
+			prevSettingHeight_ = PREVIEW_HEIGHT_NORMAL;
+		}
 		/* set parameters for onPreviewFrame */
  		Camera.Parameters params = camera_.getParameters();
  		/* set preview size small for fast analysis. let say QQVGA
  		 * by setting smaller image size, small faces will not be detected. */
- 		params.setPreviewSize(160, 120);
+ 		params.setPreviewSize(prevSettingWidth_, prevSettingHeight_);
  		params.setPictureSize(640, 480);
 		camera_.setParameters(params);
 		/* need to re-get for real size... why?
@@ -134,7 +182,7 @@ class PreviewView extends SurfaceView implements SurfaceHolder.Callback, Preview
 //		Log.i("DEBUG","preview size, w:"+previewWidth_+",h:"+previewHeight_);
 		// allocate work memory for analysis
 		bufflen_ = previewWidth_*previewHeight_;
-		grayBuff_ = ByteBuffer.allocate(bufflen_);
+		grayBuff_ = new byte[bufflen_];
 		rgbs_ = new int[bufflen_];
 		fdet_ = new FaceDetector( previewWidth_,previewHeight_, MAX_FACE ); 
 		/* start Preview */
@@ -144,27 +192,6 @@ class PreviewView extends SurfaceView implements SurfaceHolder.Callback, Preview
 		camera_.autoFocus(this);
 		lockPreview_ = false;
 	}
-
-	/* onPreviewFrame */
-	public void onPreviewFrame(byte[] _data, Camera _camera) {
-		if(lockPreview_)
-			return;
-		// run only one analysis thread at one time
-		if(!isThreadWorking_){
-			isThreadWorking_ = true;
-			// copy only Y buffer
-			grayBuff_.clear();
-			grayBuff_.put(_data, 0, bufflen_);
-			// start thread
-			detectThread_.setBuffer(grayBuff_.array());
-			detectThread_.run();
-		}
-	}
-
-
-	/* Jni entry point */
-	private native int grayToRgb(byte src[],int dst[]);
-
 
 	/* Overlay Layer class */
 	public class OverlayLayer extends View { 
