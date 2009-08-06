@@ -242,15 +242,15 @@ public class PhotSpotActivity extends MapActivity {
 		MenuItem menu_MyLocation = menu.add(0,R.id.menu_MyLocation,0,R.string.menu_MyLocation);
 		menu_MyLocation.setIcon(R.drawable.ic_menu_mylocation);
 		MenuItem menu_MapMode = menu.add(0,R.id.menu_MapMode,0,R.string.menu_MapMode);
-		menu_MapMode.setIcon(R.drawable.ic_menu_mapmode);
+		menu_MapMode.setIcon(android.R.drawable.ic_menu_mapmode);
 		MenuItem menu_Preferences = menu.add(0,R.id.menu_Preferences,0,R.string.menu_Preferences);
-		menu_Preferences.setIcon(R.drawable.ic_menu_preferences);
+		menu_Preferences.setIcon(android.R.drawable.ic_menu_preferences);
 		MenuItem menu_ClearSuggest = menu.add(0,R.id.menu_ClearSuggest,0,R.string.menu_ClearSuggest);
-		menu_ClearSuggest.setIcon(R.drawable.ic_menu_close_clear_cancel);
+		menu_ClearSuggest.setIcon(android.R.drawable.ic_menu_close_clear_cancel);
 		MenuItem menu_Help = menu.add(0,R.id.menu_Help,0,R.string.menu_Help);
-		menu_Help.setIcon(R.drawable.ic_menu_help);
+		menu_Help.setIcon(android.R.drawable.ic_menu_help);
 		MenuItem menu_About = menu.add(0,R.id.menu_About,0,R.string.menu_About);
-		menu_About.setIcon(R.drawable.ic_menu_about);
+		menu_About.setIcon(android.R.drawable.ic_menu_info_details);
 		return true;
 	}
 
