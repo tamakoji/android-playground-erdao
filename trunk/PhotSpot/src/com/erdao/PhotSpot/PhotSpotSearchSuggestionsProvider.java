@@ -20,7 +20,7 @@ import android.content.SearchRecentSuggestionsProvider;
 
 /* Custom SearchRecentSuggestionsProvider to store suggestion */
 public class PhotSpotSearchSuggestionsProvider extends SearchRecentSuggestionsProvider {
-	final static String AUTHORITY = "com.erdao.Spottr.SpottrSearchSuggestionsProvider";
+	final static String AUTHORITY = "com.erdao.PhotSpot.PhotSpotSearchSuggestionsProvider";
 	final static int MODE = DATABASE_MODE_QUERIES;
 	public PhotSpotSearchSuggestionsProvider() {
 		super();

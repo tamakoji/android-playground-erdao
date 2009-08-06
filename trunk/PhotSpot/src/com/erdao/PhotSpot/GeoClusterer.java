@@ -48,7 +48,7 @@ public class GeoClusterer {
 	private ArrayList<PhotoItem> items_ = new ArrayList<PhotoItem>();
 	private ArrayList<PhotoItem> leftItems_ = new ArrayList<PhotoItem>();
 	private ArrayList<GeoCluster> clusters_ = new ArrayList<GeoCluster>();
-	private int gridSize_ = 40;
+	private int gridSize_ = 74;
 	private GeoCluster selcluster_ = null;
 	private int checkcnt_ = 0;
 	private GeoBounds checkBound_;

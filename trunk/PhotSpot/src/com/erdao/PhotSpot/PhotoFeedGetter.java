@@ -78,18 +78,19 @@ public class PhotoFeedGetter {
 		final HttpGet get = new HttpGet(uri);
 		HttpEntity entity = null;
 		HttpResponse response;
-		StringBuilder sb = null;
+		StringBuilder strbuilder = null;
+		InputStream is = null;
 		try {
 			response = httpClient_.execute(get);
 			if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
 				entity = response.getEntity();
-				final InputStream is = entity.getContent();
+				is = entity.getContent();
 				InputStreamReader isr = new InputStreamReader(is);
-				BufferedReader reader = new BufferedReader(isr);
-				sb = new StringBuilder();
+				BufferedReader reader = new BufferedReader(isr,1024);
+				strbuilder = new StringBuilder();
 				String line = null;
 				while ((line = reader.readLine()) != null) {
-					sb.append(line + "\n");
+					strbuilder.append(line + "\n");
 				}
 			}
 		} catch (ClientProtocolException e) {
@@ -98,9 +99,16 @@ public class PhotoFeedGetter {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}finally {
+			try {
+				if(is!=null)
+					is.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
-		if( sb != null ){
-			String result = sb.toString();
+		if( strbuilder != null ){
+			String result = strbuilder.toString();
 			JSONObject jsonobj;
 			try {
 				JSONArray array = null;
@@ -176,11 +184,14 @@ public class PhotoFeedGetter {
 					 * so the time comparison is not yet implemented.
 					 * todo: range check of location, timestamp comparison
 					 */
-					if(!owner.contentEquals(owner_p)||lat!=lat_p||lng!=lng_p){
-						PhotoItem item =
-							new PhotoItem(id,thumb,(int)(lat*1E6),(int)(lng*1E6),title,photoUrl,owner);
-						photoItems_.add(item);
+					if(owner.contentEquals(owner_p)){
+						if((lat<(lat_p-0.001))&&(lat>(lat_p+0.001))||(lng<(lng_p-0.001))&&(lng>(lng_p+0.001))){
+							continue;
+						}
 					}
+					PhotoItem item =
+						new PhotoItem(id,thumb,(int)(lat*1E6),(int)(lng*1E6),title,photoUrl,owner);
+					photoItems_.add(item);
 					owner_p = owner;
 					lat_p = lat;
 					lng_p = lng;
