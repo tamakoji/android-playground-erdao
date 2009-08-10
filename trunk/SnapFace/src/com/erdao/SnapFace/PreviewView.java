@@ -60,19 +60,21 @@ class PreviewView extends SurfaceView implements SurfaceHolder.Callback, Preview
 	private int mode_;
 	private final int PREVIEW_WIDTH_FINE = 320;
 	private final int PREVIEW_HEIGHT_FINE = 240;
-	private final int PREVIEW_WIDTH_NORMAL = 160;
-	private final int PREVIEW_HEIGHT_NORMAL= 120;
+	private final int PREVIEW_WIDTH_NORMAL = 240;
+	private final int PREVIEW_HEIGHT_NORMAL= 180;
 	private int prevSettingWidth_;
 	private int prevSettingHeight_;
 	private int previewWidth_;
 	private int previewHeight_;
 	private boolean takingPicture_ = false;
+	private Bitmap fdtmodeBitmap_ = null;
+	private boolean isSDCardPresent_ = false;
 
 	/* Overlay Layer for additional graphics overlay */
 	private OverlayLayer layer_;
 
 	/* Face Detection */
-	private FaceDetector.Face faces_[];
+	private FaceResult faces_[];
 	private final int MAX_FACE = 5;
 	private FaceDetector fdet_;
 	private PointF selFacePt_ = null;
@@ -80,6 +82,7 @@ class PreviewView extends SurfaceView implements SurfaceHolder.Callback, Preview
 	/* Face Detection Threads */
 	private boolean isThreadWorking_ = false;
 	private Handler handler_;
+	private FaceDetectThread detectThread_ = null;
 	
 	/* buffers for vision analysis */
 	private byte[] grayBuff_;
@@ -92,13 +95,16 @@ class PreviewView extends SurfaceView implements SurfaceHolder.Callback, Preview
 		context_ = context;
 		mode_ = mode;
 		previewWidth_ = previewHeight_ = 1;
-		faces_ = new FaceDetector.Face[MAX_FACE];
+		faces_ = new FaceResult[MAX_FACE];
+		for(int i=0;i<MAX_FACE;i++)
+			faces_[i] = new FaceResult();
 		layer_ = new OverlayLayer(context);
 		surfacehldr_ = getHolder();
 		surfacehldr_.addCallback(this);
 		surfacehldr_.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
 		handler_ = new Handler();
 		System.loadLibrary("snapface-jni");
+		isSDCardPresent_ = android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED);
 	}
 
 	/* Overlay instance access method for Activity */
@@ -109,26 +115,19 @@ class PreviewView extends SurfaceView implements SurfaceHolder.Callback, Preview
 	/* surfaceCreated */
 	public void surfaceCreated(SurfaceHolder holder) {
 //		Log.i("DEBUG","surfaceCreated");
-		/* open camera setup preview */
-		try {
-			camera_ = Camera.open();
-			camera_.setPreviewDisplay(holder);
-			setKeepScreenOn(true);
-			Toast.makeText(context_, "Tap deteced face rect to capture.", Toast.LENGTH_LONG).show();
-		} catch (IOException exception) {
-			camera_.release();
-			camera_ = null;
-		}
+		setKeepScreenOn(true);
+		setupCamera();
+		if(!isSDCardPresent_)
+			Toast.makeText(context_, R.string.SDCardNotPresentAlert, Toast.LENGTH_LONG).show();
+		else
+			Toast.makeText(context_, R.string.TapInstructionAlert, Toast.LENGTH_LONG).show();
 	}
 
 	/* surfaceDestroyed */
 	public void surfaceDestroyed(SurfaceHolder holder) {
 //		Log.i("DEBUG","surfaceDestroyed");
-		/* release camera object */
-		lockPreview_ = true;
-		camera_.stopPreview();
-		camera_.release();
-		camera_ = null;
+		setKeepScreenOn(false);
+		releaseCamera();
 	}
 
 	/* onAutoFocus */
@@ -141,12 +140,14 @@ class PreviewView extends SurfaceView implements SurfaceHolder.Callback, Preview
 	public void surfaceChanged(SurfaceHolder holder, int format, int w, int h) {
 //		Log.i("DEBUG","surfaceChanged");
 		resetCameraSettings();
+		startPreview();
 	}
 
 	/* onPreviewFrame */
 	public void onPreviewFrame(byte[] _data, Camera _camera) {
-		if(lockPreview_)
+		if(lockPreview_||takingPicture_)
 			return;
+//		Log.i("DEBUG","_data.length, bufflen_="+_data.length+","+bufflen_);
 		if(_data.length < bufflen_)
 			return;
 		// run only one analysis thread at one time
@@ -155,10 +156,12 @@ class PreviewView extends SurfaceView implements SurfaceHolder.Callback, Preview
 			// copy only Y buffer
 			ByteBuffer bbuffer = ByteBuffer.wrap(_data);
 			bbuffer.get(grayBuff_, 0, bufflen_);
+			// make sure to wait for previous thread completes
+			waitForFdetThreadComplete();
 			// start thread
-			FaceDetectThread detectThread = new FaceDetectThread(handler_);
-			detectThread.setBuffer(grayBuff_);
-			detectThread.start();
+			detectThread_ = new FaceDetectThread(handler_);
+			detectThread_.setBuffer(grayBuff_);
+			detectThread_.start();
 		}
 	}
 
@@ -178,25 +181,25 @@ class PreviewView extends SurfaceView implements SurfaceHolder.Callback, Preview
 			float xRatio = (float)w / previewWidth_; 
 			float yRatio = (float)h / previewHeight_;
 			selFacePt_ = null;
-			synchronized(context_){
-				for(int i=0; i<MAX_FACE; i++){
-					FaceDetector.Face face = faces_[i];
-					if(face==null)
-						continue;
-					PointF midEyes = new PointF(); 
-					face.getMidPoint(midEyes); 
-					float eyedist = face.eyesDistance()*xRatio;
-					if(midEyes==null)
-						continue;
-					/* assume face rect is x3 size of eye distance each side */
-					PointF lt = new PointF(midEyes.x*xRatio-eyedist*1.5f,midEyes.y*yRatio-eyedist*1.5f);
-					Rect rect = new Rect((int)(lt.x),(int)(lt.y),(int)(lt.x+eyedist*3.0f),(int)(lt.y+eyedist*3.0f));
-					if( rect.contains(touchPt.x,touchPt.y)){
-						Toast.makeText(context_, "Capturing... hold still.", Toast.LENGTH_SHORT).show();
-						selFacePt_ = new PointF((float)touchPt.x/w,(float)touchPt.y/h);
+			for(int i=0; i<MAX_FACE; i++){
+				FaceResult face = faces_[i];
+				float eyedist = face.eyesDistance()*xRatio;
+				if(eyedist==0.0f)
+					continue;
+				PointF midEyes = new PointF();
+				face.getMidPoint(midEyes);
+				/* assume face rect is x3 size of eye distance each side */
+				PointF lt = new PointF(midEyes.x*xRatio-eyedist*1.5f,midEyes.y*yRatio-eyedist*1.5f);
+				Rect rect = new Rect((int)(lt.x),(int)(lt.y),(int)(lt.x+eyedist*3.0f),(int)(lt.y+eyedist*3.0f));
+				if( rect.contains(touchPt.x,touchPt.y)){
+					if(!isSDCardPresent_)
+					Toast.makeText(context_, R.string.SDCardNotPresentAlert, Toast.LENGTH_LONG).show();
+					else{
 						takingPicture_ = true;
-						break;
+						Toast.makeText(context_, R.string.CapturingAlert, Toast.LENGTH_SHORT).show();
+						selFacePt_ = new PointF((float)touchPt.x/w,(float)touchPt.y/h);
 					}
+					break;
 				}
 			}
 			/* call autofocus. if takingPicture_ == true, take picture upon completion */
@@ -206,24 +209,52 @@ class PreviewView extends SurfaceView implements SurfaceHolder.Callback, Preview
 		return false;
 	}
 	
+	/* setResolution */
 	public void setResolution(int which){
+		if(mode_ == which)
+			return;
 		mode_ = which;
+		releaseCamera();
+		setupCamera();
+		resetCameraSettings();
+		startPreview();
+	}
+
+	/* setupCamera */
+	private void setupCamera(){
+		try {
+			camera_ = Camera.open();
+			camera_.setPreviewDisplay(surfacehldr_);
+		} catch (IOException exception) {
+			camera_.release();
+			camera_ = null;
+		}
+	}
+
+	/* releaseCamera */
+	private void releaseCamera(){
+		/* release camera object */
 		lockPreview_ = true;
 		camera_.stopPreview();
-		resetCameraSettings();
+		waitForFdetThreadComplete();
+		camera_.release();
+		camera_ = null;
 	}
-	
-	/* Jni entry point */
-	private native int grayToRgb(byte src[],int dst[]);
 	
 	/* resetCameraSettings */
 	private void resetCameraSettings(){
+		lockPreview_ = true;
+		waitForFdetThreadComplete();
+		for(int i=0;i<MAX_FACE;i++)
+			faces_[i].clear();
 		if( mode_ == 0 ){
 			prevSettingWidth_ = PREVIEW_WIDTH_FINE;
 			prevSettingHeight_ = PREVIEW_HEIGHT_FINE;
+			fdtmodeBitmap_ = BitmapFactory.decodeResource(context_.getResources(), R.drawable.fdt_fine);
 		}else{
 			prevSettingWidth_ = PREVIEW_WIDTH_NORMAL;
 			prevSettingHeight_ = PREVIEW_HEIGHT_NORMAL;
+			fdtmodeBitmap_ = BitmapFactory.decodeResource(context_.getResources(), R.drawable.fdt_norm);
 		}
 		/* set parameters for onPreviewFrame */
  		Camera.Parameters params = camera_.getParameters();
@@ -232,7 +263,7 @@ class PreviewView extends SurfaceView implements SurfaceHolder.Callback, Preview
  		params.setPreviewSize(prevSettingWidth_, prevSettingHeight_);
  		params.setPictureSize(640, 480);
 		camera_.setParameters(params);
-		/* need to re-get for real size... why?
+		/* need to re-get for real size if set to 160x120... why?
 		 * (actual preview size will be 176x144 wich is 11:9) */
  		params = camera_.getParameters();
  		Size size = params.getPreviewSize();
@@ -244,17 +275,21 @@ class PreviewView extends SurfaceView implements SurfaceHolder.Callback, Preview
 		grayBuff_ = new byte[bufflen_];
 		rgbs_ = new int[bufflen_];
 		fdet_ = new FaceDetector( previewWidth_,previewHeight_, MAX_FACE ); 
-		/* start Preview */
-		camera_.startPreview();
-		camera_.setPreviewCallback(this);
-		/* one-shot autofoucs */
-		camera_.autoFocus(this);
 		lockPreview_ = false;
 	}
 	
+	/* startPreview */
+	private void startPreview(){
+		/* start Preview */
+		camera_.setPreviewCallback(this);
+		camera_.startPreview();
+		/* one-shot autofoucs */
+		camera_.autoFocus(this);
+	}
+
 	/* takePicture */
 	private void takePicture() {
-//		Log.i("DEBUG","takePicture");
+		waitForFdetThreadComplete();
 		/* implement only jpeg callback */
 		camera_.takePicture(null, null, pictureCallbackJpeg); 
 	}
@@ -279,47 +314,36 @@ class PreviewView extends SurfaceView implements SurfaceHolder.Callback, Preview
 			float yRatio = (float)h / previewHeight_;
 			/* restore touch point to bitmap size */
 			Point touchPt = new Point((int)(selFacePt_.x*w),(int)(selFacePt_.y*h));
-			synchronized(context_){
-				for(int i=0; i<MAX_FACE; i++){
-					FaceDetector.Face face = faces_[i];
-					if(face==null)
-						continue;
-					PointF midEyes = new PointF(); 
-					face.getMidPoint(midEyes); 
-					float eyedist = face.eyesDistance()*xRatio;
-					if (midEyes == null)
-						continue;
-					/* don't want region to be overlapped, assume face region is x3 eyedist */
-					PointF lt = new PointF(midEyes.x*xRatio-eyedist*1.5f+offset_w,midEyes.y*yRatio-eyedist*1.5f);
-					Rect rect = new Rect((int)(lt.x),(int)(lt.y),(int)(lt.x+eyedist*3.0f),(int)(lt.y+eyedist*3.0f));
-					if(!rect.contains(touchPt.x,touchPt.y))
-						continue;
-					/* expand region for cropping face */
-					lt = new PointF(midEyes.x*xRatio-eyedist*2.0f+offset_w,midEyes.y*yRatio-eyedist*2.0f);
-					rect = new Rect((int)(lt.x),(int)(lt.y),(int)(lt.x+eyedist*4.0f),(int)(lt.y+eyedist*4.0f));
-					/* fix to fit within bitmap */
-					rect.left = rect.left < 0 ? 0 : rect.left;
-					rect.right = rect.right > w ? w : rect.right;
-					rect.top = rect.top < 0 ? 0 : rect.top;
-					rect.bottom = rect.bottom > h ? h : rect.bottom;
-					/* crop */
-					Bitmap facebmp = Bitmap.createBitmap(fullbmp,rect.left,rect.top,rect.width(),rect.height());
-					/* Save bitmap to file */
-					Uri uri = SaveBitmapToFile(facebmp);
-					if(uri!=null){
-						/* Open up Picture Viewer for further actions (i.e. set as contact icon ) */
-						//Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-						//context_.startActivity(intent);
-						Intent intent = new Intent(Intent.ACTION_ATTACH_DATA, uri);
-						try {
-							context_.startActivity(Intent.createChooser(intent,context_.getString(R.string.SetPictureAsIntent_Name)));
-						} catch (android.content.ActivityNotFoundException ex) {
-							Toast.makeText(context_, R.string.SetPictureAsIntent_FailCreate, Toast.LENGTH_SHORT).show();
-						}
-						return;
-					}
-					break;
+			for(int i=0; i<MAX_FACE; i++){
+				FaceResult face = faces_[i];
+				float eyedist = face.eyesDistance()*xRatio;
+				if(eyedist==0.0f)
+					continue;
+				PointF midEyes = new PointF(); 
+				face.getMidPoint(midEyes);
+				/* don't want region to be overlapped, assume face region is x3 eyedist */
+				PointF lt = new PointF(midEyes.x*xRatio-eyedist*1.5f+offset_w,midEyes.y*yRatio-eyedist*1.5f);
+				Rect rect = new Rect((int)(lt.x),(int)(lt.y),(int)(lt.x+eyedist*3.0f),(int)(lt.y+eyedist*3.0f));
+				if(!rect.contains(touchPt.x,touchPt.y))
+					continue;
+				/* expand region for cropping face */
+				lt = new PointF(midEyes.x*xRatio-eyedist*2.0f+offset_w,midEyes.y*yRatio-eyedist*2.0f);
+				rect = new Rect((int)(lt.x),(int)(lt.y),(int)(lt.x+eyedist*4.0f),(int)(lt.y+eyedist*4.0f));
+				/* fix to fit within bitmap */
+				rect.left = rect.left < 0 ? 0 : rect.left;
+				rect.right = rect.right > w ? w : rect.right;
+				rect.top = rect.top < 0 ? 0 : rect.top;
+				rect.bottom = rect.bottom > h ? h : rect.bottom;
+				/* crop */
+				Bitmap facebmp = Bitmap.createBitmap(fullbmp,rect.left,rect.top,rect.width(),rect.height());
+				/* Save bitmap to file */
+				Uri uri = SaveBitmapToFile(facebmp);
+				if(uri!=null){
+					Intent intent = new Intent(Intent.ACTION_VIEW, uri, context_, ImageViewActivity.class);
+					context_.startActivity(intent);
+					return;
 				}
+				break;
 			}
 			/* restart preview */
 			camera_.startPreview();
@@ -351,14 +375,32 @@ class PreviewView extends SurfaceView implements SurfaceHolder.Callback, Preview
 			bmp.compress(Bitmap.CompressFormat.JPEG, 90, outStream);
 			outStream.flush();
 			outStream.close();
+			Toast.makeText(context_, context_.getString(R.string.SaveImageSuccessAlert)+absFilePath, Toast.LENGTH_LONG).show();
 			return uri;
 		} catch (IOException e) {
-			Toast.makeText(context_, "Image Capture Failed.", Toast.LENGTH_LONG).show();
+			Toast.makeText(context_, R.string.SaveImageFailureAlert, Toast.LENGTH_LONG).show();
 			e.printStackTrace();
 		}
 		return null;
 	}
 
+	/* waitForFdetThreadComplete */
+	private void waitForFdetThreadComplete(){
+		if(detectThread_ == null)
+			return;
+		if( detectThread_.isAlive() ){
+			try {
+				detectThread_.join();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	/* Jni entry point */
+	private native int grayToRgb(byte src[],int dst[]);
+	
 	/* Overlay Layer class */
 	public class OverlayLayer extends View { 
 		private Paint paint_ = new Paint(Paint.ANTI_ALIAS_FLAG); 
@@ -377,19 +419,22 @@ class PreviewView extends SurfaceView implements SurfaceHolder.Callback, Preview
 			super.onDraw(canvas);
 			int w = canvas.getWidth();
 			int h = canvas.getHeight();
+			if(fdtmodeBitmap_!=null){
+				int x = w-100;
+				int y = 10;
+        		canvas.drawBitmap(fdtmodeBitmap_, null , new Rect(x,y,x+70,y+20),paint_);
+			}
 			float xRatio = (float)w / previewWidth_; 
 			float yRatio = (float)h / previewHeight_;
 			for(int i=0; i<MAX_FACE; i++){
-				FaceDetector.Face face = faces_[i];
-				if(face!=null){
-					PointF midEyes = new PointF(); 
-					face.getMidPoint(midEyes); 
-					float eyedist = face.eyesDistance()*xRatio;
-					if (midEyes != null) {
-						PointF lt = new PointF(midEyes.x*xRatio-eyedist*1.5f,midEyes.y*yRatio-eyedist*1.5f);
-						canvas.drawRect((int)(lt.x),(int)(lt.y),(int)(lt.x+eyedist*3.0f),(int)(lt.y+eyedist*3.0f), paint_); 
-					}
-				}
+				FaceResult face = faces_[i];
+				float eyedist = face.eyesDistance()*xRatio;
+				if(eyedist==0.0f)
+					continue;
+				PointF midEyes = new PointF();
+				face.getMidPoint(midEyes);
+				PointF lt = new PointF(midEyes.x*xRatio-eyedist*1.5f,midEyes.y*yRatio-eyedist*1.5f);
+				canvas.drawRect((int)(lt.x),(int)(lt.y),(int)(lt.x+eyedist*3.0f),(int)(lt.y+eyedist*3.0f), paint_); 
 			}
 		}
 	};
@@ -419,14 +464,52 @@ class PreviewView extends SurfaceView implements SurfaceHolder.Callback, Preview
 //			gray8toRGB32(graybuff_,previewWidth_,previewHeight_,rgbs);		// java method
 //			Log.i("DEBUG","decode time:"+(System.currentTimeMillis()-t1));
 			Bitmap bmp = Bitmap.createBitmap(rgbs_,previewWidth_,previewHeight_,Bitmap.Config.RGB_565);
-//			t1 = System.currentTimeMillis();
-			FaceDetector.Face[] local = new FaceDetector.Face[MAX_FACE];
-			fdet_.findFaces(bmp, local);
-			/* copy result */
-			synchronized (context_) {
-				faces_ = local.clone();
+//			Log.i("DEBUG","bmp w:"+bmp.getWidth()+",h:"+bmp.getHeight());
+			int prevfound=0,trackfound=0;
+			for(int i=0; i<MAX_FACE; i++){
+				FaceResult face = faces_[i];
+				float eyedist = face.eyesDistance();
+				if(eyedist==0.0f)
+					continue;
+				PointF midEyes = new PointF(); 
+				face.getMidPoint(midEyes);
+				prevfound++;
+				PointF lt = new PointF(midEyes.x-eyedist*2.5f,midEyes.y-eyedist*2.5f);
+				Rect rect = new Rect((int)(lt.x),(int)(lt.y),(int)(lt.x+eyedist*5.0f),(int)(lt.y+eyedist*5.0f));
+				/* fix to fit */
+				rect.left = rect.left < 0 ? 0 : rect.left;
+				rect.right = rect.right > previewWidth_ ? previewWidth_ : rect.right;
+				rect.top = rect.top < 0 ? 0 : rect.top;
+				rect.bottom = rect.bottom > previewHeight_ ? previewHeight_ : rect.bottom;
+				/* crop */
+				Bitmap facebmp = Bitmap.createBitmap(bmp,rect.left,rect.top,rect.width(),rect.height());
+				FaceDetector.Face[] trackface = new FaceDetector.Face[1];
+				FaceDetector tracker = new FaceDetector( facebmp.getWidth(),facebmp.getHeight(),1); 
+				int found = tracker.findFaces(facebmp, trackface);
+				if(found!=0){
+					PointF ptTrack = new PointF();
+					trackface[0].getMidPoint(ptTrack);
+					ptTrack.x += (float)rect.left;
+					ptTrack.y += (float)rect.top;
+					faces_[i].setFace(ptTrack,trackface[0].eyesDistance());
+					trackfound++;
+				}
 			}
-//			Log.i("DEBUG","detect time:"+(System.currentTimeMillis()-t1));
+//			Log.i("DEBUG","prevfound:trackfound="+prevfound+","+trackfound);
+			if(prevfound==0||prevfound!=trackfound){
+				FaceDetector.Face[] fullResults = new FaceDetector.Face[MAX_FACE];
+//				t1 = System.currentTimeMillis();
+				fdet_.findFaces(bmp, fullResults);
+				/* copy result */
+				for(int i=0; i<MAX_FACE; i++){
+					if(fullResults[i]==null)
+						faces_[i].clear();
+					else{
+						faces_[i].setFace(fullResults[i]);
+					}
+				}
+			}
+//			Log.i("DEBUG","loop time:"+(System.currentTimeMillis()-t1));
 			/* post message to UI */
 			handler_.post(new Runnable() {
 				public void run() {
@@ -453,4 +536,34 @@ class PreviewView extends SurfaceView implements SurfaceHolder.Callback, Preview
 		}
 	};
 
+	/* Face Result Class */
+	private class FaceResult extends Object {
+		private PointF midEye_;
+		private float eyeDist_;
+		public FaceResult(){
+			midEye_ = new PointF(0.0f,0.0f);
+			eyeDist_ = 0.0f;
+		}
+		public void setFace(PointF midEye, float eyeDist){
+			set_(midEye,eyeDist);
+		}
+		public void setFace(FaceDetector.Face src){
+			PointF midEye = new PointF();
+			src.getMidPoint(midEye);
+			set_(midEye,src.eyesDistance());
+		}
+		public void clear(){
+			set_(new PointF(0.0f,0.0f),0.0f);
+		}
+		private synchronized void set_(PointF midEye, float eyeDist){
+			midEye_.set(midEye);
+			eyeDist_ = eyeDist;
+		}
+		public float eyesDistance(){
+			return eyeDist_;
+		}
+		public void getMidPoint(PointF pt){
+			pt.set(midEye_);
+		}
+	};
 }
