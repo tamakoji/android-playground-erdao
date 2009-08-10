@@ -13,12 +13,16 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
-<resources>
-	<item type="id" name="menu_Preferences" />
-	<item type="id" name="PreferencesDlg" />
-
-	<item type="id" name="menu_SetAs" />
-	<item type="id" name="menu_Delete" />
-	<item type="id" name="menu_Return" />
-
-</resources>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    >
+	<ImageView
+            android:id="@+id/imageview"
+            android:adjustViewBounds="true"
+			android:gravity="center"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+	/>
+</LinearLayout>

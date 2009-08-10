@@ -20,4 +20,18 @@
 	<string name="SnapFacePreference">SnapFacePreference</string>
 	<string name="SetPictureAsIntent_Name">set picture as</string>
 	<string name="SetPictureAsIntent_FailCreate">This picture cannot be set</string>
+	<string name="SDCardNotPresentAlert">Pleaese make sure your SD Card is inserted.</string>
+	<string name="TapInstructionAlert">Tap deteced face rect to capture.</string>
+	<string name="CapturingAlert">Capturing... hold still.</string>
+	<string name="SaveImageSuccessAlert">Image saved to:\n</string>
+	<string name="SaveImageFailureAlert">Image Capture Failed.</string>
+
+    <string name="imgview">Captured Image</string>
+	<string name="menu_SetAs">Set As</string>
+	<string name="menu_Delete">Delete</string>
+	<string name="menu_Return">Return</string>
+	<string name="delete_alert">The picture will be deleted</string>
+	<string name="delete_alert_ok">OK</string>
+	<string name="delete_alert_cancel">Cancel</string>
+
 </resources>
