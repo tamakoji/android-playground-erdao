@@ -34,6 +34,9 @@ public class HelpActivity extends Activity {
 		wv = (WebView) findViewById(R.id.help);
 		WebSettings setting = wv.getSettings();
 		setting.setTextSize(WebSettings.TextSize.SMALLER);
-		wv.loadData(getString(R.string.helpcontent), mimeType, encoding);
+		setting.setDefaultTextEncodingName(encoding);
+		// there is bug on loadData, if containing 2byte chars it displays corrupted text.
+//		wv.loadData(getString(R.string.helpcontent), mimeType, encoding);
+		wv.loadDataWithBaseURL("dummy",getString(R.string.helpcontent), mimeType, encoding, null);
 	}
 }
