@@ -15,8 +15,8 @@
 -->
 <resources>
 	<string name="app_name">PhotSpot</string>
-	<string name="menu_SearchPhotSpot">スポットを探す</string>
-	<string name="menu_RefreshPhotSpot">スポットを更新</string>
+	<string name="menu_SearchPhotSpot">PhotSpotを探す</string>
+	<string name="menu_RefreshPhotSpot">PhotSpotを更新</string>
 	<string name="menu_SearchPlace">場所を検索</string>
 	<string name="menu_MyLocation">現在位置</string>
 	<string name="menu_MapMode">地図モード</string>
@@ -45,7 +45,7 @@
 		PhotSpot by Huan Erdao\n
 		Panoramio および Picasa Web Albums は Google Inc.の商標です\n
 		Flickr は Yahoo! Inc.の商標です\n
-		当ソフトウェアは上記サービスのAPIを利用しますが上記いずれの企業からの承認を受けているわけではありません。\n
+		当ソフトウェアは上記サービスのAPIを利用しますが上記いずれの企業からの保証を受けているわけではありません。\n
 		その他の商品名、製品名、会社名などは、一般に各社の. 商標または登録商標です\n
 		上記のサービスが提供する写真の著作権はそれぞれの所有者の下にあります。
 	</string>
@@ -53,9 +53,9 @@
 	<string name="helplabel">PhotSpot ヘルプ</string>
 	<string name="helpcontent">
 		&lt;h2&gt;PhotSpotとは?&lt;/h2&gt;
-		PhotSpotはあなたの好きな場所の人気スポットを簡単に捜すことが出来ます。
+		PhotSpotは任意の場所の人気スポットを簡単に捜すことが出来ます。
 		一般公開されている位置情報付きの写真を取得し、地図上にグループ化されたバルーンとして表示します。
-		バルーンの数字はそのスポットにある写真コンテンツの数を意味しています。よって数が大きければ大きいほど
+		バルーンに表示される数字は、そのスポットにある写真コンテンツの数を意味しています。よって数が大きければ大きいほど
 		その場所で写真が撮られているということを意味しています。
 		&lt;h2&gt;操作方法&lt;/h2&gt;
 		&lt;ul&gt;
@@ -78,12 +78,12 @@
 				&lt;li&gt;&lt;b&gt;Flickr&lt;/b&gt;&lt;/li&gt;
 			&lt;/ul&gt;
 			&lt;li&gt;&lt;b&gt;ヘルプ&lt;/b&gt;&lt;/li&gt;
-			このページを開きます
+			このページを開きます。
 		&lt;/ul&gt;
 		&lt;h2&gt;スポットの閲覧&lt;/h2&gt;
 		&lt;ul&gt;
 			&lt;li&gt;&lt;b&gt;バルーンをタップ&lt;/b&gt;&lt;/li&gt;
-			バルーンをタップすることにより、バルーンが含んでいる写真を表示します。
+			バルーンをタップすることにより、バルーンに含まれる写真をギャラリー表示します。
 			&lt;li&gt;&lt;b&gt;バルーンをダブルタップ&lt;/b&gt;&lt;/li&gt;
 			バルーンをダブルタップすることで地図をズームインすることが可能です。画面右下に表示されているズームボタンでも同様のことが出来ます。
 			&lt;li&gt;&lt;b&gt;ズームイン・ズームアウト&lt;/b&gt;&lt;/li&gt;
@@ -106,7 +106,7 @@
 		&lt;h2&gt;著作権、商標について&lt;/h2&gt;
 		Panoramio および Picasa Web Albums は Google Inc.の商標です&lt;br&gt;
 		Flickr は Yahoo! Inc.の商標です&lt;br&gt;
-		当ソフトウェアは上記サービスのAPIを利用しますが上記いずれの企業からの承認を受けているわけではありません。&lt;br&gt;
+		当ソフトウェアは上記サービスのAPIを利用しますが上記いずれの企業からの保証を受けているわけではありません。&lt;br&gt;
 		その他の商品名、製品名、会社名などは、一般に各社の. 商標または登録商標です&lt;br&gt;
 		上記のサービスが提供する写真の著作権はそれぞれの所有者の下にあります。&lt;br&gt;
 	</string>
