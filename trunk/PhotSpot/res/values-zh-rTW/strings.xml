@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) 2009 Huan Erdao
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+  
+          http://www.apache.org/licenses/LICENSE-2.0
+  
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+-->
+<resources>
+	<string name="app_name">PhotSpot搜索熱門拍照地方</string>
+	<string name="menu_SearchPhotSpot">搜索PhotSpot</string>
+	<string name="menu_RefreshPhotSpot">刷新PhotSpot</string>
+	<string name="menu_SearchPlace">搜索地方</string>
+	<string name="menu_MyLocation">當前位置</string>
+	<string name="menu_MapMode">地圖模式</string>
+	<string name="menu_Preferences">設置</string>
+	<string name="menu_ClearSuggest">清除搜索歷史記錄</string>
+	<string name="menu_Help">幫助</string>
+	<string name="menu_About">關於PhotSpot</string>
+
+	<string name="QuerySearching">正在搜索中...</string>
+	<string name="httpErrorMsg">有問題的互聯網連接。請檢查連接。 </string>
+
+	<string name="MapModeDlgTitle">選擇地圖模式</string>
+	<string name="PreferencesDlgTitle">選擇服務</string>
+	<string name="ReverseGeoResult">也許</string>
+	<string name="ThumbActionDlg">選擇動作</string>
+
+	<string name="ToastRevGeoCodeRun">正在搜索中...</string>
+	<string name="ToastRevGeoCodeFail">我們無法找到一個地方</string>
+	<string name="search_label">搜索地方</string>
+	<string name="search_hint">請輸入地方</string>
+
+	<string name="AboutDlgTitle">關於PhotSpot</string>
+	<string name="AboutDlgOK">OK</string>
+	<string name="AboutDlgContent">
+		PhotSpot by Huan Erdao\n 
+		Panoramio和Picasa Web Albums是Google Inc.的商標\n 
+		Flickr是Yahoo Inc.的商標\n 
+		該產品採用的API上述服務，但並不贊同或證明上述公司。 
+		所有其他公司和產品名稱可能是商標的相應公司的這些聯繫。 \n 
+		照片提供上述服務是根據版權的所有者。 
+	</string>
+	<string name="copyrightLabel">照片提供上述服務是根據版權的所有者</string>
+
+	<string name="helplabel">PhotSpot幫助</string>
+	<string name="helpcontent">
+		&lt;h2&gt;PhotSpot是什麼?&lt;/h2&gt; 
+		PhotSpot讓你輕鬆搜索熱門拍照地方到一個去處為您最喜愛的位置。 
+		它將檢索公共標記位置內容,然後查看他們在地圖上的群集氣球。每個號碼的氣球顯示了一些內容的集群
+		所以較它的數量，採取了越來越多的人在這方面的照片。 
+		&lt;h2&gt;操作方法&lt;/h2&gt; 
+		&lt;ul&gt; 
+		&lt;li&gt;&lt;b&gt;初始畫面&lt;/b&gt;&lt;/li&gt; 
+		最初屏幕顯示當前位置地圖。請按菜單按鈕。 
+		&lt;li&gt;&lt;b&gt;搜索PhotSpot&lt;/b&gt;&lt;/li&gt; 
+		將開始搜索公開照片。完成後，顯示在地圖上。 
+		&lt;li&gt;&lt;b&gt;搜索地方&lt;/b&gt;&lt;/li&gt; 
+		此菜單或按下搜索鍵將開始尋找任何地點。 
+		&lt;li&gt;&lt;b&gt;現在位置&lt;/b&gt;&lt;/li&gt; 
+		將返回到您當前的位置。 
+		&lt;li&gt;&lt;b&gt;地圖模式&lt;/b&gt;&lt;/li&gt; 
+		選擇地圖模式“地圖”或“衛星” 
+		&lt;li&gt;&lt;b&gt;設定&lt;/b&gt;&lt;/li&gt; 
+		您可以選擇內容提供商，為檢索標記位置的內容。 （默認： Panoramio ）&lt;br&gt; 
+		目前支持的供應商是： 
+		&lt;ul&gt; 
+		&lt;li&gt;&lt;b&gt;Panoramio&lt;/b&gt;&lt;/li&gt; 
+		&lt;li&gt;&lt;b&gt;Picasa Web Album&lt;/b&gt;&lt;/li&gt; 
+		&lt;li&gt;&lt;b&gt;Flickr&lt;/b&gt;&lt;/li&gt; 
+		&lt;/ul&gt; 
+		&lt;li&gt;&lt;b&gt;幫助&lt;/b&gt;&lt;/li&gt; 
+		打開這個網頁
+		&lt;/ul&gt; 
+		&lt;h2&gt;查看結果&lt;/h2&gt; 
+		&lt;ul&gt; 
+		&lt;li&gt;&lt;b&gt;擊氣球看到內容&lt;/b&gt;&lt;/li&gt; 
+		擊氣球，圖像畫廊就會顯示。您可以瀏覽什麼是在那裡。 
+		&lt;li&gt;&lt;b&gt;雙擊可以放大地圖&lt;/b&gt;&lt;/li&gt; 
+		雙擊氣球您可以縮放地圖。你也可以用幕右下角的按鈕你。 
+		&lt;li&gt;&lt;b&gt;放大,縮小&lt;/b&gt;&lt;/li&gt; 
+		放大/縮小的地圖將合併/鴻溝集群根據縮放級別。 
+		但是，內容本身是基於結果你的“搜索PhotSpot”命令。 
+		如果您需要刷新的結果，選擇“刷新PhotSpot”從菜單中。 &lt;br&gt; 
+		&lt;li&gt;&lt;b&gt;按住縮略圖&lt;/b&gt;&lt;/li&gt; 
+		按住縮略圖，額外的操作會彈出&lt;br&gt; 
+		&lt;li&gt;&lt;b&gt;要隱藏畫廊&lt;/b&gt;&lt;/li&gt; 
+		擊圖像畫廊底部，將關閉圖像畫廊。 &lt;br&gt; 
+		&lt;/ul&gt; 
+		&lt;h2&gt;秘訣&lt;/h2&gt; 
+		&lt;ul&gt; 
+		&lt;li&gt;&lt;b&gt;選擇服務&lt;/b&gt;&lt;/li&gt; 
+		你會得到不同的結果在不同的供應商， Panoramio提供優美的風景照片，以便它是有用找到名勝歷史的地方。 
+		Picasa Web Album和Flickr可以更多非正式的內容，但它可以檢索更多更新的內容相比，使用Panoramio 。 
+		&lt;/ul&gt; 
+		&lt;h2&gt;版權，商標&lt;/h2&gt; 
+		Panoramio和Picasa Web Albums是Google Inc.的商標&lt;br&gt; 
+		Flickr是Yahoo Inc.的商標&lt;br&gt; 
+		該產品採用的API上述服務，但並不贊同或證明上述公司。 
+		所有其他公司和產品名稱可能是商標的相應公司的這些聯繫。 &lt;br&gt; 
+		照片提供上述服務是根據版權的所有者。 &lt;br&gt; 
+	</string>
+
+</resources>

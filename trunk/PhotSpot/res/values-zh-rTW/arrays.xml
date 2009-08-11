@@ -15,8 +15,8 @@
 -->
 <resources>
 	<string-array name="select_map_mode">
-        <item>地图</item>
-        <item>卫星</item>
+        <item>地圖</item>
+        <item>衛星</item>
     </string-array>
 
 	<string-array name="select_service">
@@ -26,8 +26,8 @@
     </string-array>
 
 	<string-array name="thumbnail_action">
-        <item>打开用浏览器</item>
-        <item>缩放地图</item>
+        <item>打開用瀏覽器</item>
+        <item>縮放地圖</item>
     </string-array>
 
 </resources>
