@@ -1,20 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Copyright (C) 2009 Huan Erdao
 
-     Licensed under the Apache License, Version 2.0 (the "License");
-     you may not use this file except in compliance with the License.
-     You may obtain a copy of the License at
+	 Licensed under the Apache License, Version 2.0 (the "License");
+	 you may not use this file except in compliance with the License.
+	 You may obtain a copy of the License at
   
-          http://www.apache.org/licenses/LICENSE-2.0
+		  http://www.apache.org/licenses/LICENSE-2.0
   
-     Unless required by applicable law or agreed to in writing, software
-     distributed under the License is distributed on an "AS IS" BASIS,
-     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-     See the License for the specific language governing permissions and
-     limitations under the License.
+	 Unless required by applicable law or agreed to in writing, software
+	 distributed under the License is distributed on an "AS IS" BASIS,
+	 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+	 See the License for the specific language governing permissions and
+	 limitations under the License.
 -->
 <resources>
-    <string name="app_name">PhotSpot</string>
+	<string name="gmap_key_dbg">YOUR_GOOGLEMAP_KEY</string>
+	<string name="gmap_key_rel">YOUR_GOOGLEMAP_KEY</string>
+	<string name="flickr_key">YOUR_FLICKRAPI_KEY</string>
+
+	<string name="app_name">PhotSpot</string>
 	<string name="menu_SearchPhotSpot">Search Spots</string>
 	<string name="menu_RefreshPhotSpot">Refresh Spots</string>
 	<string name="menu_SearchPlace">Search Place</string>
@@ -27,9 +31,24 @@
 
 	<string name="QuerySearching">Searching ...</string>
 	<string name="httpErrorMsg">there is problem connecting to internet. please check your connection.</string>
+	<string name="search_label">Search Place</string>
+	<string name="search_hint">Enter Place Name</string>
+	<string name="search_invoke">App/Search/Invoke Search</string>
+
+	<string name="ReverseGeoResult">Did you mean</string>
+	<string name="ThumbActionDlg">Select Action</string>
+	<string name="ToastRevGeoCodeRun">Searching Place...</string>
+	<string name="ToastRevGeoCodeFail">No Place Found.</string>
+	<string name="PhotSpotPreference">PhotSpotPreference</string>
+	
+	<string name="PrefContentProvider">ContentProvider</string>
+	<string name="PrefMapMode">MapMode</string>
 
 	<string name="MapModeDlgTitle">Select Map Mode</string>
 	<string name="PreferencesDlgTitle">Select Contents Provider</string>
+	<string name="no_title">NO TITLE</string>
+	<string name="copyrightLabel">Photos are under the copyright of their owners.</string>
+
 	<string name="AboutDlgTitle">About PhotSpot</string>
 	<string name="AboutDlgOK">OK</string>
 	<string name="AboutDlgContent">
@@ -40,15 +59,6 @@
 		All other company and product names may be trademarks of the respective companies with which they are associate.\n
 		Photos provided by above services are under the copyright of their owners.
 	</string>
-	<string name="ReverseGeoResult">Did you mean</string>
-	<string name="ThumbActionDlg">Select Action</string>
-
-	<string name="ToastRevGeoCodeRun">Searching Place...</string>
-	<string name="ToastRevGeoCodeFail">No Place Found.</string>
-	<string name="PhotSpotPreference">PhotSpotPreference</string>
-	
-	<string name="PrefContentProvider">ContentProvider</string>
-	<string name="PrefMapMode">MapMode</string>
 
 	<string name="helplabel">PhotSpot Help</string>
 	<string name="helpcontent">
@@ -112,17 +122,5 @@
 		All other company and product names may be trademarks of the respective companies with which they are associate.&lt;br&gt;
 		Photos provided by above services are under the copyright of their owners.&lt;br&gt;
 	</string>
-
-    <string name="search_label">Search Place</string>
-    <string name="search_hint">Enter Place Name</string>
-    <string name="search_invoke">App/Search/Invoke Search</string>
-
-    <string name="no_title">NO TITLE</string>
-
-    <string name="copyrightLabel">Photos are under the copyright of their owners.</string>
-
-    <string name="gmap_key_dbg">YOUR-GOOGLEMAP-KEY-HERE</string>
-    <string name="gmap_key_rel">YOUR-GOOGLEMAP-KEY-HERE</string>
-    <string name="flickr_key">YOUR-FLICKR-KEY-HERE</string>
 
 </resources>
