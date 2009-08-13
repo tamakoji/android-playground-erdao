@@ -25,7 +25,7 @@
 	<string name="SaveImageSuccessAlert">照片保存完了:\n</string>
 	<string name="SaveImageFailureAlert">照片保存失败</string>
 
-	<string name="menu_SetAs">设置图片</string>
+	<string name="menu_SetAs">图片设为</string>
 	<string name="menu_Delete">删除图片</string>
 	<string name="menu_Return">返回</string>
 	<string name="delete_alert">删除该图片吗？</string>
