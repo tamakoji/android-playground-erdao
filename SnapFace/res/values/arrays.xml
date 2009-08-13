@@ -14,8 +14,12 @@
      limitations under the License.
 -->
 <resources>
-	<string-array name="select_preference">
+	<string-array name="select_fdetlevel">
         <item>Fine (detect small faces but slow)</item>
         <item>Normal(recommended)</item>
+    </string-array>
+	<string-array name="select_appmode">
+        <item>Face Crop Mode</item>
+        <item>Darth Vader Face Mode</item>
     </string-array>
 </resources>

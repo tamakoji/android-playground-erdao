@@ -32,7 +32,8 @@ import android.view.ViewGroup.LayoutParams;
  */
 public class SnapFaceActivity extends Activity {
 	private PreviewView camPreview_;
-	private int mode_;
+	private int fdetLevel_;
+	private int appMode_;
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -44,10 +45,13 @@ public class SnapFaceActivity extends Activity {
 
 		/* Restore preferences */
 		SharedPreferences settings = getSharedPreferences(getString(R.string.SnapFacePreference), 0);
-		mode_ = settings.getInt(getString(R.string.menu_Preferences), 1);
+		appMode_ = settings.getInt(getString(R.string.menu_AppMode), 0);
+		fdetLevel_ = settings.getInt(getString(R.string.menu_Preferences), 1);
 		
 		/* create camera view */
-		camPreview_ = new PreviewView(this,mode_);
+		camPreview_ = new PreviewView(this);
+		camPreview_.setAppMode(appMode_);
+		camPreview_.setfdetLevel(fdetLevel_,true);
 		setContentView(camPreview_);
 		/* append Overlay */
 		addContentView(camPreview_.getOverlay(), new LayoutParams 
@@ -60,6 +64,8 @@ public class SnapFaceActivity extends Activity {
 		super.onCreateOptionsMenu(menu);
 		MenuItem menu_Preference = menu.add(0,R.id.menu_Preferences,0,R.string.menu_Preferences);
 		menu_Preference.setIcon(android.R.drawable.ic_menu_preferences);
+		MenuItem menu_AppMode = menu.add(0,R.id.menu_AppMode,0,R.string.menu_AppMode);
+		menu_AppMode.setIcon(android.R.drawable.ic_menu_manage);
 		return true;
 	}
 
@@ -69,6 +75,10 @@ public class SnapFaceActivity extends Activity {
 		switch (item.getItemId()) {
 			case R.id.menu_Preferences:{
 				showDialog(R.id.PreferencesDlg);
+				break;
+			}
+			case R.id.menu_AppMode:{
+				showDialog(R.id.AppModeDlg);
 				break;
 			}
 		}
@@ -83,14 +93,30 @@ public class SnapFaceActivity extends Activity {
 			case R.id.PreferencesDlg: {
 				return new AlertDialog.Builder(this)
 				.setTitle(R.string.PreferencesDlgTitle)
-				.setSingleChoiceItems(R.array.select_preference, mode_, new DialogInterface.OnClickListener() {
+				.setSingleChoiceItems(R.array.select_fdetlevel, fdetLevel_, new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int whichButton) {
-						camPreview_.setResolution(whichButton);
+						fdetLevel_ = whichButton;
+						camPreview_.setfdetLevel(fdetLevel_,false);
 						SharedPreferences settings = getSharedPreferences(getString(R.string.SnapFacePreference), 0);
 						SharedPreferences.Editor editor = settings.edit();
 						editor.putInt(getString(R.string.menu_Preferences), whichButton);
 						editor.commit();
 						dismissDialog(R.id.PreferencesDlg);
+					}
+				})
+				.create();
+			}
+			case R.id.AppModeDlg: {
+				return new AlertDialog.Builder(this)
+				.setTitle(R.string.PreferencesDlgTitle)
+				.setSingleChoiceItems(R.array.select_appmode, appMode_, new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int whichButton) {
+						camPreview_.setAppMode(whichButton);
+						SharedPreferences settings = getSharedPreferences(getString(R.string.SnapFacePreference), 0);
+						SharedPreferences.Editor editor = settings.edit();
+						editor.putInt(getString(R.string.menu_AppMode), whichButton);
+						editor.commit();
+						dismissDialog(R.id.AppModeDlg);
 					}
 				})
 				.create();

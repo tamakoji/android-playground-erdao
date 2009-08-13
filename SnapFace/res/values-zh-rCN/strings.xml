@@ -14,20 +14,21 @@
      limitations under the License.
 -->
 <resources>
-    <string name="app_name">SnapFace人脸检测相机软件</string>
+    <string name="app_name">SnapFace</string>
 	<string name="menu_Preferences">设置</string>
-	<string name="PreferencesDlgTitle">选择人脸检测力量</string>
+	<string name="menu_AppMode">软件模式</string>
+	<string name="PreferencesDlgTitle">选择人脸检测程度</string>
 	<string name="SetPictureAsIntent_FailCreate">这个照片不能设置</string>
-	<string name="SDCardNotPresentAlert">SD卡没插入了。请插入 SD卡</string>
-	<string name="TapInstructionAlert">塔发现的人脸对拍照</string>
-	<string name="CapturingAlert">正在拍照... 持有仍然</string>
+	<string name="SDCardNotPresentAlert">没插入SD卡。请插入 SD卡</string>
+	<string name="TapInstructionAlert">点击检测到的人脸以拍照</string>
+	<string name="CapturingAlert">正在拍照... 别抖动</string>
 	<string name="SaveImageSuccessAlert">照片保存完了:\n</string>
-	<string name="SaveImageFailureAlert">照片保存失败了</string>
+	<string name="SaveImageFailureAlert">照片保存失败</string>
 
 	<string name="menu_SetAs">设置图片</string>
 	<string name="menu_Delete">删除图片</string>
 	<string name="menu_Return">返回</string>
-	<string name="delete_alert">删除这个图片吗？</string>
+	<string name="delete_alert">删除该图片吗？</string>
 	<string name="delete_alert_ok">好</string>
 	<string name="delete_alert_cancel">不</string>
 

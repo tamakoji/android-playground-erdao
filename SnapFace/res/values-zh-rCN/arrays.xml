@@ -14,8 +14,12 @@
      limitations under the License.
 -->
 <resources>
-	<string-array name="select_preference">
-        <item>Fine (检测小人脸、但是动作慢)</item>
-        <item>Normal(推荐)</item>
+	<string-array name="select_fdetlevel">
+        <item>高精度(检测小的人脸、但是动作慢)</item>
+        <item>普通(推荐)</item>
+    </string-array>
+	<string-array name="select_appmode">
+        <item>裁剪人脸图象模式</item>
+        <item>达斯维达脸模式</item>
     </string-array>
 </resources>

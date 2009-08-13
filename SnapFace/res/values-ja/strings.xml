@@ -16,6 +16,7 @@
 <resources>
     <string name="app_name">SnapFace</string>
 	<string name="menu_Preferences">設定</string>
+	<string name="menu_AppMode">モード</string>
 	<string name="PreferencesDlgTitle">検出レベルの設定</string>
 	<string name="SetPictureAsIntent_FailCreate">この写真は使えません</string>
 	<string name="SDCardNotPresentAlert">SDカードがありません。カードを挿入してください。</string>

@@ -15,7 +15,9 @@
 -->
 <resources>
 	<item type="id" name="menu_Preferences" />
+	<item type="id" name="menu_AppMode" />
 	<item type="id" name="PreferencesDlg" />
+	<item type="id" name="AppModeDlg" />
 
 	<item type="id" name="menu_SetAs" />
 	<item type="id" name="menu_Delete" />

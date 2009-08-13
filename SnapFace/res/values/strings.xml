@@ -16,6 +16,7 @@
 <resources>
     <string name="app_name">SnapFace</string>
 	<string name="menu_Preferences">Preferences</string>
+	<string name="menu_AppMode">App Mode</string>
 	<string name="PreferencesDlgTitle">Set Level</string>
 	<string name="SnapFacePreference">SnapFacePreference</string>
 	<string name="SetPictureAsIntent_Name">set picture as</string>
