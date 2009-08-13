@@ -14,62 +14,62 @@
 	 limitations under the License.
 -->
 <resources>
-	<string name="app_name">PhotSpot搜索热门拍照地方</string>
-	<string name="menu_SearchPhotSpot">搜索PhotSpot</string>
-	<string name="menu_RefreshPhotSpot">刷新PhotSpot</string>
+	<string name="app_name">搜索热门拍照点</string>
+	<string name="menu_SearchPhotSpot">搜索热门拍照点</string>
+	<string name="menu_RefreshPhotSpot">刷新热门拍照点</string>
 	<string name="menu_SearchPlace">搜索地方</string>
 	<string name="menu_MyLocation">当前位置</string>
 	<string name="menu_MapMode">地图模式</string>
 	<string name="menu_Preferences">设置</string>
 	<string name="menu_ClearSuggest">清除搜索历史记录</string>
 	<string name="menu_Help">帮助</string>
-	<string name="menu_About">关于PhotSpot</string>
+	<string name="menu_About">关于</string>
 
 	<string name="QuerySearching">正在搜索中 ...</string>
-	<string name="httpErrorMsg">有问题的互联网连接。请检查连接。</string>
+	<string name="httpErrorMsg">互联网连接有问题。请检查连接。</string>
 
 	<string name="MapModeDlgTitle">选择地图模式</string>
 	<string name="PreferencesDlgTitle">选择服务</string>
-	<string name="ReverseGeoResult">也许</string>
+	<string name="ReverseGeoResult">您是不是要找</string>
 	<string name="ThumbActionDlg">选择动作</string>
 
 	<string name="ToastRevGeoCodeRun">正在搜索中...</string>
-	<string name="ToastRevGeoCodeFail">我们无法找到一个地方</string>
+	<string name="ToastRevGeoCodeFail">我们无法找到该地方</string>
 	<string name="search_label">搜索地方</string>
 	<string name="search_hint">请输入地方</string>
 
-	<string name="AboutDlgTitle">关于PhotSpot</string>
+	<string name="AboutDlgTitle">关于</string>
 	<string name="AboutDlgOK">OK</string>
 	<string name="AboutDlgContent">
-		PhotSpot by Huan Erdao\n
+		搜索热门拍照点 by Huan Erdao\n
 		Panoramio和Picasa Web Albums是Google Inc.的商标\n
 		Flickr是Yahoo Inc.的商标\n
-		该产品采用的API上述服务，但并上述公司不保证对该产品。
-		所有其他公司和产品名称可能是商标的相应公司的这些联系。\n
-		照片提供上述服务是根据版权的所有者。
+		该软件采用上述服务的API，但是上述公司不保证该软件功能。
+		所有其它品牌和产品名称都是各自公司的商标、注册商标或者服务标志。\n
+		此服务提供的照片和版权属于他们各自的所有者。
 	</string>
-	<string name="copyrightLabel">照片提供上述服务是根据版权的所有者</string>
+	<string name="copyrightLabel">提供的照片和版权属于他们各自的所有者</string>
 
-	<string name="helplabel">PhotSpot帮助</string>
+	<string name="helplabel">帮助</string>
 	<string name="helpcontent">
-		&lt;h2&gt;PhotSpot是什么?&lt;/h2&gt;
-		PhotSpot让你轻松搜索热门拍照地方到一个去处为您最喜爱的位置。 
-		它将检索公共标记位置内容,然后查看他们在地图上的群集气球。每个号码的气球显示了一些内容的集群
-		所以较它的数量，采取了越来越多的人在这方面的照片。
+		&lt;h2&gt;”搜索热门拍照点”是什么?&lt;/h2&gt;
+		”搜索热门拍照点”让您搜索任何地方的热门拍照点。 
+		软件将搜索公开照片和全球定位系统数据,然后显示“群集气球”在地图上。每个气球的数字显示了照片数量。
+		所以气球的数字越大，该位置越热门。
 		&lt;h2&gt;操作方法&lt;/h2&gt;
 		&lt;ul&gt;
 			&lt;li&gt;&lt;b&gt;初始画面&lt;/b&gt;&lt;/li&gt;
 			最初屏幕显示当前位置地图。请按菜单按钮。
-			&lt;li&gt;&lt;b&gt;搜索PhotSpot&lt;/b&gt;&lt;/li&gt;
+			&lt;li&gt;&lt;b&gt;搜索搜索热门拍照点&lt;/b&gt;&lt;/li&gt;
 			将开始搜索公开照片。完成后，显示在地图上。
 			&lt;li&gt;&lt;b&gt;搜索地方&lt;/b&gt;&lt;/li&gt;
-			此菜单或按下搜索键将开始寻找任何地点。
+			选择此菜单或按下搜索键将开始寻找任何地点。
 			&lt;li&gt;&lt;b&gt;現在位置&lt;/b&gt;&lt;/li&gt;
 			将返回到您当前的位置。
 			&lt;li&gt;&lt;b&gt;地图模式&lt;/b&gt;&lt;/li&gt;
 			选择地图模式“地图”或“卫星”
 			&lt;li&gt;&lt;b&gt;設定&lt;/b&gt;&lt;/li&gt;
-			您可以选择内容提供商，为检索标记位置的内容。 （默认： Panoramio ）&lt;br&gt; 
+			您可以选择照片提供商 （默认： Panoramio ）&lt;br&gt; 
 			目前支持的供应商是： 
 			&lt;ul&gt;
 				&lt;li&gt;&lt;b&gt;Panoramio&lt;/b&gt;&lt;/li&gt;
@@ -81,31 +81,31 @@
 		&lt;/ul&gt;
 		&lt;h2&gt;查看结果&lt;/h2&gt;
 		&lt;ul&gt;
-			&lt;li&gt;&lt;b&gt;击气球看到内容&lt;/b&gt;&lt;/li&gt;
-			击气球，图像画廊就会显示。您可以浏览什么是在那里。
-			&lt;li&gt;&lt;b&gt;双击可以放大地图&lt;/b&gt;&lt;/li&gt;
-			双击气球您可以缩放地图。你也可以用幕右下角的按钮你。
+			&lt;li&gt;&lt;b&gt;点击气球看到内容&lt;/b&gt;&lt;/li&gt;
+			点击气球，显示图像画廊。您可以浏览该处的照片。
+			&lt;li&gt;&lt;b&gt;双击缩小地图&lt;/b&gt;&lt;/li&gt;
+			双击气球您可以缩放地图。您也可以用屏幕右下角的按钮。
 			&lt;li&gt;&lt;b&gt;放大,缩小&lt;/b&gt;&lt;/li&gt;
-			放大/缩小的地图将合并/鸿沟集群根据缩放级别。 
-			但是，内容本身是基于结果你的 “搜索PhotSpot”命令。 
-			如果您需要刷新的结果，选择 “刷新PhotSpot”从菜单中。&lt;br&gt;
+			放大/缩小地图将根据缩放级别合并/分离 “群集气球”。 
+			但是，照片不刷新。	如果您需要刷新照片，
+			选择 “刷新热门拍照点”从菜单中。&lt;br&gt;
 			&lt;li&gt;&lt;b&gt;按住缩略图&lt;/b&gt;&lt;/li&gt;
 			按住缩略图，额外的操作会弹出&lt;br&gt;
 			&lt;li&gt;&lt;b&gt;要隐藏画廊&lt;/b&gt;&lt;/li&gt;
-			击图像画廊底部，将关闭图像画廊。&lt;br&gt;
+			点击图像画廊底部，将关闭图像画廊。&lt;br&gt;
 		&lt;/ul&gt;
 		&lt;h2&gt;秘诀&lt;/h2&gt;
 		&lt;ul&gt;
 			&lt;li&gt;&lt;b&gt;选择服务&lt;/b&gt;&lt;/li&gt;
-			你会得到不同的结果在不同的供应商， Panoramio提供优美的风景照片，以便它是有用找到名胜历史的地方。 
-			Picasa Web Album和Flickr可以更多非正式的内容，但它可以检索更多更新的内容相比，使用Panoramio 。
+			各服务提供的照片类型不一样， Panoramio提供优美的风景照片，以便找到名胜历史的地方。 
+			Picasa Web Album和Flickr包含更多类型的内容，相比Panoramio，它可以检索到更多更新的内容 。
 		&lt;/ul&gt;
 		&lt;h2&gt;版权，商标&lt;/h2&gt;
 		Panoramio和Picasa Web Albums是Google Inc.的商标&lt;br&gt;
 		Flickr是Yahoo Inc.的商标&lt;br&gt;
-		该产品采用的API上述服务，但并上述公司不保证对该产品。
-		所有其他公司和产品名称可能是商标的相应公司的这些联系。&lt;br&gt;
-		照片提供上述服务是根据版权的所有者。&lt;br&gt;
+		该软件采用上述服务的API，但是上述公司对该软件不保证。&lt;br&gt;
+		所有其它品牌和产品名称都是各自公司的商标、注册商标或者服务标志。&lt;br&gt;
+		此服务提供的照片和版权属于他们各自的所有者。&lt;br&gt;
 	</string>
 
 </resources>

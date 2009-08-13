@@ -224,6 +224,9 @@ public class GeoClusterer {
 				}
 			}
 			if(dismiss){
+				for(int i=0; i<items_.size(); i++) {
+					items_.get(i).clearSelect();
+				}
 				imageFrame_.setVisibility(View.GONE);
 				TextView txtView = (TextView)imageFrame_.findViewById(R.id.copyright);
 				txtView.setVisibility(View.GONE);

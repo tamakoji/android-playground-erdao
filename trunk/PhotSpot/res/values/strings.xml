@@ -14,9 +14,9 @@
 	 limitations under the License.
 -->
 <resources>
-	<string name="gmap_key_dbg">YOUR_GOOGLEMAP_KEY</string>
-	<string name="gmap_key_rel">YOUR_GOOGLEMAP_KEY</string>
-	<string name="flickr_key">YOUR_FLICKRAPI_KEY</string>
+	<string name="gmap_key_dbg">YOUR-KEY</string>
+	<string name="gmap_key_rel">YOUR-KEY</string>
+	<string name="flickr_key">YOUR-KEY</string>
 
 	<string name="app_name">PhotSpot</string>
 	<string name="menu_SearchPhotSpot">Search Spots</string>
@@ -24,7 +24,7 @@
 	<string name="menu_SearchPlace">Search Place</string>
 	<string name="menu_MyLocation">My Location</string>
 	<string name="menu_MapMode">Map Mode</string>
-	<string name="menu_Preferences">Preferences</string>
+	<string name="menu_Preferences">Select Provider</string>
 	<string name="menu_ClearSuggest">Clear Search History</string>
 	<string name="menu_Help">Help</string>
 	<string name="menu_About">About</string>
@@ -55,8 +55,8 @@
 		PhotSpot by Huan Erdao\n
 		Panoramio and Picasa Web Albums are trademarks of Google Inc.\n
 		Flickr is a trademark of Yahoo! Inc.\n
-		This product uses the APIs of above services but is not endorsed or certified by above companies.\n
 		All other company and product names may be trademarks of the respective companies with which they are associate.\n
+		This product uses the APIs of above services but is not endorsed by above companies.\n
 		Photos provided by above services are under the copyright of their owners.
 	</string>
 
@@ -79,8 +79,8 @@
 			On initial screen it is turned on, if you wish to set map location to current location, select this.
 			It will require GPS to find your current location.
 			&lt;li&gt;&lt;b&gt;Map Mode&lt;/b&gt;&lt;/li&gt;
-			You can either select \"map\" mode or \"satelite\" mode (default:map mode)
-			&lt;li&gt;&lt;b&gt;Preferences&lt;/b&gt;&lt;/li&gt;
+			You can either select \"map\" mode or \"satellite\" mode (default:map mode)
+			&lt;li&gt;&lt;b&gt;Select Provider&lt;/b&gt;&lt;/li&gt;
 			You can select content provider for retrieving the geotagged content.(default:Panoramio)
 			Currently supported providers are:
 			&lt;ul&gt;
@@ -93,7 +93,7 @@
 		&lt;/ul&gt;
 		&lt;h2&gt;Viewing the result&lt;/h2&gt;
 		&lt;ul&gt;
-			&lt;li&gt;&lt;b&gt;Tap balloon to see the content&lt;/b&gt;&lt;/li&gt;
+			&lt;li&gt;&lt;b&gt;Opening gallery view&lt;/b&gt;&lt;/li&gt;
 			By tapping the balloon, Gallery View will show up. You can browse what is in there.
 			&lt;li&gt;&lt;b&gt;Double-Tap to zoom in the map&lt;/b&gt;&lt;/li&gt;
 			You can zoom in/out using zoom control, also you can zoom in by double-tapping the balloon.
@@ -118,8 +118,8 @@
 		&lt;h2&gt;Legal Notices&lt;/h2&gt;
 		Panoramio and Picasa Web Albums are trademarks of Google Inc.&lt;br&gt;
 		Flickr is a trademark of Yahoo! Inc.&lt;br&gt;
-		This product uses the APIs of above services but is not endorsed or certified by above companies.&lt;br&gt;
 		All other company and product names may be trademarks of the respective companies with which they are associate.&lt;br&gt;
+		This product uses the APIs of above services but is not endorsed by above companies.&lt;br&gt;
 		Photos provided by above services are under the copyright of their owners.&lt;br&gt;
 	</string>
 

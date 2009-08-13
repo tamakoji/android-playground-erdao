@@ -14,16 +14,16 @@
 	 limitations under the License.
 -->
 <resources>
-	<string name="app_name">PhotSpot</string>
-	<string name="menu_SearchPhotSpot">PhotSpotを探す</string>
-	<string name="menu_RefreshPhotSpot">PhotSpotを更新</string>
+	<string name="app_name">フォットスポット</string>
+	<string name="menu_SearchPhotSpot">スポットを探す</string>
+	<string name="menu_RefreshPhotSpot">スポットを更新</string>
 	<string name="menu_SearchPlace">場所を検索</string>
 	<string name="menu_MyLocation">現在位置</string>
 	<string name="menu_MapMode">地図モード</string>
-	<string name="menu_Preferences">設定</string>
+	<string name="menu_Preferences">サービスの選択</string>
 	<string name="menu_ClearSuggest">検索履歴の消去</string>
 	<string name="menu_Help">ヘルプ</string>
-	<string name="menu_About">PhotSpotについて</string>
+	<string name="menu_About">フォットスポットについて</string>
 
 	<string name="QuerySearching">検索中 ...</string>
 	<string name="httpErrorMsg">接続中に問題が発生しました。接続を確認してください。</string>
@@ -38,25 +38,25 @@
 	<string name="search_label">場所の検索</string>
 	<string name="search_hint">場所を入力してください</string>
 
-	<string name="copyrightLabel">これら写真の著作権はそれぞれの所有者の下にあります</string>
-	<string name="AboutDlgTitle">PhotSpotについて</string>
+	<string name="AboutDlgTitle">フォットスポットについて</string>
 	<string name="AboutDlgOK">OK</string>
 	<string name="AboutDlgContent">
-		PhotSpot by Huan Erdao\n
+		フォットスポット by Huan Erdao\n
 		Panoramio および Picasa Web Albums は Google Inc.の商標です\n
 		Flickr は Yahoo! Inc.の商標です\n
-		当ソフトウェアは上記サービスのAPIを利用しますが上記いずれの企業からの保証を受けているわけではありません。\n
 		その他の商品名、製品名、会社名などは、一般に各社の. 商標または登録商標です\n
-		上記のサービスが提供する写真の著作権はそれぞれの所有者の下にあります。
+		当ソフトウェアは上記サービスのAPIを利用しておりますが、上記いずれの企業も保証責任を負いません。\n
+		上記のサービスが提供する写真の著作権はそれぞれの所有者にあります。
 	</string>
+	<string name="copyrightLabel">これら写真の著作権はそれぞれの所有者にあります</string>
 
-	<string name="helplabel">PhotSpot ヘルプ</string>
+	<string name="helplabel">フォットスポット ヘルプ</string>
 	<string name="helpcontent">
-		&lt;h2&gt;PhotSpotとは?&lt;/h2&gt;
-		PhotSpotは任意の場所の人気スポットを簡単に捜すことが出来ます。
+		&lt;h2&gt;フォットスポットとは?&lt;/h2&gt;
+		フォットスポットは人気写真撮影スポットを簡単に捜すアプリケーションです。
 		一般公開されている位置情報付きの写真を取得し、地図上にグループ化されたバルーンとして表示します。
 		バルーンに表示される数字は、そのスポットにある写真コンテンツの数を意味しています。よって数が大きければ大きいほど
-		その場所で写真が撮られているということを意味しています。
+		その場所で写真が撮られていることを意味しています。
 		&lt;h2&gt;操作方法&lt;/h2&gt;
 		&lt;ul&gt;
 			&lt;li&gt;&lt;b&gt;初期画面&lt;/b&gt;&lt;/li&gt;
@@ -69,7 +69,7 @@
 			地図を移動したりなどした後、現在位置に戻りたい場合などにご利用ください。
 			&lt;li&gt;&lt;b&gt;地図モード&lt;/b&gt;&lt;/li&gt;
 			モードは「地図」もしくは「航空写真」が選択可能です
-			&lt;li&gt;&lt;b&gt;設定&lt;/b&gt;&lt;/li&gt;
+			&lt;li&gt;&lt;b&gt;サービスの選択&lt;/b&gt;&lt;/li&gt;
 			サービスの選択をします。デフォルトはPanoramioになっています。
 			現在サポートしているサービスは以下になります:
 			&lt;ul&gt;
@@ -82,15 +82,14 @@
 		&lt;/ul&gt;
 		&lt;h2&gt;スポットの閲覧&lt;/h2&gt;
 		&lt;ul&gt;
-			&lt;li&gt;&lt;b&gt;バルーンをタップ&lt;/b&gt;&lt;/li&gt;
+			&lt;li&gt;&lt;b&gt;写真の表示&lt;/b&gt;&lt;/li&gt;
 			バルーンをタップすることにより、バルーンに含まれる写真をギャラリー表示します。
-			&lt;li&gt;&lt;b&gt;バルーンをダブルタップ&lt;/b&gt;&lt;/li&gt;
-			バルーンをダブルタップすることで地図をズームインすることが可能です。画面右下に表示されているズームボタンでも同様のことが出来ます。
 			&lt;li&gt;&lt;b&gt;ズームイン・ズームアウト&lt;/b&gt;&lt;/li&gt;
+			バルーンをダブルタップすることで地図をズームインすることが可能です。画面右下に表示されているズームボタンでも同様のことが出来ます。
 			ズームレベルを変更することでバルーンに含まれるコンテンツは結合・分離され、現在のズームレベルに応じた表示になります。
 			ただしコンテンツ自体は変更されませんので、ズームアウトした際などは「スポットを更新」を行うことで、そのズームレベルに応じた
-			コンテンツをサイド取得することが可能です。
-			&lt;li&gt;&lt;b&gt;サムネールを長押し&lt;/b&gt;&lt;/li&gt;
+			コンテンツを再度取得することが可能です。
+			&lt;li&gt;&lt;b&gt;写真をブラウザで表示&lt;/b&gt;&lt;/li&gt;
 			ギャラリー表示されているサムネールを長押しすることで、写真をブラウザで開いたり、ズームインをしたりといった追加アクションが実行可能です&lt;br&gt;
 			&lt;li&gt;&lt;b&gt;ギャラリーを非表示にする&lt;/b&gt;&lt;/li&gt;
 			ギャラリーの下に表示されているバー(△のマークがあります)をタップすることでギャラリーを隠すことが出来ます。&lt;br&gt;
@@ -106,9 +105,9 @@
 		&lt;h2&gt;著作権、商標について&lt;/h2&gt;
 		Panoramio および Picasa Web Albums は Google Inc.の商標です&lt;br&gt;
 		Flickr は Yahoo! Inc.の商標です&lt;br&gt;
-		当ソフトウェアは上記サービスのAPIを利用しますが上記いずれの企業からの保証を受けているわけではありません。&lt;br&gt;
 		その他の商品名、製品名、会社名などは、一般に各社の. 商標または登録商標です&lt;br&gt;
-		上記のサービスが提供する写真の著作権はそれぞれの所有者の下にあります。&lt;br&gt;
+		当ソフトウェアは上記サービスのAPIを利用しておりますが、上記いずれの企業も保証責任を負いません。&lt;br&gt;
+		上記のサービスが提供する写真の著作権はそれぞれの所有者にあります。&lt;br&gt;
 	</string>
 
 </resources>
