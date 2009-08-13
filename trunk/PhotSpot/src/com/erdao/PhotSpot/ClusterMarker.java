@@ -83,6 +83,11 @@ public class ClusterMarker extends Overlay {
 		center_ = cluster_.getLocation();
 		photoItems_ = cluster_.getItems();
 		selItem_ = 0;
+		paint_ = new Paint();
+		paint_.setStyle(Paint.Style.STROKE);
+		paint_.setColor(Color.WHITE);
+		paint_.setTextSize(15);
+		paint_.setTypeface(Typeface.DEFAULT_BOLD);
 		/* check if we have selected item in cluster */
 		for(int i=0; i<photoItems_.size(); i++) {
 			if(photoItems_.get(i).isSelected()) {
@@ -91,11 +96,6 @@ public class ClusterMarker extends Overlay {
 			}
 		}
 		loadMarkerBitmap();
-		paint_ = new Paint();
-		paint_.setStyle(Paint.Style.STROKE);
-		paint_.setColor(Color.RED);
-		paint_.setTextSize(12);
-		paint_.setTypeface(Typeface.DEFAULT_BOLD);
 	}
 	
 	/* load&change bitmap for cluster marker */
@@ -106,16 +106,18 @@ public class ClusterMarker extends Overlay {
 			}else{
 				bmp_ = BitmapFactory.decodeResource(context_.getResources(), R.drawable.balloon_l);
 			}
-			bmpSize_ = new Point(48,40);
-			balloonGrid_ = new Point(43,37);
+			bmpSize_ = new Point(56,56);
+			balloonGrid_ = new Point(28,28);
+			paint_.setTextSize(16);
 		}else{
 			if( isSelected_ ){
 				bmp_ = BitmapFactory.decodeResource(context_.getResources(), R.drawable.balloon_s_s);
 			}else{
 				bmp_ = BitmapFactory.decodeResource(context_.getResources(), R.drawable.balloon_s);
 			}
-			bmpSize_ = new Point(38,32);
-			balloonGrid_ = new Point(34,30);
+			bmpSize_ = new Point(40,40);
+			balloonGrid_ = new Point(20,20);
+			paint_.setTextSize(14);
 		}
 	}
 
@@ -128,14 +130,14 @@ public class ClusterMarker extends Overlay {
 			return;
 		canvas.drawBitmap(bmp_, p.x-balloonGrid_.x, p.y-balloonGrid_.y, null);
 		String caption = String.valueOf(photoItems_.size());
-		int x = p.x-bmpSize_.x/2-(caption.length()-1)*2;
-		int y = p.y-bmpSize_.y/2+4;
+		int x = p.x-caption.length()*4;
+		int y = p.y+5;
 		canvas.drawText(caption,x,y,paint_);
 	}
 	
-	/* onTap */
+	/* onTouchEvent */
 	@Override
-	public boolean onTap(GeoPoint p, MapView mapView){
+    public boolean onTap(GeoPoint p, MapView mapView){
 		Projection pro = mapView.getProjection();
 		Point ct = pro.toPixels(center_, null);
 		Point pt = pro.toPixels(p, null);
