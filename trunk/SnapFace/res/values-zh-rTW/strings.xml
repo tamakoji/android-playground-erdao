@@ -14,21 +14,22 @@
      limitations under the License.
 -->
 <resources>
-	<string name="app_name">SnapFace人臉檢測相機軟件</string>
-	<string name="menu_Preferences">設置</string>
-	<string name="PreferencesDlgTitle">選擇人臉檢測力量</string>
-	<string name="SetPictureAsIntent_FailCreate">這個照片不能設置</string>
-	<string name="SDCardNotPresentAlert">SD卡沒插入了。請插入SD卡</string>
-	<string name="TapInstructionAlert">塔發現的人臉對拍照</string>
-	<string name="CapturingAlert">正在拍照...持有仍然</string>
-	<string name="SaveImageSuccessAlert">照片保存完了:\n</string>
-	<string name="SaveImageFailureAlert">照片保存失敗了</string>
+	<string name="app_name">SnapFace</string> 
+	<string name="menu_Preferences">設置</string> 
+	<string name="menu_AppMode">軟体模式</string> 
+	<string name="PreferencesDlgTitle">選擇人臉檢測程度</string> 
+	<string name="SetPictureAsIntent_FailCreate">這個照片不能設置</string> 
+	<string name="SDCardNotPresentAlert">沒插入SD卡。請插入SD卡</string> 
+	<string name="TapInstructionAlert">點擊檢測到的人臉以拍照</string> 
+	<string name="CapturingAlert">正在拍照...別抖動</string> 
+	<string name="SaveImageSuccessAlert">照片保存完了:\n</string> 
+	<string name="SaveImageFailureAlert">照片保存失敗</string> 
 
-	<string name="menu_SetAs">設置圖片</string>
-	<string name="menu_Delete">刪除圖片</string>
-	<string name="menu_Return">返回</string>
-	<string name="delete_alert">刪除這個圖片嗎？ </string>
-	<string name="delete_alert_ok">好</string>
+	<string name="menu_SetAs">設置圖片</string> 
+	<string name="menu_Delete">刪除圖片</string> 
+	<string name="menu_Return">返回</string> 
+	<string name="delete_alert">刪除該圖片嗎？ </string> 
+	<string name="delete_alert_ok">好</string> 
 	<string name="delete_alert_cancel">不</string>
 
 </resources>

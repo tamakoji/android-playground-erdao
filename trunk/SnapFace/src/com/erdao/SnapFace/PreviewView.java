@@ -57,7 +57,6 @@ class PreviewView extends SurfaceView implements SurfaceHolder.Callback, Preview
 	private SurfaceHolder surfacehldr_;
 	private Camera camera_;
 	private boolean lockPreview_ = true;
-	private int mode_;
 	private final int PREVIEW_WIDTH_FINE = 320;
 	private final int PREVIEW_HEIGHT_FINE = 240;
 	private final int PREVIEW_WIDTH_NORMAL = 240;
@@ -69,8 +68,11 @@ class PreviewView extends SurfaceView implements SurfaceHolder.Callback, Preview
 	private boolean takingPicture_ = false;
 	private Bitmap fdtmodeBitmap_ = null;
 	private boolean isSDCardPresent_ = false;
+	private int fdetLevel_ = 1;
+	private int appMode_ = 0;
 
 	/* Overlay Layer for additional graphics overlay */
+	private Bitmap overlayBitmap_;
 	private OverlayLayer layer_;
 
 	/* Face Detection */
@@ -90,10 +92,9 @@ class PreviewView extends SurfaceView implements SurfaceHolder.Callback, Preview
 	private int[] rgbs_;
 
 	/* Constructor */
-	public PreviewView(Context context, int mode) {
+	public PreviewView(Context context) {
 		super(context);
 		context_ = context;
-		mode_ = mode;
 		previewWidth_ = previewHeight_ = 1;
 		faces_ = new FaceResult[MAX_FACE];
 		for(int i=0;i<MAX_FACE;i++)
@@ -210,14 +211,38 @@ class PreviewView extends SurfaceView implements SurfaceHolder.Callback, Preview
 	}
 	
 	/* setResolution */
-	public void setResolution(int which){
-		if(mode_ == which)
+	public void setfdetLevel(int level, boolean silent){
+		if(fdetLevel_ == level)
 			return;
-		mode_ = which;
+		fdetLevel_ = level;
+		if(silent)
+			return;
 		releaseCamera();
 		setupCamera();
 		resetCameraSettings();
 		startPreview();
+	}
+
+	/* setAppMode */
+	public void setAppMode(int mode){
+		if(appMode_ == mode)
+			return;
+		appMode_ = mode;
+		switch(appMode_)
+		{
+			case 0:{
+				overlayBitmap_ = null;
+				break;
+			}
+			case 1:{
+				overlayBitmap_ = BitmapFactory.decodeResource(context_.getResources(), R.drawable.mask_vader);
+				break;
+			}
+//			case 2:{
+//				overlayBitmap_ = BitmapFactory.decodeResource(context_.getResources(), R.drawable.mask_laughingman);
+//				break;
+//			}
+		}
 	}
 
 	/* setupCamera */
@@ -247,7 +272,7 @@ class PreviewView extends SurfaceView implements SurfaceHolder.Callback, Preview
 		waitForFdetThreadComplete();
 		for(int i=0;i<MAX_FACE;i++)
 			faces_[i].clear();
-		if( mode_ == 0 ){
+		if( fdetLevel_ == 0 ){
 			prevSettingWidth_ = PREVIEW_WIDTH_FINE;
 			prevSettingHeight_ = PREVIEW_HEIGHT_FINE;
 			fdtmodeBitmap_ = BitmapFactory.decodeResource(context_.getResources(), R.drawable.fdt_fine);
@@ -303,9 +328,8 @@ class PreviewView extends SurfaceView implements SurfaceHolder.Callback, Preview
 			Bitmap fullbmp = BitmapFactory.decodeByteArray(_data, 0, _data.length);
 			int w = fullbmp.getWidth();
 			int h = fullbmp.getHeight();
-//			Log.i("DEBUG","image size: w="+w+",h="+h);
 			/* CAUTION
-			 * takepicture callback image differs not just aspect
+			 * takepicture callback image may differs not just aspect
 			 * but also the view angle. need to fix them.
 			 */
 			float orgRatio = (float)previewWidth_/previewHeight_;
@@ -336,6 +360,14 @@ class PreviewView extends SurfaceView implements SurfaceHolder.Callback, Preview
 				rect.bottom = rect.bottom > h ? h : rect.bottom;
 				/* crop */
 				Bitmap facebmp = Bitmap.createBitmap(fullbmp,rect.left,rect.top,rect.width(),rect.height());
+				if(appMode_!=0&&overlayBitmap_!=null){
+					//todo: merge bitmap
+					Canvas c = new Canvas(facebmp);
+		            Paint p = new Paint();
+		            float len = eyedist*3.5f;
+					PointF lt_mask = new PointF((facebmp.getWidth()-len)/2.0f,(facebmp.getHeight()-len)/2.0f);
+	        		c.drawBitmap(overlayBitmap_, null , new Rect((int)lt_mask.x, (int)lt_mask.y,(int)(lt_mask.x+len),(int)(lt_mask.y+len)),p);
+				}
 				/* Save bitmap to file */
 				Uri uri = SaveBitmapToFile(facebmp);
 				if(uri!=null){
@@ -433,8 +465,14 @@ class PreviewView extends SurfaceView implements SurfaceHolder.Callback, Preview
 					continue;
 				PointF midEyes = new PointF();
 				face.getMidPoint(midEyes);
-				PointF lt = new PointF(midEyes.x*xRatio-eyedist*1.5f,midEyes.y*yRatio-eyedist*1.5f);
-				canvas.drawRect((int)(lt.x),(int)(lt.y),(int)(lt.x+eyedist*3.0f),(int)(lt.y+eyedist*3.0f), paint_); 
+				if(appMode_==0){
+					PointF lt = new PointF(midEyes.x*xRatio-eyedist*1.5f,midEyes.y*yRatio-eyedist*1.5f);
+					canvas.drawRect((int)(lt.x),(int)(lt.y),(int)(lt.x+eyedist*3.0f),(int)(lt.y+eyedist*3.0f), paint_); 
+				}
+				else if(overlayBitmap_!=null){
+					PointF lt = new PointF(midEyes.x*xRatio-eyedist*1.75f,midEyes.y*yRatio-eyedist*1.75f);
+	        		canvas.drawBitmap(overlayBitmap_, null , new Rect((int)lt.x, (int)lt.y,(int)(lt.x+eyedist*3.5f),(int)(lt.y+eyedist*3.5f)),paint_);
+				}
 			}
 		}
 	};
