@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) 2009 Huan Erdao
+
+	 Licensed under the Apache License, Version 2.0 (the "License");
+	 you may not use this file except in compliance with the License.
+	 You may obtain a copy of the License at
+  
+		  http://www.apache.org/licenses/LICENSE-2.0
+  
+	 Unless required by applicable law or agreed to in writing, software
+	 distributed under the License is distributed on an "AS IS" BASIS,
+	 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+	 See the License for the specific language governing permissions and
+	 limitations under the License.
+-->
+<resources>
+	<string name="gmap_key_dbg">YOUR-GOOGLEMAP-KEY</string>
+	<string name="gmap_key_rel">YOUR-GOOGLEMAP-KEY</string>
+	<string name="flickr_key">YOUR-FLICKR-API-KEY</string>
+
+	<string name="app_name">PhotSpot</string>
+	<string name="menu_SearchPhotSpot">Search Spots</string>
+	<string name="menu_RefreshPhotSpot">Refresh Spots</string>
+	<string name="menu_SearchPlace">Search Place</string>
+	<string name="menu_MyLocation">My Location</string>
+	<string name="menu_MapMode">Map Mode</string>
+	<string name="menu_Preferences">Select Provider</string>
+	<string name="menu_ClearSuggest">Clear Search History</string>
+	<string name="menu_Help">Help</string>
+	<string name="menu_About">About</string>
+
+	<string name="QuerySearching">Searching ...</string>
+	<string name="httpErrorMsg">there is problem connecting to internet. please check your connection.</string>
+	<string name="search_label">Search Place</string>
+	<string name="search_hint">Enter Place Name</string>
+	<string name="search_invoke">App/Search/Invoke Search</string>
+
+	<string name="ReverseGeoResult">Did you mean</string>
+	<string name="ThumbActionDlg">Select Action</string>
+	<string name="ToastRevGeoCodeRun">Searching Place...</string>
+	<string name="ToastRevGeoCodeFail">No Place Found.</string>
+	<string name="PhotSpotPreference">PhotSpotPreference</string>
+	
+	<string name="PrefContentProvider">ContentProvider</string>
+	<string name="PrefMapMode">MapMode</string>
+
+	<string name="MapModeDlgTitle">Select Map Mode</string>
+	<string name="PreferencesDlgTitle">Select Contents Provider</string>
+	<string name="no_title">NO TITLE</string>
+	<string name="copyrightLabel">Photos are under the copyright of their owners.</string>
+
+	<string name="AboutDlgTitle">About PhotSpot</string>
+	<string name="AboutDlgOK">OK</string>
+	<string name="AboutDlgContent">
+		PhotSpot by Huan Erdao\n
+		Panoramio and Picasa Web Albums are trademarks of Google Inc.\n
+		Flickr is a trademark of Yahoo! Inc.\n
+		All other company and product names may be trademarks of the respective companies with which they are associate.\n
+		This product uses the APIs of above services but is not endorsed by above companies.\n
+		Photos provided by above services are under the copyright of their owners.
+	</string>
+
+	<string name="helplabel">PhotSpot Help</string>
+	<string name="helpcontent">
+		&lt;h2&gt;What is PhotSpot?&lt;/h2&gt;
+		PhotSpot will let you easily find out the popular spot at location of your choice.
+		It will retrieve public geotagged contents on the map screen and show them in clustered balloons.
+		the each number on the balloon shows the number of contents within the cluster, so that
+		the more the number it has, the more people take photos around that area.
+		&lt;h2&gt;Instruction&lt;/h2&gt;
+		&lt;ul&gt;
+			&lt;li&gt;&lt;b&gt;Initial Screen&lt;/b&gt;&lt;/li&gt;
+			Initial map screen will display the map of current location. Press "menu" button to proceed.
+			&lt;li&gt;&lt;b&gt;Search Spot&lt;/b&gt;&lt;/li&gt;
+			Selecting \"Search Spot\" will retrieve public content and result will be shown on the map.
+			&lt;li&gt;&lt;b&gt;Search Place&lt;/b&gt;&lt;/li&gt;
+			Selecting \"Search Place\" or pressing search button on your device will start search for certain place.
+			&lt;li&gt;&lt;b&gt;My Location&lt;/b&gt;&lt;/li&gt;
+			On initial screen it is turned on, if you wish to set map location to current location, select this.
+			It will require GPS to find your current location.
+			&lt;li&gt;&lt;b&gt;Map Mode&lt;/b&gt;&lt;/li&gt;
+			You can either select \"map\" mode or \"satellite\" mode (default:map mode)
+			&lt;li&gt;&lt;b&gt;Select Provider&lt;/b&gt;&lt;/li&gt;
+			You can select content provider for retrieving the geotagged content.(default:Panoramio)
+			Currently supported providers are:
+			&lt;ul&gt;
+				&lt;li&gt;&lt;b&gt;Panoramio&lt;/b&gt;&lt;/li&gt;
+				&lt;li&gt;&lt;b&gt;Picasa Web Album&lt;/b&gt;&lt;/li&gt;
+				&lt;li&gt;&lt;b&gt;Flickr&lt;/b&gt;&lt;/li&gt;
+			&lt;/ul&gt;
+			&lt;li&gt;&lt;b&gt;Help&lt;/b&gt;&lt;/li&gt;
+			Opens this content
+		&lt;/ul&gt;
+		&lt;h2&gt;Viewing the result&lt;/h2&gt;
+		&lt;ul&gt;
+			&lt;li&gt;&lt;b&gt;Opening gallery view&lt;/b&gt;&lt;/li&gt;
+			By tapping the balloon, Gallery View will show up. You can browse what is in there.
+			&lt;li&gt;&lt;b&gt;Double-Tap to zoom in the map&lt;/b&gt;&lt;/li&gt;
+			You can zoom in/out using zoom control, also you can zoom in by double-tapping the balloon.
+			It will zoom into the detail location of the content you are currently looking at.
+			&lt;li&gt;&lt;b&gt;Zoom in/out to discover more&lt;/b&gt;&lt;/li&gt;
+			Zooming in/out the map will merge/divide clusters according to the zoom level.
+			But content itself are based on result you get by \"Search Spot\" command.
+			If you need to refresh result, select \"Refresh Spot\" from the menu.
+			&lt;li&gt;&lt;b&gt;Long-pressing the thumbnail&lt;/b&gt;&lt;/li&gt;
+			By long-pressing the thumbnail, extra actions will pop-up&lt;br&gt;
+			&lt;li&gt;&lt;b&gt;Dismissing the Gallery View&lt;/b&gt;&lt;/li&gt;
+			By clicking the bar on the bottom of the Gallery View, you can dismiss the Gallery View.&lt;br&gt;
+		&lt;/ul&gt;
+		&lt;h2&gt;Tips&lt;/h2&gt;
+		&lt;ul&gt;
+			&lt;li&gt;&lt;b&gt;Selecting the content provider&lt;/b&gt;&lt;/li&gt;
+			Contents you can get differs by providers, Panoramio will provide beautiful scenery photo content
+			so it is useful to find landmarks and historical places.&lt;br&gt;
+			Picasa Web Album and Flickr can get more casual content, but it can retrieve more up-to-date content
+			compared to using Panoramio.
+		&lt;/ul&gt;
+		&lt;h2&gt;Legal Notices&lt;/h2&gt;
+		Panoramio and Picasa Web Albums are trademarks of Google Inc.&lt;br&gt;
+		Flickr is a trademark of Yahoo! Inc.&lt;br&gt;
+		All other company and product names may be trademarks of the respective companies with which they are associate.&lt;br&gt;
+		This product uses the APIs of above services but is not endorsed by above companies.&lt;br&gt;
+		Photos provided by above services are under the copyright of their owners.&lt;br&gt;
+	</string>
+
+</resources>
