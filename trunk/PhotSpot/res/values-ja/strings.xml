@@ -27,6 +27,7 @@
 
 	<string name="QuerySearching">検索中 ...</string>
 	<string name="httpErrorMsg">接続中に問題が発生しました。接続を確認してください。</string>
+	<string name="noResultErrorMsg">スポットが見つかりませんでした。</string>
 
 	<string name="MapModeDlgTitle">地図モードの選択</string>
 	<string name="PreferencesDlgTitle">サービスの選択</string>
@@ -35,6 +36,7 @@
 
 	<string name="ToastRevGeoCodeRun">場所を検索しています...</string>
 	<string name="ToastRevGeoCodeFail">場所が見つかりませんでした.</string>
+	<string name="ToastInstructionNav">Menuキーを押して始めます</string>
 	<string name="search_label">場所の検索</string>
 	<string name="search_hint">場所を入力してください</string>
 

@@ -27,12 +27,14 @@
 
 	<string name="QuerySearching">正在搜索中 ...</string>
 	<string name="httpErrorMsg">互联网连接有问题。请检查连接。</string>
+	<string name="noResultErrorMsg">这里没有热门拍照点</string>
 
 	<string name="MapModeDlgTitle">选择地图模式</string>
 	<string name="PreferencesDlgTitle">选择服务</string>
 	<string name="ReverseGeoResult">您是不是要找</string>
 	<string name="ThumbActionDlg">选择动作</string>
 
+	<string name="ToastInstructionNav">请按菜单按钮</string>
 	<string name="ToastRevGeoCodeRun">正在搜索中...</string>
 	<string name="ToastRevGeoCodeFail">我们无法找到该地方</string>
 	<string name="search_label">搜索地方</string>
