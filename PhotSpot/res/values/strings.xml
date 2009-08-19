@@ -16,7 +16,6 @@
 <resources>
 	<string name="gmap_key_dbg">YOUR-GOOGLEMAP-KEY</string>
 	<string name="gmap_key_rel">YOUR-GOOGLEMAP-KEY</string>
-	<string name="flickr_key">YOUR-FLICKR-API-KEY</string>
 
 	<string name="app_name">PhotSpot</string>
 	<string name="menu_SearchPhotSpot">Search Spots</string>
@@ -31,6 +30,7 @@
 
 	<string name="QuerySearching">Searching ...</string>
 	<string name="httpErrorMsg">there is problem connecting to internet. please check your connection.</string>
+	<string name="noResultErrorMsg">No Spots were found.</string>
 	<string name="search_label">Search Place</string>
 	<string name="search_hint">Enter Place Name</string>
 	<string name="search_invoke">App/Search/Invoke Search</string>
@@ -39,6 +39,7 @@
 	<string name="ThumbActionDlg">Select Action</string>
 	<string name="ToastRevGeoCodeRun">Searching Place...</string>
 	<string name="ToastRevGeoCodeFail">No Place Found.</string>
+	<string name="ToastInstructionNav">Press Menu Key To Start</string>
 	<string name="PhotSpotPreference">PhotSpotPreference</string>
 	
 	<string name="PrefContentProvider">ContentProvider</string>

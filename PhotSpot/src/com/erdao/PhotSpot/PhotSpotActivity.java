@@ -17,8 +17,11 @@
 package com.erdao.PhotSpot;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -35,6 +38,7 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.SearchRecentSuggestions;
@@ -157,6 +161,7 @@ public class PhotSpotActivity extends MapActivity {
 			doSearchQuery(queryIntent);
 		}
 		else{
+			Toast.makeText(this, R.string.ToastInstructionNav, Toast.LENGTH_LONG).show();
 			mylocationEnabled_ = true;
 		}
 	}
@@ -268,22 +273,30 @@ public class PhotSpotActivity extends MapActivity {
 		switch (item.getItemId()) {
 			case R.id.menu_FindSpots: {
 				showDialog(R.id.QuerySearchDlg);
+				uri = "http://photspotcloud.appspot.com/photspotcloud?nwlng="+nwlng+"&selat="+selat+"&nwlat="+nwlat+"&selng="+selng;
+				String debugstr = Locale.getDefault().getDisplayName()+","+Build.MODEL+","+Build.VERSION.RELEASE;
+				try {
+					debugstr = URLEncoder.encode(debugstr,"UTF-8");
+				} catch (UnsupportedEncodingException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				switch( contentProvider_ ){
 					case ContentProvider.Panoramio:
 					default:{
-						uri = "http://www.panoramio.com/map/get_panoramas.php?order=popularity&set=full&size=small&minx="+nwlng+"&miny="+selat+"&maxx="+selng+"&maxy="+nwlat+"&from=0&to=100";
+							uri += "&svc=panoramio";
 						break;
 					}
 					case ContentProvider.PicasaWeb:{
-						uri = "http://picasaweb.google.com/data/feed/api/all?alt=jsonc&kind=photo&bbox="+nwlng+","+selat+","+selng+","+nwlat+"&max-results=300";
+						uri += "&svc=picasa";
 						break;
 					}
 					case ContentProvider.Flickr:{
-						String api_key = this.getString(R.string.flickr_key);
-						uri = "http://api.flickr.com/services/rest/?method=flickr.photos.search&format=json&api_key="+api_key+"&extras=geo&min_taken_date=2005-1-1+00%3A00%3A00&bbox="+nwlng+","+selat+","+selng+","+nwlat;
+						uri += "&svc=flickr";
 						break;
 					}
 				}
+				uri += "&dbg="+debugstr;
 //				Log.i("DEBUG",uri);
 				getPhotoFeedTask_ = new GetPhotoFeedTask(this,contentProvider_);
 				getPhotoFeedTask_.execute(uri);
@@ -397,11 +410,19 @@ public class PhotSpotActivity extends MapActivity {
 	}
 	
 	/* onAsyncTaskComplete */
-	protected void onAsyncTaskComplete(String result){
+	protected void onAsyncTaskComplete(Integer code){
 		dismissDialog(R.id.QuerySearchDlg);
-		if(result==null){
+		if(code==PhotoFeedGetter.CODE_HTTPERROR){
 			AlertDialog.Builder ad = new AlertDialog.Builder(this);
 			ad.setMessage(R.string.httpErrorMsg);
+			ad.setPositiveButton(android.R.string.ok,null);
+			ad.setTitle(R.string.app_name);
+			ad.create();
+			ad.show();
+		}
+		else if(code==PhotoFeedGetter.CODE_NORESULT){
+			AlertDialog.Builder ad = new AlertDialog.Builder(this);
+			ad.setMessage(R.string.noResultErrorMsg);
 			ad.setPositiveButton(android.R.string.ok,null);
 			ad.setTitle(R.string.app_name);
 			ad.create();
@@ -436,14 +457,21 @@ public class PhotSpotActivity extends MapActivity {
 					for(int i=0;i<addresses_.size();i++){
 						Address addr = addresses_.get(i);
 						String place = "";
-						if(addr.getAddressLine(0)!=null)
-							place += (addr.getAddressLine(0)+", ");
-						else
-							place += (queryString+", ");
-						if(addr.getAdminArea()!=null)
-							place += (addr.getAdminArea()+", ");
-						if(addr.getCountryName()!=null)
-							place += addr.getCountryCode();
+						int linesize = addr.getMaxAddressLineIndex();
+						if(linesize!=-1){
+							for(int j=0;j<=linesize;j++){
+								place += (addr.getAddressLine(j)+", ");
+							}
+						}else{
+							if(addr.getFeatureName()!=null)
+								place += (addr.getFeatureName()+", ");
+							else
+								place += (queryString+", ");
+							if(addr.getAdminArea()!=null)
+								place += (addr.getAdminArea()+", ");
+							if(addr.getCountryName()!=null)
+								place += addr.getCountryName();
+						}
 						places[i] = place;
 					}
 					new AlertDialog.Builder(this)
@@ -470,7 +498,7 @@ public class PhotSpotActivity extends MapActivity {
 	}
 	
 	/* GetPhotoFeedTask - AsyncTask */
-	private class GetPhotoFeedTask extends AsyncTask<String, Integer, String> {
+	private class GetPhotoFeedTask extends AsyncTask<String, Integer, Integer> {
 		PhotoFeedGetter getter_;
 		Context context_;
 		/* constructor */
@@ -481,16 +509,16 @@ public class PhotSpotActivity extends MapActivity {
 
 		/* doInBackground */
 		@Override
-		protected String doInBackground(String... uris) {
+		protected Integer doInBackground(String... uris) {
 //			Log.i("DEBUG","doInBackground");
 			return getter_.getFeed(uris[0]);
 		}
 
 		/* onPostExecute */
 		@Override
-		protected void onPostExecute(String result) {
-			onAsyncTaskComplete(result);
-			if(result!=null){
+		protected void onPostExecute(Integer code) {
+			onAsyncTaskComplete(code);
+			if(code!=PhotoFeedGetter.CODE_HTTPERROR){
 				ArrayList<PhotoItem> photoItems = getter_.getPhotoItemList();
 //				Log.i("DEBUG","result size:"+photoItems.size());
 				mapOverlays_ = mapView_.getOverlays();
