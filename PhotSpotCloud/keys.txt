@@ -1,2 +1,0 @@
-		final String flickr_key = "8fcb4331127a2d6206b50447719a5939";
-		final String flickr_key = "YOUR-FLICKR-API-KEY";
