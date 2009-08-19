@@ -107,7 +107,6 @@ public class PhotSpotCloudServlet extends HttpServlet {
 	}
 	
 	private String createUrl() {
-		final String flickr_key = "YOUR-FLICKR-API-KEY";
 		String url = "";
 		switch(svcMode_){
 			default:
@@ -120,7 +119,7 @@ public class PhotSpotCloudServlet extends HttpServlet {
 				break;
 			}
 			case MODE_FLICKR:{
-				url = "http://api.flickr.com/services/rest/?method=flickr.photos.search&format=json&api_key="+flickr_key+"&per_page=300&extras=geo&min_taken_date=2005-1-1+00%3A00%3A00&bbox="+nwlng_+","+selat_+","+selng_+","+nwlat_;
+				url = "http://api.flickr.com/services/rest/?method=flickr.photos.search&format=json&api_key="+APIKeys.flickr_key+"&per_page=300&extras=geo&min_taken_date=2005-1-1+00%3A00%3A00&bbox="+nwlng_+","+selat_+","+selng_+","+nwlat_;
 				break;
 			}
 		}
