@@ -44,6 +44,7 @@ public class PhotSpotCloudServlet extends HttpServlet {
 	private String selat_;
 	private String selng_;
 	private String debugstr_;			// TODO: for debugging purpose
+	private String jsoncb_ = null;
 	private String author_p = "";
 	private double lat_p = 0.0;
 	private double lng_p = 0.0;
@@ -55,6 +56,7 @@ public class PhotSpotCloudServlet extends HttpServlet {
 		selng_ = req.getParameter("selng");
 		debugstr_ = req.getParameter("dbg");
 		service_ = req.getParameter("svc");
+		jsoncb_ = req.getParameter("callback");
 		if(service_.equals("picasa"))
 			svcMode_ = MODE_PICASA;
 		else if(service_.equals("panoramio"))
@@ -75,7 +77,10 @@ public class PhotSpotCloudServlet extends HttpServlet {
 		if( strbuilder != null ){
 			compactJson = compactJsonFeed(strbuilder.toString());
 			if(compactJson!=null){
-				resp.getWriter().println(compactJson);
+				if(jsoncb_!=null)
+					resp.getWriter().println(jsoncb_+"("+compactJson+")");
+				else
+					resp.getWriter().println(compactJson);
 			}
 		}
 	}
