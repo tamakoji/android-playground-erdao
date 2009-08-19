@@ -43,7 +43,7 @@ public class PhotSpotCloudServlet extends HttpServlet {
 	private String nwlng_;
 	private String selat_;
 	private String selng_;
-	private String debugstr_;
+	private String debugstr_;			// TODO: for debugging purpose
 	private String author_p = "";
 	private double lat_p = 0.0;
 	private double lng_p = 0.0;
@@ -200,6 +200,8 @@ public class PhotSpotCloudServlet extends HttpServlet {
 						break;
 					}
 				}
+				// eliminate same author with same location.
+				// TODO: do more intelligent filtering.
 				if(author.contentEquals(author_p)){
 					if((lat>(lat_p-0.0001))&&(lat<(lat_p+0.001))||(lng>(lng_p-0.001))&&(lng<(lng_p+0.001))){
 						continue;
@@ -233,6 +235,7 @@ public class PhotSpotCloudServlet extends HttpServlet {
 			compactJson = result.toString();
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
+			compactJson = "{\"count\":0}";
 			e.printStackTrace();
 		}
 		return compactJson;
