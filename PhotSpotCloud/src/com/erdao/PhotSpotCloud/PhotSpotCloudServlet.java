@@ -82,14 +82,14 @@ public class PhotSpotCloudServlet extends HttpServlet {
 	
 	private StringBuilder openFeed(URL url){
 		HttpURLConnection connection;
-    	StringBuilder strbuilder = null;
+		StringBuilder strbuilder = null;
 		BufferedReader reader;
 		try {
 			connection = (HttpURLConnection) url.openConnection();
-	        connection.setDoOutput(false);
-	        connection.setRequestMethod("GET");
-	        if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
-	    		InputStream is = connection.getInputStream();
+			connection.setDoOutput(false);
+			connection.setRequestMethod("GET");
+			if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+				InputStream is = connection.getInputStream();
 				InputStreamReader isr = new InputStreamReader(is,"UTF-8");
 				reader = new BufferedReader(isr,2048);
 				strbuilder = new StringBuilder();
@@ -98,7 +98,7 @@ public class PhotSpotCloudServlet extends HttpServlet {
 					strbuilder.append(line + "\n");
 				}
 				is.close();
-	        }
+			}
 		} catch (IOException e2) {
 			// TODO Auto-generated catch block
 			e2.printStackTrace();
