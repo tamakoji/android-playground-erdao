@@ -44,21 +44,26 @@ import org.json.JSONObject;
 
 import android.content.Context;
 
-/* Class for Getting the PhotoFeed */
-public class PhotoFeedGetter {
+/* Class for Getting the JsonFeed */
+public class JsonFeedGetter {
+	/* constant */
+	public static final int MODE_SPOTSEARCH = 0;
+	public static final int MODE_LOCALSEARCH = 1;
+
+	public final static int CODE_HTTPERROR	= -1;
+	public final static int CODE_NORESULT	= 0;
+	public final static int CODE_OK			= 1;
 	/* variables */
 	private HttpClient httpClient_;
 	private final int connection_Timeout = 10000;
 	private final Context context_;
-	int service_;
+	int mode_;
 	private ArrayList<PhotoItem> photoItems_ = new ArrayList<PhotoItem>();
-	public final static int CODE_HTTPERROR	= -1;
-	public final static int CODE_NORESULT	= 0;
-	public final static int CODE_OK			= 1;
+	private ArrayList<CharSequence> localSpots_ = new ArrayList<CharSequence>();
 
 	/* constructor */
-	public PhotoFeedGetter(int svc, Context context){
-		service_ = svc;
+	public JsonFeedGetter(int mode, Context context){
+		mode_ = mode;
 		context_ = context;
 		final HttpParams httpParams = new BasicHttpParams();
 		HttpProtocolParams.setVersion(httpParams, HttpVersion.HTTP_1_1);
@@ -118,28 +123,35 @@ public class PhotoFeedGetter {
 			long feedcount = jsonobj.getLong("count");
 			if(feedcount==0)
 				return CODE_NORESULT;
-			array = jsonobj.getJSONArray("photo");
+			if(mode_==MODE_SPOTSEARCH)
+				array = jsonobj.getJSONArray("photo");
+			else
+				array = jsonobj.getJSONArray("result");
 			int count = array.length();
 			for (int i = 0; i < count; i++) {
-				if( photoItems_.size() >= 100 )	// max = 100 items
-					break;
 				JSONObject obj = array.getJSONObject(i);
 				long id = 0;
 				String title = null, thumb = null, photoUrl = null, owner= null;
 				double lat = 0.0,lng = 0.0;
-				id = obj.getLong("id");
-				title = obj.getString("title");
-				thumb = obj.getString("thumbUrl");
-				photoUrl = obj.getString("photoUrl");
-				lat = obj.getDouble("lat");
-				lng = obj.getDouble("lng");
-				owner = obj.getString("author");
-				if(title == null || title.length() == 0) {
-					title = context_.getString(R.string.no_title);
+				if(mode_==MODE_SPOTSEARCH){
+					id = obj.getLong("id");
+					title = obj.getString("title");
+					thumb = obj.getString("thumbUrl");
+					photoUrl = obj.getString("photoUrl");
+					lat = obj.getDouble("lat");
+					lng = obj.getDouble("lng");
+					owner = obj.getString("author");
+					if(title == null || title.length() == 0) {
+						title = context_.getString(R.string.no_title);
+					}
+					PhotoItem item =
+						new PhotoItem(id,thumb,(int)(lat*1E6),(int)(lng*1E6),title,photoUrl,owner);
+					photoItems_.add(item);
 				}
-				PhotoItem item =
-					new PhotoItem(id,thumb,(int)(lat*1E6),(int)(lng*1E6),title,photoUrl,owner);
-				photoItems_.add(item);
+				else{
+					title = obj.getString("title");
+					localSpots_.add(title);
+				}
 			}
 			return CODE_OK; 
 		} catch (JSONException e) {
@@ -152,5 +164,10 @@ public class PhotoFeedGetter {
 	/* getPhotoItemList */
 	public ArrayList<PhotoItem> getPhotoItemList(){
 		return photoItems_;
+	}
+
+	/* getLocalSpotsList */
+	public ArrayList<CharSequence> getLocalSpotsList(){
+		return localSpots_;
 	}
 }

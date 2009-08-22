@@ -36,22 +36,25 @@
 	<string name="search_invoke">App/Search/Invoke Search</string>
 
 	<string name="ReverseGeoResult">Did you mean</string>
-	<string name="ThumbActionDlg">Select Action</string>
 	<string name="ToastRevGeoCodeRun">Searching Place...</string>
-	<string name="ToastRevGeoCodeFail">No Place Found.</string>
+	<string name="ToastRevGeoCodeFail">No place found.</string>
+	<string name="ToastLocalSearchFail">No Local listing found.</string>
 	<string name="ToastInstructionNav">Press Menu Key To Start</string>
 	<string name="PhotSpotPreference">PhotSpotPreference</string>
 	
 	<string name="PrefContentProvider">ContentProvider</string>
 	<string name="PrefMapMode">MapMode</string>
-
-	<string name="MapModeDlgTitle">Select Map Mode</string>
-	<string name="PreferencesDlgTitle">Select Contents Provider</string>
 	<string name="no_title">NO TITLE</string>
 	<string name="copyrightLabel">Photos are under the copyright of their owners.</string>
 
+	<string name="ThumbActionDlg">Select Action</string>
+	<string name="LocalSearchDlg">Select to google search</string>
+	<string name="MapModeDlgTitle">Select Map Mode</string>
+	<string name="PreferencesDlgTitle">Select Contents Provider</string>
+	<string name="Dlg_OK">OK</string>
+	<string name="Dlg_Close">Close</string>
+
 	<string name="AboutDlgTitle">About PhotSpot</string>
-	<string name="AboutDlgOK">OK</string>
 	<string name="AboutDlgContent">
 		PhotSpot by Huan Erdao\n
 		Panoramio and Picasa Web Albums are trademarks of Google Inc.\n

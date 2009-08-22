@@ -28,6 +28,8 @@
 	<string-array name="thumbnail_action">
         <item>打开用浏览器</item>
         <item>缩放地图</item>
+        <item>这儿有什么?</item>
+        <item>这儿怎么走?</item>
     </string-array>
 
 </resources>

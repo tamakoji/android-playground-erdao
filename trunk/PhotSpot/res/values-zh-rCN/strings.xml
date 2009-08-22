@@ -33,15 +33,18 @@
 	<string name="PreferencesDlgTitle">选择服务</string>
 	<string name="ReverseGeoResult">您是不是要找</string>
 	<string name="ThumbActionDlg">选择动作</string>
+	<string name="LocalSearchDlg">选择将开谷歌搜索</string>
+	<string name="Dlg_OK">OK</string>
+	<string name="Dlg_Close">关</string>
 
 	<string name="ToastInstructionNav">请按菜单按钮</string>
 	<string name="ToastRevGeoCodeRun">正在搜索中...</string>
 	<string name="ToastRevGeoCodeFail">我们无法找到该地方</string>
+	<string name="ToastLocalSearchFail">这儿没有本地信息</string>
 	<string name="search_label">搜索地方</string>
 	<string name="search_hint">请输入地方</string>
 
 	<string name="AboutDlgTitle">关于</string>
-	<string name="AboutDlgOK">OK</string>
 	<string name="AboutDlgContent">
 		搜索热门拍照点 by Huan Erdao\n
 		Panoramio和Picasa Web Albums是Google Inc.的商标\n

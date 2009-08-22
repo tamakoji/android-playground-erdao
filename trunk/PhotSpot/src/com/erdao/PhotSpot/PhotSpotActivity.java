@@ -273,7 +273,7 @@ public class PhotSpotActivity extends MapActivity {
 		switch (item.getItemId()) {
 			case R.id.menu_FindSpots: {
 				showDialog(R.id.QuerySearchDlg);
-				uri = "http://photspotcloud.appspot.com/photspotcloud?nwlng="+nwlng+"&selat="+selat+"&nwlat="+nwlat+"&selng="+selng;
+				uri = "http://photspotcloud.appspot.com/photspotcloud?q=searchspot&nwlng="+nwlng+"&selat="+selat+"&nwlat="+nwlat+"&selng="+selng;
 				String debugstr = Locale.getDefault().getDisplayName()+","+Build.MODEL+","+Build.VERSION.RELEASE;
 				try {
 					debugstr = URLEncoder.encode(debugstr,"UTF-8");
@@ -296,9 +296,9 @@ public class PhotSpotActivity extends MapActivity {
 						break;
 					}
 				}
-				uri += "&dbg="+debugstr;
+				uri += "&dbg="+debugstr+",android";
 //				Log.i("DEBUG",uri);
-				getPhotoFeedTask_ = new GetPhotoFeedTask(this,contentProvider_);
+				getPhotoFeedTask_ = new GetPhotoFeedTask(this);
 				getPhotoFeedTask_.execute(uri);
 				break;
 			}
@@ -392,7 +392,7 @@ public class PhotSpotActivity extends MapActivity {
 				.setIcon(R.drawable.icon)
 				.setTitle(R.string.AboutDlgTitle)
 				.setMessage(R.string.AboutDlgContent)
-				.setPositiveButton(R.string.AboutDlgOK, new DialogInterface.OnClickListener() {
+				.setPositiveButton(R.string.Dlg_OK, new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int whichButton) {
 					}
 				})
@@ -412,7 +412,7 @@ public class PhotSpotActivity extends MapActivity {
 	/* onAsyncTaskComplete */
 	protected void onAsyncTaskComplete(Integer code){
 		dismissDialog(R.id.QuerySearchDlg);
-		if(code==PhotoFeedGetter.CODE_HTTPERROR){
+		if(code==JsonFeedGetter.CODE_HTTPERROR){
 			AlertDialog.Builder ad = new AlertDialog.Builder(this);
 			ad.setMessage(R.string.httpErrorMsg);
 			ad.setPositiveButton(android.R.string.ok,null);
@@ -420,7 +420,7 @@ public class PhotSpotActivity extends MapActivity {
 			ad.create();
 			ad.show();
 		}
-		else if(code==PhotoFeedGetter.CODE_NORESULT){
+		else if(code==JsonFeedGetter.CODE_NORESULT){
 			AlertDialog.Builder ad = new AlertDialog.Builder(this);
 			ad.setMessage(R.string.noResultErrorMsg);
 			ad.setPositiveButton(android.R.string.ok,null);
@@ -499,12 +499,12 @@ public class PhotSpotActivity extends MapActivity {
 	
 	/* GetPhotoFeedTask - AsyncTask */
 	private class GetPhotoFeedTask extends AsyncTask<String, Integer, Integer> {
-		PhotoFeedGetter getter_;
+		JsonFeedGetter getter_;
 		Context context_;
 		/* constructor */
-		public GetPhotoFeedTask(Context c, int svc) {
+		public GetPhotoFeedTask(Context c) {
 			context_ = c;
-			getter_ = new PhotoFeedGetter(svc,context_);
+			getter_ = new JsonFeedGetter(JsonFeedGetter.MODE_SPOTSEARCH,context_);
 		}
 
 		/* doInBackground */
@@ -518,7 +518,7 @@ public class PhotSpotActivity extends MapActivity {
 		@Override
 		protected void onPostExecute(Integer code) {
 			onAsyncTaskComplete(code);
-			if(code!=PhotoFeedGetter.CODE_HTTPERROR){
+			if(code!=JsonFeedGetter.CODE_HTTPERROR){
 				ArrayList<PhotoItem> photoItems = getter_.getPhotoItemList();
 //				Log.i("DEBUG","result size:"+photoItems.size());
 				mapOverlays_ = mapView_.getOverlays();

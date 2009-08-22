@@ -33,15 +33,18 @@
 	<string name="PreferencesDlgTitle">サービスの選択</string>
 	<string name="ReverseGeoResult">もしかして</string>
 	<string name="ThumbActionDlg">アクションを選択</string>
+	<string name="LocalSearchDlg">選択してGoogle検索します</string>
+	<string name="Dlg_OK">OK</string>
+	<string name="Dlg_Close">閉じる</string>
 
 	<string name="ToastRevGeoCodeRun">場所を検索しています...</string>
 	<string name="ToastRevGeoCodeFail">場所が見つかりませんでした.</string>
+	<string name="ToastLocalSearchFail">ローカ情報がありませんでした.</string>
 	<string name="ToastInstructionNav">Menuキーを押して始めます</string>
 	<string name="search_label">場所の検索</string>
 	<string name="search_hint">場所を入力してください</string>
 
 	<string name="AboutDlgTitle">フォットスポットについて</string>
-	<string name="AboutDlgOK">OK</string>
 	<string name="AboutDlgContent">
 		フォットスポット by Huan Erdao\n
 		Panoramio および Picasa Web Albums は Google Inc.の商標です\n
