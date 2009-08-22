@@ -28,6 +28,8 @@
 	<string-array name="thumbnail_action">
         <item>Open with browser</item>
         <item>Zoom into the place</item>
+        <item>What's here?</item>
+        <item>Route to the place</item>
     </string-array>
 
 </resources>

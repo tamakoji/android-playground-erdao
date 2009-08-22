@@ -28,6 +28,8 @@
 	<string-array name="thumbnail_action">
         <item>打開用瀏覽器</item>
         <item>縮放地圖</item>
+        <item>這兒有什麼?</item>
+        <item>這兒怎麼走?</item>
     </string-array>
 
 </resources>

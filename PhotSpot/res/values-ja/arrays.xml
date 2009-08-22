@@ -28,6 +28,8 @@
 	<string-array name="thumbnail_action">
         <item>ブラウザで開く</item>
         <item>この場所へズーム</item>
+        <item>この場所について</item>
+        <item>この場所へのルート</item>
     </string-array>
 
 </resources>

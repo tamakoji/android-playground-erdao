@@ -16,7 +16,10 @@
 
 package com.erdao.PhotSpot;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Locale;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -31,6 +34,8 @@ import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Typeface;
 import android.net.Uri;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.view.View;
@@ -45,6 +50,7 @@ import android.widget.FrameLayout;
 import android.widget.Gallery;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
 
@@ -73,7 +79,13 @@ public class ClusterMarker extends Overlay {
 	private boolean isSelected_ = false;
 	private long tapCheckTime_;
 	private int selItem_;
+	private ArrayList<CharSequence> localSpots_;
 
+	private static final int EXT_ACTION_OPENBROWSER = 0;
+	private static final int EXT_ACTION_ZOOM_IN= 1;
+	private static final int EXT_ACTION_WHATS_HERE = 2;
+	private static final int EXT_ACTION_NAVTOPLACE = 3;
+	
 	/* constructor */
 	public ClusterMarker(GeoCluster cluster, MapView mapView, Context context, FrameLayout imageFrame) {
 		cluster_ = cluster;
@@ -200,10 +212,15 @@ public class ClusterMarker extends Overlay {
 			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 				new AlertDialog.Builder(context_)
 				.setTitle(R.string.ThumbActionDlg)
+				.setPositiveButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int whichButton) {
+						dialog.dismiss();
+					}
+				})
 				.setItems(R.array.thumbnail_action, new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int which) {
-						dialog.dismiss();
 						onThumbAction(which);
+						dialog.dismiss();
 					}
 				})
 			   .create()
@@ -216,20 +233,46 @@ public class ClusterMarker extends Overlay {
 	/* option tasks for long pressing thumbnail */
 	public void onThumbAction(int cmd){
 		switch(cmd){
-			case 0:{
+			case EXT_ACTION_OPENBROWSER:{
 				clearSelect();
 				String url = photoItems_.get(selItem_).getPhotoUrl();
-				//Log.i("DEBUG","Openurl="+url);
 				Intent i = new Intent(Intent.ACTION_VIEW,Uri.parse(url));
 				context_.startActivity(i);
 				break;
 			}
-			case 1:{
+			case EXT_ACTION_ZOOM_IN:{
 				MapController mapCtrl = mapView_.getController();
 				GeoPoint location = photoItems_.get(selItem_).getLocation();
 				Projection pro = mapView_.getProjection();
 				Point pt = pro.toPixels(location, null);
 				mapCtrl.zoomInFixing(pt.x, pt.y);
+				break;
+			}
+			case EXT_ACTION_WHATS_HERE:{
+				GeoPoint location = photoItems_.get(selItem_).getLocation();
+				double lat = location.getLatitudeE6()/1E6;
+				double lng = location.getLongitudeE6()/1E6;
+				String debugstr = Locale.getDefault().getDisplayName()+","+Build.MODEL+","+Build.VERSION.RELEASE;
+				try {
+					debugstr = URLEncoder.encode(debugstr,"UTF-8");
+				} catch (UnsupportedEncodingException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				String uri = "http://photspotcloud.appspot.com/photspotcloud?q=localsearch&latlng="+lat+","+lng+"&dbg="+debugstr;
+				LocalSearchTask task = new LocalSearchTask(context_);
+				task.execute(uri);
+				break;
+			}
+			case EXT_ACTION_NAVTOPLACE:{
+				GeoPoint location = photoItems_.get(selItem_).getLocation();
+				double lat = location.getLatitudeE6()/1E6;
+				double lng = location.getLongitudeE6()/1E6;
+				String url = "http://maps.google.com/maps?daddr="+lat+","+lng;
+				Intent i = new Intent(Intent.ACTION_VIEW,Uri.parse(url));
+				i.addCategory(Intent.CATEGORY_BROWSABLE);
+				i.setFlags(0x2800000);
+				context_.startActivity(i);
 				break;
 			}
 		}
@@ -362,4 +405,62 @@ public class ClusterMarker extends Overlay {
 		}
 	};
 
+	/* GetPhotoFeedTask - AsyncTask */
+	private class LocalSearchTask extends AsyncTask<String, Integer, Integer> {
+		JsonFeedGetter getter_;
+		Context context_;
+		/* constructor */
+		public LocalSearchTask(Context c) {
+			context_ = c;
+			getter_ = new JsonFeedGetter(JsonFeedGetter.MODE_LOCALSEARCH,context_);
+		}
+		/* doInBackground */
+		@Override
+		protected Integer doInBackground(String... uris) {
+			return getter_.getFeed(uris[0]);
+		}
+
+		/* onPostExecute */
+		@Override
+		protected void onPostExecute(Integer code) {
+			if(code!=JsonFeedGetter.CODE_HTTPERROR){
+				localSpots_ = getter_.getLocalSpotsList();
+				if(localSpots_.size()==0)
+					Toast.makeText(context_, R.string.ToastLocalSearchFail, Toast.LENGTH_SHORT);
+				else{
+					CharSequence[] arry = (CharSequence[])localSpots_.toArray(new CharSequence[0]);
+					new AlertDialog.Builder(context_)
+					.setTitle(R.string.LocalSearchDlg)
+					.setPositiveButton(R.string.Dlg_Close, new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int whichButton) {
+							dialog.dismiss();
+						}
+					})
+					.setItems(arry, new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int which) {
+							String place = (String) localSpots_.get(which);
+							try {
+								place = URLEncoder.encode(place,"UTF-8");
+							} catch (UnsupportedEncodingException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+							String url = "http://www.google.com/m/search?hl="+Locale.getDefault().getCountry()+"&q="+place;
+							Intent i = new Intent(Intent.ACTION_VIEW,Uri.parse(url));
+							context_.startActivity(i);
+							dialog.dismiss();
+						}
+					})
+				   .create()
+				   .show();
+				}
+			}
+		}
+	
+		/* onCancelled */
+		@Override
+		protected void onCancelled() {
+		}
+	};
+	
 }
