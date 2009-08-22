@@ -16,5 +16,6 @@
 package com.erdao.PhotSpotCloud;
 
 public class APIKeys {
-	public static final String flickr_key = "YOUR_FLICKR_API_KEY";
+	public static final String flickr_key		= "YOUR_FLICKR_API_KEY";
+	public static final String google_ajax_key	= "YOUR_GOOGLE_AJAX_API_KEY";
 }

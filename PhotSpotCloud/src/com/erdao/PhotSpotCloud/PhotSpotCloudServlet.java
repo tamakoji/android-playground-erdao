@@ -20,8 +20,11 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLDecoder;
+import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -33,56 +36,93 @@ import org.json.JSONObject;
 
 @SuppressWarnings("serial")
 public class PhotSpotCloudServlet extends HttpServlet {
-	private final int MODE_PANORAMIO = 0;
-	private final int MODE_PICASA = 1;
-	private final int MODE_FLICKR = 2;
-
-	private String service_;
-	private int svcMode_ = MODE_PANORAMIO;
-	private String nwlat_;
-	private String nwlng_;
-	private String selat_;
-	private String selng_;
-	private String debugstr_;			// TODO: for debugging purpose
-	private String jsoncb_ = null;
-	private String author_p = "";
-	private double lat_p = 0.0;
-	private double lng_p = 0.0;
+	private static final int MODE_PANORAMIO = 0;
+	private static final int MODE_PICASA = 1;
+	private static final int MODE_FLICKR = 2;
+	private static final int MODE_LOCALSEARCH = 3;
+	private int feedCount_ = 0;
+	private static final Logger log = Logger.getLogger(PhotSpotCloudServlet.class.getName());
 	
 	public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-		nwlat_ = req.getParameter("nwlat");
-		nwlng_ = req.getParameter("nwlng");
-		selat_ = req.getParameter("selat");
-		selng_ = req.getParameter("selng");
-		debugstr_ = req.getParameter("dbg");
-		service_ = req.getParameter("svc");
-		jsoncb_ = req.getParameter("callback");
-		if(service_.equals("picasa"))
-			svcMode_ = MODE_PICASA;
-		else if(service_.equals("panoramio"))
-			svcMode_ = MODE_PANORAMIO;
-		else
-			svcMode_ = MODE_FLICKR;
-		resp.setContentType("text/plain");
-		resp.setCharacterEncoding("utf-8");
+		URL requestUrl = null;
 		String compactJson = "";
 		StringBuilder strbuilder = null;
-		URL url = new URL(createUrl());
+		String lat = null;
+		String lng = null;
+		String service = null;
+		int svcMode = MODE_PANORAMIO;
+		String nwlat = null;
+		String nwlng = null;
+		String selat = null;
+		String selng = null;
+
+		// common params
+		String qMode = req.getParameter("q");
+		String debugstr = req.getParameter("dbg");
+		if(debugstr!=null){
+			try {
+				debugstr = URLDecoder.decode(debugstr,"UTF-8");
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+			}
+		}
+		String jsoncb = req.getParameter("callback");
+		// request branch
+		if(qMode==null||qMode.equals("searchspot")){
+			nwlat = req.getParameter("nwlat");
+			nwlng = req.getParameter("nwlng");
+			selat = req.getParameter("selat");
+			selng = req.getParameter("selng");
+			service = req.getParameter("svc");
+			if(nwlat==null||nwlng==null||selat==null||selng==null||service==null)
+				return;
+			if(service.equals("picasa"))
+				svcMode = MODE_PICASA;
+			else if(service.equals("panoramio"))
+				svcMode = MODE_PANORAMIO;
+			else
+				svcMode = MODE_FLICKR;
+			requestUrl = new URL(createPhotoFeedUrl(svcMode,nwlat,nwlng,selat,selng));
+		}
+		else if(qMode.equals("localsearch")){
+			String latlng = req.getParameter("latlng");
+			if(latlng==null)
+				return;
+			String token[] = latlng.split(",");
+			lat = token[0];
+			lng = token[1];
+			if(lat==null||lng==null)
+				return;
+			svcMode = MODE_LOCALSEARCH;
+			requestUrl = new URL("http://ajax.googleapis.com/ajax/services/search/local?v=1.0&q=*&key="+APIKeys.google_ajax_key+"&sll="+lat+","+lng);
+			log.info("requestUrl:"+requestUrl);
+		}
+		if(requestUrl==null)
+			return;
+		resp.setContentType("text/plain");
+		resp.setCharacterEncoding("utf-8");
 		final int MAX_RETRY = 2;
+		boolean openfeedSuccess = false;
 		for(int i = 0; i < MAX_RETRY; i++ ){
-			strbuilder = openFeed(url);
-			if(strbuilder!=null)
+			strbuilder = openFeed(requestUrl);
+			if(strbuilder!=null){
+				openfeedSuccess = true;
 				break;
+			}
 		}
 		if( strbuilder != null ){
-			compactJson = compactJsonFeed(strbuilder.toString());
+			compactJson = compactJsonFeed(svcMode,strbuilder.toString());
 			if(compactJson!=null){
-				if(jsoncb_!=null)
-					resp.getWriter().println(jsoncb_+"("+compactJson+")");
+				if(jsoncb!=null)
+					resp.getWriter().println(jsoncb+"("+compactJson+")");
 				else
 					resp.getWriter().println(compactJson);
 			}
 		}
+		if(svcMode==MODE_LOCALSEARCH)
+			log.info("localsearch from="+req.getRemoteAddr()+",user-agent="+req.getHeader("user-agent")+",latlng="+lat+","+lng+",dbg="+debugstr+",openfeed="+openfeedSuccess+",feedcount="+feedCount_);
+		else
+			log.info("spotsearch from="+req.getRemoteAddr()+",user-agent="+req.getHeader("user-agent")+",bbox="+nwlat+","+nwlng+","+selat+","+selng+",svc="+service+",dbg="+debugstr+",openfeed="+openfeedSuccess+",feedcount="+feedCount_);
 	}
 	
 	private StringBuilder openFeed(URL url){
@@ -111,20 +151,20 @@ public class PhotSpotCloudServlet extends HttpServlet {
 		return strbuilder;
 	}
 	
-	private String createUrl() {
+	private String createPhotoFeedUrl(int svcMode, String nwlat, String nwlng, String selat, String selng) {
 		String url = "";
-		switch(svcMode_){
+		switch(svcMode){
 			default:
 			case MODE_PANORAMIO:{
-				url = "http://www.panoramio.com/map/get_panoramas.php?order=popularity&set=full&size=small&minx="+nwlng_+"&miny="+selat_+"&maxx="+selng_+"&maxy="+nwlat_+"&from=0&to=100";
+				url = "http://www.panoramio.com/map/get_panoramas.php?order=popularity&set=full&size=small&minx="+nwlng+"&miny="+selat+"&maxx="+selng+"&maxy="+nwlat+"&from=0&to=100";
 				break;
 			}
 			case MODE_PICASA:{
-				url = "http://picasaweb.google.com/data/feed/api/all?alt=jsonc&kind=photo&bbox="+nwlng_+","+selat_+","+selng_+","+nwlat_+"&max-results=400";
+				url = "http://picasaweb.google.com/data/feed/api/all?alt=jsonc&kind=photo&bbox="+nwlng+","+selat+","+selng+","+nwlat+"&max-results=400";
 				break;
 			}
 			case MODE_FLICKR:{
-				url = "http://api.flickr.com/services/rest/?method=flickr.photos.search&format=json&api_key="+APIKeys.flickr_key+"&per_page=400&extras=geo&min_taken_date=2005-1-1+00%3A00%3A00&bbox="+nwlng_+","+selat_+","+selng_+","+nwlat_;
+				url = "http://api.flickr.com/services/rest/?method=flickr.photos.search&format=json&api_key="+APIKeys.flickr_key+"&per_page=400&extras=geo&min_taken_date=2005-1-1+00%3A00%3A00&bbox="+nwlng+","+selat+","+selng+","+nwlat;
 				break;
 			}
 		}
@@ -134,13 +174,13 @@ public class PhotSpotCloudServlet extends HttpServlet {
 	
 	/* compactJsonFeed - compact json feed
 	 */
-	private String compactJsonFeed(String fullJson){
+	private String compactJsonFeed(int svcMode, String fullJson){
 		String compactJson = "";
 		JSONObject jsonobj = null;
 		JSONArray compactArray = new JSONArray();
 		try {
 			JSONArray array = null;
-			switch( svcMode_ ){
+			switch( svcMode ){
 				default:
 				case MODE_PANORAMIO:{
 					jsonobj = new JSONObject(fullJson);
@@ -158,15 +198,23 @@ public class PhotSpotCloudServlet extends HttpServlet {
 					array = jsonobj.getJSONObject("photos").getJSONArray("photo");
 					break;
 				}
+				case MODE_LOCALSEARCH: {
+					jsonobj = new JSONObject(fullJson);
+					array = jsonobj.getJSONObject("responseData").getJSONArray("results");
+					break;
+				}
 			}
 			int total = array.length();
 			int compactArrayCount = 0;
+			String author_p = "";
+			double lat_p = 0.0;
+			double lng_p = 0.0;
 			for (int i = 0; i < total; i++) {
 				JSONObject obj = array.getJSONObject(i);
 				long id = 0;
 				String title = null, thumbUrl = null, photoUrl = null, author= null;
 				double lat = 0.0,lng = 0.0;
-				switch( svcMode_ ){
+				switch( svcMode ){
 					default:
 					case MODE_PANORAMIO:{
 						id = obj.getLong("photo_id");
@@ -204,39 +252,55 @@ public class PhotSpotCloudServlet extends HttpServlet {
 						author = obj.getString("owner"); // todo:get real user name..
 						break;
 					}
-				}
-				// eliminate same author with same location.
-				// TODO: do more intelligent filtering.
-				if(author.contentEquals(author_p)){
-					if((lat>(lat_p-0.0001))&&(lat<(lat_p+0.001))||(lng>(lng_p-0.001))&&(lng<(lng_p+0.001))){
-						continue;
+					case MODE_LOCALSEARCH: {
+						title = obj.getString("titleNoFormatting");
+						break;
 					}
 				}
-				JSONObject comactObj = new JSONObject();
-				comactObj.put("id", id);
-				comactObj.put("title", title);
-				comactObj.put("author", author);
-				comactObj.put("thumbUrl", thumbUrl);
-				comactObj.put("photoUrl", photoUrl);
-				comactObj.put("lat", lat);
-				comactObj.put("lng", lng);
-				compactArray.put(comactObj);
-				if(++compactArrayCount>100)
-					break;
-				author_p = author;
-				lat_p = lat;
-				lng_p = lng;
+				if(svcMode==MODE_LOCALSEARCH){
+					JSONObject comactObj = new JSONObject();
+					comactObj.put("title", title);
+					compactArray.put(comactObj);
+				}
+				else{
+					// eliminate same author with same location.
+					// TODO: do more intelligent filtering.
+					if(author.contentEquals(author_p)){
+						if((lat>(lat_p-0.0001))&&(lat<(lat_p+0.001))||(lng>(lng_p-0.001))&&(lng<(lng_p+0.001))){
+							continue;
+						}
+					}
+					JSONObject comactObj = new JSONObject();
+					comactObj.put("id", id);
+					comactObj.put("title", title);
+					comactObj.put("author", author);
+					comactObj.put("thumbUrl", thumbUrl);
+					comactObj.put("photoUrl", photoUrl);
+					comactObj.put("lat", lat);
+					comactObj.put("lng", lng);
+					compactArray.put(comactObj);
+					if(++compactArrayCount>100)
+						break;
+					author_p = author;
+					lat_p = lat;
+					lng_p = lng;
+				}
 			}
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			compactJson = "{\"count\":0}";
-			return compactJson;
+			feedCount_ = 0;
+			return null;
 		}
 		try {
 			JSONObject result = new JSONObject();
-			result.put("count", compactArray.length());
-			result.put("photo", compactArray);
+			feedCount_ = compactArray.length();
+			result.put("count", feedCount_);
+			if(svcMode==MODE_LOCALSEARCH)
+				result.put("result", compactArray);
+			else
+				result.put("photo", compactArray);
 			compactJson = result.toString();
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
