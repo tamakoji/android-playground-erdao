@@ -32,11 +32,19 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.DialogInterface.OnCancelListener;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.Point;
+import android.graphics.Rect;
+import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Criteria;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -63,6 +71,8 @@ import com.google.android.maps.Projection;
 /* Main Activity Class for PhotSpot */
 public class PhotSpotActivity extends MapActivity {
 
+	private PhotSpotActivity me_;
+
 	/* google map variables */
 	private MapView mapView_;
 	private MapController mapCtrl_;
@@ -71,6 +81,7 @@ public class PhotSpotActivity extends MapActivity {
 	private MyLocationOverlay myLocationOverlay_ = null;
 	private List<Overlay> mapOverlays_;
 	private boolean mylocationEnabled_;
+	private boolean mylocationSetFocus_;
 	private List<Address> addresses_;
 	
 	/* for mylocation thread */
@@ -92,6 +103,7 @@ public class PhotSpotActivity extends MapActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		me_ = this;
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.main);
 		resetViews();
@@ -152,17 +164,28 @@ public class PhotSpotActivity extends MapActivity {
 		mapView_.setSatellite(mapmode);
 		contentProvider_ = settings.getInt(getString(R.string.PrefContentProvider), 0);
 
-		/* get and process search query here */
-		final Intent queryIntent = getIntent();
-		final String queryAction = queryIntent.getAction();
-		if (Intent.ACTION_SEARCH.equals(queryAction)) {
+        /* get and process search query here */
+		final Intent intent = getIntent();
+		final String action = intent.getAction();
+		mylocationSetFocus_ = false;
+		if (Intent.ACTION_SEARCH.equals(action)) {
 			Toast.makeText(this, R.string.ToastRevGeoCodeRun, Toast.LENGTH_SHORT).show();
 			mylocationEnabled_ = false;
-			doSearchQuery(queryIntent);
+			doSearchQuery(intent);
+		}
+		if (Intent.ACTION_VIEW.equals(action)) {
+			mylocationEnabled_ = true;
+			mylocationSetFocus_ = false;
+			PhotoItem item = intent.getParcelableExtra(PhotoItem.EXT_PHOTOITEM);
+			mapCtrl_.animateTo(item.getLocation());
+	        final List<Overlay> overlays = mapView_.getOverlays();
+	        overlays.add(new ImageOverlay(this,item));
+			mapView_.invalidate();
 		}
 		else{
 			Toast.makeText(this, R.string.ToastInstructionNav, Toast.LENGTH_LONG).show();
 			mylocationEnabled_ = true;
+			mylocationSetFocus_ = true;
 		}
 	}
 
@@ -181,15 +204,18 @@ public class PhotSpotActivity extends MapActivity {
 //		Log.i("DEBUG", "onStart");
 		if(clusterer_ == null && mylocationEnabled_){
 			String provider = locationMgr_.getBestProvider(criteria_, true);
-			Location location = locationMgr_.getLastKnownLocation(provider);
-			if(location != null){
-				Double geoLat = location.getLatitude()*1E6;
-				Double geoLng = location.getLongitude()*1E6;
-				GeoPoint point = new GeoPoint(geoLat.intValue(), geoLng.intValue());
-				resetViews();
-				mapCtrl_.animateTo(point);
+			if(provider != null){
+				Location location = locationMgr_.getLastKnownLocation(provider);
+				if(location != null){
+					Double geoLat = location.getLatitude()*1E6;
+					Double geoLng = location.getLongitude()*1E6;
+					GeoPoint point = new GeoPoint(geoLat.intValue(), geoLng.intValue());
+					resetViews();
+					if(mylocationSetFocus_)
+						mapCtrl_.animateTo(point);
+				}
+				startListening();
 			}
-			startListening();
 		}
 	}
 
@@ -208,7 +234,7 @@ public class PhotSpotActivity extends MapActivity {
 			myLocationOverlay_ = new MyLocationOverlay(this, mapView_);
 		}
 		List<Overlay> mapOverlays = mapView_.getOverlays();
-		if(!mapOverlays.contains(mapOverlays)){
+		if(!mapOverlays.contains(myLocationOverlay_)){
 			mapOverlays.add(myLocationOverlay_);
 		}
 		myLocationOverlay_.enableMyLocation();
@@ -219,7 +245,8 @@ public class PhotSpotActivity extends MapActivity {
 						resetViews();
 					}
 				});
-				mapCtrl_.animateTo(myLocationOverlay_.getMyLocation());
+				if(mylocationSetFocus_)
+					mapCtrl_.animateTo(myLocationOverlay_.getMyLocation());
 			}
 		});
 	}
@@ -246,10 +273,12 @@ public class PhotSpotActivity extends MapActivity {
 		menu_SearchPlace.setIcon(R.drawable.ic_menu_searchplace);
 		MenuItem menu_MyLocation = menu.add(0,R.id.menu_MyLocation,0,R.string.menu_MyLocation);
 		menu_MyLocation.setIcon(R.drawable.ic_menu_mylocation);
-		MenuItem menu_MapMode = menu.add(0,R.id.menu_MapMode,0,R.string.menu_MapMode);
-		menu_MapMode.setIcon(android.R.drawable.ic_menu_mapmode);
+		MenuItem menu_Favorites = menu.add(0,R.id.menu_Favorites,0,R.string.menu_Favorites);
+		menu_Favorites.setIcon(android.R.drawable.star_big_on);
 		MenuItem menu_Preferences = menu.add(0,R.id.menu_Preferences,0,R.string.menu_Preferences);
 		menu_Preferences.setIcon(android.R.drawable.ic_menu_preferences);
+		MenuItem menu_MapMode = menu.add(0,R.id.menu_MapMode,0,R.string.menu_MapMode);
+		menu_MapMode.setIcon(android.R.drawable.ic_menu_mapmode);
 		MenuItem menu_ClearSuggest = menu.add(0,R.id.menu_ClearSuggest,0,R.string.menu_ClearSuggest);
 		menu_ClearSuggest.setIcon(android.R.drawable.ic_menu_close_clear_cancel);
 		MenuItem menu_Help = menu.add(0,R.id.menu_Help,0,R.string.menu_Help);
@@ -282,16 +311,16 @@ public class PhotSpotActivity extends MapActivity {
 					e.printStackTrace();
 				}
 				switch( contentProvider_ ){
-					case ContentProvider.Panoramio:
+					case TypesService.Panoramio:
 					default:{
 							uri += "&svc=panoramio";
 						break;
 					}
-					case ContentProvider.PicasaWeb:{
+					case TypesService.PicasaWeb:{
 						uri += "&svc=picasa";
 						break;
 					}
-					case ContentProvider.Flickr:{
+					case TypesService.Flickr:{
 						uri += "&svc=flickr";
 						break;
 					}
@@ -308,15 +337,21 @@ public class PhotSpotActivity extends MapActivity {
 			}
 			case R.id.menu_MyLocation:{
 				mylocationEnabled_ = true;
+				mylocationSetFocus_ = true;
 				startListening();
 				break;
 			}
-			case R.id.menu_MapMode:{
-				showDialog(R.id.MapModeDlg);
+			case R.id.menu_Favorites:{
+				Intent i = new Intent(this, FavoritesActivity.class);
+				startActivity(i);
 				break;
 			}
 			case R.id.menu_Preferences:{
 				showDialog(R.id.PreferencesDlg);
+				break;
+			}
+			case R.id.menu_MapMode:{
+				showDialog(R.id.MapModeDlg);
 				break;
 			}
 			case R.id.menu_ClearSuggest:{
@@ -400,6 +435,11 @@ public class PhotSpotActivity extends MapActivity {
 			}
 		}
 		return null;
+	}
+
+	/* Toast Message */
+	public void ToastMessage(int messageId, int duration){
+		Toast.makeText(this, messageId, duration).show();
 	}
 
 	/* clearSearchHistory */
@@ -527,7 +567,7 @@ public class PhotSpotActivity extends MapActivity {
 					mapOverlays_.add(myLocationOverlay_);
 				}
 				FrameLayout imageFrame = (FrameLayout)findViewById(R.id.imageframe);
-				clusterer_ = new GeoClusterer(context_, mapView_,imageFrame);
+				clusterer_ = new GeoClusterer(me_,context_, mapView_,imageFrame);
 				for(int i=0; i<photoItems.size(); i++) {
 					PhotoItem item = photoItems.get(i);
 					clusterer_.addItem(item);
@@ -543,5 +583,139 @@ public class PhotSpotActivity extends MapActivity {
 //			Log.i("DEBUG","onCancelled");
 		}
 	};
+
+    public class ImageOverlay extends Overlay {
+    	private final PhotoItem item_;
+    	private final Drawable frame_;
+    	private final Bitmap thumbnail_;
+    	private final Rect frmRect_;
+    	private final Rect thmRect_;
+    	private final Context context_;
+        private Paint paint_;
+        private String title_;
+        private String subtitle_;
+    	
+    	private static final int EXT_ACTION_OPENBROWSER		= 0;
+    	private static final int EXT_ACTION_NAVTOPLACE		= 1;
+
+		public ImageOverlay(Context c, PhotoItem item) { 
+			context_ = c;
+			item_ = item;
+	    	frame_ = c.getResources().getDrawable(R.drawable.balloon_fv);
+	    	thumbnail_ = item.getBitmap();
+	        final int frmWidth = frame_.getIntrinsicWidth();	// 75
+	        final int frmHeight = frame_.getIntrinsicHeight();	// 75
+	        frame_.setBounds(0, 0, frmWidth, frmHeight);
+	        int ltx = -(frmWidth/2);
+	        int lty = -frmHeight;
+	        frmRect_ = new Rect(ltx,lty,ltx+frmWidth,lty+frmHeight);
+	        int thmbWidth = 57;
+	        int thmbHeight= 57;
+	        ltx += 6;
+	        lty += 6;
+	        thmRect_ = new Rect(ltx,lty,ltx+thmbWidth,lty+thmbHeight);
+	        paint_ = new Paint();
+	        paint_.setAntiAlias(true);
+			paint_.setTextSize(14);
+			paint_.setTypeface(Typeface.DEFAULT_BOLD);
+			title_ = item_.getTitle();
+			if(title_.length()>26)
+				title_ = title_.substring(0, 25);
+			subtitle_ = item_.getAuthor();
+			if(subtitle_.length()>24)
+				subtitle_ = subtitle_.substring(0, 23);
+			subtitle_ = "by: "+subtitle_;
+		} 
+		/* onTouchEvent */
+		@Override
+	    public boolean onTap(GeoPoint p, MapView mapView){
+			new AlertDialog.Builder(context_)
+			.setTitle(R.string.ExtActionDlg)
+			.setPositiveButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int whichButton) {
+					dialog.dismiss();
+				}
+			})
+			.setItems(R.array.showmap_extaction, new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int which) {
+					onItemAction(which,item_);
+					dialog.dismiss();
+				}
+			})
+		   .create()
+		   .show();
+			return false;
+		}
+
+		@Override
+        public void draw(Canvas canvas, MapView mapView, boolean shadow) {
+            if (!shadow) {
+                Point p = new Point();
+                Projection proj = mapView.getProjection();
+                proj.toPixels(item_.getLocation(), p);
+                super.draw(canvas, mapView, shadow);
+                drawAt(canvas, frame_, p.x+frmRect_.left, p.y+frmRect_.top, shadow);
+                int l = p.x+thmRect_.left;
+                int t = p.y+thmRect_.top;
+                int r = l + thmRect_.width();
+                int b = t + thmRect_.height();
+                canvas.drawBitmap(thumbnail_, null , new Rect(l,t,r,b),paint_);
+    			paint_.setTextSize(14);
+    			paint_.setTypeface(Typeface.DEFAULT_BOLD);
+    			int x = r+5;
+                int y = (int) (t+paint_.getTextSize()+3);
+                canvas.drawText(title_,x,y,paint_);
+    			paint_.setTextSize(11);
+    			paint_.setTypeface(Typeface.DEFAULT);
+    			y += (int) (paint_.getTextSize()+4);
+        		canvas.drawText(subtitle_,x,y,paint_);
+        		if(myLocationOverlay_!=null){
+        			GeoPoint myLoc = myLocationOverlay_.getMyLocation();
+        			if(myLoc!=null){
+	        			GeoPoint ovLoc = item_.getLocation();
+	        			final int EARTH_RADIUS_KM = 6371;
+	        			double myLatRad = Math.toRadians(myLoc.getLatitudeE6()/(double)1E6);
+	        			double ovLatRad = Math.toRadians(ovLoc.getLatitudeE6()/(double)1E6);
+	        	        double deltaLonRad = Math.toRadians((ovLoc.getLongitudeE6()-myLoc.getLongitudeE6())/(double)1E6);
+	        	        double distKm = Math.acos(Math.sin(myLatRad) * Math.sin(ovLatRad) + Math.cos(myLatRad) * Math.cos(ovLatRad)
+	        	                * Math.cos(deltaLonRad))
+	        	                * EARTH_RADIUS_KM;
+	        			y += (int) (paint_.getTextSize()+4);
+	        			String distMsg = String.format(":%6.2f[km]", distKm);
+	            		canvas.drawText(getString(R.string.Distance)+distMsg,x,y,paint_);
+        			}
+        		}
+            }
+        }
+
+		/* option tasks for long pressing item */
+		public void onItemAction(int cmd, PhotoItem item){
+			switch(cmd){
+				case EXT_ACTION_OPENBROWSER:{
+					String url = item.getPhotoUrl();
+					Intent i = new Intent(Intent.ACTION_VIEW,Uri.parse(url));
+					context_.startActivity(i);
+					break;
+				}
+				case EXT_ACTION_NAVTOPLACE:{
+					GeoPoint location = item.getLocation();
+					double lat = location.getLatitudeE6()/1E6;
+					double lng = location.getLongitudeE6()/1E6;
+					GeoPoint gp_saddr = null;
+					if(myLocationOverlay_!=null)
+						gp_saddr = myLocationOverlay_.getMyLocation();
+					String url = "http://maps.google.com/maps?daddr="+lat+","+lng;
+					if(gp_saddr!=null){
+						url += ( "&saddr=" + gp_saddr.getLatitudeE6()/1E6 + "," + gp_saddr.getLongitudeE6()/1E6 );
+					}
+					Intent i = new Intent(Intent.ACTION_VIEW,Uri.parse(url));
+					i.addCategory(Intent.CATEGORY_BROWSABLE);
+					i.setFlags(0x2800000);
+					context_.startActivity(i);
+					break;
+				}
+			}
+		}
+    };
 
 }

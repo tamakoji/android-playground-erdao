@@ -17,7 +17,8 @@
 package com.erdao.PhotSpot;
 
 /* enum class for Content Provider */
-public class ContentProvider {
+public class TypesService {
+	private TypesService(){};
 	public final static int Panoramio = 0;
 	public final static int PicasaWeb = 1;
 	public final static int Flickr = 2;

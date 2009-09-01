@@ -17,6 +17,7 @@
 
 package com.erdao.PhotSpot;
 
+import android.graphics.Bitmap;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -25,35 +26,41 @@ import com.google.android.maps.GeoPoint;
 /* Class for PhotoItem */
 public class PhotoItem implements Parcelable {
 	
-	/* variables */
+    public static final String EXT_PHOTOITEM = "photoitem";
+
+    /* variables */
 	private long id_;
-	private GeoPoint location_;
 	private String title_;
+	private String author_;
 	private String thumbUrl_;
 	private String photoUrl_;
-	private String owner_;
+	private GeoPoint location_;
 	private int isSelected_;
+	private Bitmap bitmap_;
 	
 	/* constructor */
 	public PhotoItem(long id, String thumbUrl, int latitudeE6, int longitudeE6,
-			String title, String photoUrl, String owner) {
+			String title, String photoUrl, String author) {
+		id_ = id;
 		location_ = new GeoPoint(latitudeE6, longitudeE6);
 		title_ = title;
 		thumbUrl_ = thumbUrl;
 		photoUrl_ = photoUrl;
-		owner_ = owner;
+		author_ = author;
 		isSelected_ = 0;
+		bitmap_ = null;
 	}
 
 	/* constructor (Parcel) */
 	public PhotoItem(Parcel in) {
 		id_ = in.readLong();
-		location_ = new GeoPoint(in.readInt(), in.readInt());
 		title_ = in.readString();
+		author_ = in.readString();
 		thumbUrl_ = in.readString();
 		photoUrl_ = in.readString();
-		owner_ = in.readString();
-		isSelected_ = in.readInt();
+		location_ = new GeoPoint(in.readInt(), in.readInt());
+		isSelected_ = 0;
+		bitmap_ = Bitmap.CREATOR.createFromParcel(in);
 	}
 
 	/* describeContents */
@@ -66,6 +73,11 @@ public class PhotoItem implements Parcelable {
 		return id_;
 	}
 	
+	/* setId */
+	public void setId(long id) {
+		id_ = id;;
+	}
+
 	/* getLocation */
 	public GeoPoint getLocation() {
 		return location_;
@@ -91,9 +103,9 @@ public class PhotoItem implements Parcelable {
 		return title_;
 	}
 	
-	/* getOwner */
-	public String getOwner() {
-		return owner_;	   
+	/* getauthor */
+	public String getAuthor() {
+		return author_;	   
 	}
 
 	/* getThumbUrl */
@@ -104,6 +116,16 @@ public class PhotoItem implements Parcelable {
 	/* getPhotoUrl */
 	public String getPhotoUrl() {
 		return photoUrl_;
+	}
+
+	/* getBitmap */
+	public Bitmap getBitmap() {
+		return bitmap_;
+	}
+
+	/* setBitmap */
+	public void setBitmap(Bitmap bmp) {
+		bitmap_ = bmp;
 	}
 
 	/* Parcelable.Creator */
@@ -120,12 +142,13 @@ public class PhotoItem implements Parcelable {
 	/* writeToParcel */
 	public void writeToParcel(Parcel parcel, int flags) {
 		parcel.writeLong(id_);
-		parcel.writeInt(location_.getLatitudeE6());
-		parcel.writeInt(location_.getLongitudeE6());
 		parcel.writeString(title_);
+		parcel.writeString(author_);
 		parcel.writeString(thumbUrl_);
 		parcel.writeString(photoUrl_);
-		parcel.writeString(owner_);
+		parcel.writeInt(location_.getLatitudeE6());
+		parcel.writeInt(location_.getLongitudeE6());
+		bitmap_.writeToParcel(parcel, flags);
    }
 
 }

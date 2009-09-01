@@ -19,17 +19,24 @@
         <item>衛星</item>
     </string-array>
 
-	<string-array name="select_service">
-        <item>Panoramio</item>
-        <item>Picasa Web Albums</item>
-        <item>Flickr</item>
-    </string-array>
-
-	<string-array name="thumbnail_action">
+	<string-array name="gallery_extaction">
+        <item>加入收藏夾</item>
         <item>打開用瀏覽器</item>
-        <item>縮放地圖</item>
         <item>這兒有什麼?</item>
         <item>這兒怎麼走?</item>
+    </string-array>
+
+	<string-array name="favorite_extaction">
+		<item>看在地图上</item>
+		<item>这儿怎么走?</item>
+		<item>打开用浏览器く</item>
+        <item>標籤</item>
+		<item>刪除收藏夾</item>
+	</string-array>
+
+	<string-array name="showmap_extaction">
+        <item>打開用瀏覽器</item>
+		<item>这儿怎么走?</item>
     </string-array>
 
 </resources>

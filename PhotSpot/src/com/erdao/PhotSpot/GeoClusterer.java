@@ -54,12 +54,14 @@ public class GeoClusterer {
 	private GeoBounds checkBound_;
 	private boolean isMoving_;
 	private Handler handler_;
-
+	private PhotSpotActivity activityHndl_;
+	
 	/* constructor */
-	public GeoClusterer(Context context, MapView mapView, FrameLayout imageFrame){
+	public GeoClusterer(PhotSpotActivity activityHndl, Context context, MapView mapView, FrameLayout imageFrame){
 		context_ = context;
 		mapView_ = mapView;
 		imageFrame_ = imageFrame;
+		activityHndl_ = activityHndl;
 		handler_ = new Handler();
 	}
 
@@ -387,7 +389,7 @@ public class GeoClusterer {
 				return;
 			}
 			if(clusterMarker_ == null) {
-				clusterMarker_ = new ClusterMarker(this,mapView_,context_,imageFrame_);
+				clusterMarker_ = new ClusterMarker(activityHndl_,this,mapView_,context_,imageFrame_);
 				List<Overlay> mapOverlays = mapView_.getOverlays();
 				mapOverlays.add(clusterMarker_);
 			}

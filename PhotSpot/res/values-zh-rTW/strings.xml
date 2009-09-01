@@ -14,102 +14,117 @@
 	 limitations under the License.
 -->
 <resources>
-	<string name="app_name">搜索熱門拍照點</string> 
-	<string name="menu_SearchPhotSpot">搜索熱門拍照點</string> 
-	<string name="menu_RefreshPhotSpot">刷新熱門拍照點</string> 
-	<string name="menu_SearchPlace">搜索地方</string> 
-	<string name="menu_MyLocation">當前位置</string> 
-	<string name="menu_MapMode">地圖模式</string> 
-	<string name="menu_Preferences">設置</string> 
-	<string name="menu_ClearSuggest">清除搜索歷史記錄</string> 
-	<string name="menu_Help">幫助</string> 
-	<string name="menu_About">關於</string> 
+	<string name="app_name">熱門拍照點</string>
+	<string name="help_title">幫助</string>
+	<string name="favorite_title">收藏夾</string>
 
-	<string name="QuerySearching">正在搜索中...</string> 
-	<string name="httpErrorMsg">互聯網連接有問題。請檢查連接。 </string> 
+	<string name="menu_SearchPhotSpot">搜索熱門拍照點</string>
+	<string name="menu_RefreshPhotSpot">刷新熱門拍照點</string>
+	<string name="menu_SearchPlace">搜索地方</string>
+	<string name="menu_MyLocation">當前位置</string>
+	<string name="menu_Favorites">收藏夾</string>
+	<string name="menu_Preferences">設置</string>
+	<string name="menu_MapMode">地圖模式</string>
+	<string name="menu_ClearSuggest">清除搜索歷史記錄</string>
+	<string name="menu_Help">幫助</string>
+	<string name="menu_About">關於</string>
+	<string name="menu_Revert">返回</string>
+	<string name="menu_DeleteAll">全部刪除</string>
+
+	<string name="QuerySearching">正在搜索中...</string>
+	<string name="httpErrorMsg">互聯網連接有問題。請檢查連接。 </string>
 	<string name="noResultErrorMsg">這裡沒有熱門拍照點</string>
-
-	<string name="MapModeDlgTitle">選擇地圖模式</string> 
-	<string name="PreferencesDlgTitle">選擇服務</string> 
-	<string name="ReverseGeoResult">您是不是要找</string> 
-	<string name="ThumbActionDlg">選擇動作</string> 
-	<string name="LocalSearchDlg">選擇將開谷歌搜索</string>
-
+	<string name="search_label">搜索地方</string>
+	<string name="search_hint">請輸入地方</string>
+	<string name="ReverseGeoResult">您是不是要找</string>
+	<string name="ToastRevGeoCodeRun">正在搜索中...</string>
+	<string name="ToastRevGeoCodeFail">我們無法找到該地方</string>
+	<string name="ToastLocalSearchFail">這兒沒有本地信息</string>
 	<string name="ToastInstructionNav">請按菜單按鈕</string>
-	<string name="ToastRevGeoCodeRun">正在搜索中...</string> 
-	<string name="ToastRevGeoCodeFail">我們無法找到該地方</string> 
-	<string name="ToastLocalSearchFail">這兒沒有本地信息.</string>
-	<string name="search_label">搜索地方</string> 
-	<string name="search_hint">請輸入地方</string> 
+	<string name="ToastSavedFavorites">加入收藏夾完了</string>
+	<string name="ToastRemovedFavorites">刪除了該項目</string>
+	<string name="ToastAlreadyExistFavorites">該項目已經在既收藏夾</string>
+	<string name="ToastFavoritesFull">收藏夾是满的</string>
+	<string name="noFavorites">沒有項目</string>
+	<string name="Distance">近似距離</string>
+	<string name="FavFooter">照片的位置也许不準確。 \n提供的照片和版權屬於他們各自的所有者\n</string>
+	<string name="DeleteAllConfirm">刪除全部項目在收藏夾</string>
+
+	<string name="MapModeDlgTitle">選擇地圖模式</string>
+	<string name="PreferencesDlgTitle">選擇服務</string>
+	<string name="ExtActionDlg">選擇動作</string>
+	<string name="LocalSearchDlg">選擇將開谷歌搜索</string>
 	<string name="Dlg_OK">OK</string>
 	<string name="Dlg_Close">關</string>
 
-	<string name="AboutDlgTitle">關於</string> 
-	<string name="AboutDlgContent"> 
-		搜索熱門拍照點by Huan Erdao\n 
+	<string name="AboutDlgTitle">關於</string>
+	<string name="AboutDlgContent">
+		热门拍照点 by Huan Erdao\n 
 		Panoramio和Picasa Web Albums是Google Inc.的商標\n 
-		Flickr是Yahoo Inc.的商標\n 
+		Flickr是Yahoo Inc.的商标\n 
 		該軟体採用上述服務的API，但是上述公司不保證該軟体功能。 
 		所有其它品牌和產品名稱都是各自公司的商標、註冊商標或者服務標誌。 \n 
 		此服務提供的照片和版權屬於他們各自的所有者。 
-	</string> 
+		照片的位置也许不準確。
+	</string>
 	<string name="copyrightLabel">提供的照片和版權屬於他們各自的所有者</string>
 
-	<string name="helplabel">幫助</string> 
-	<string name="helpcontent"> 
-		&lt;h2&gt;”搜索熱門拍照點”是什麼?&lt;/h2&gt; 
-			”搜索熱門拍照點”讓您搜索任何地方的熱門拍照點。 
-			軟体將搜索公開照片和全球定位系統數據,然後顯示“群集氣球”在地圖上。
-			每個氣球的數字顯示了照片數量。所以氣球的數字越大，該位置越熱門。 
-		&lt;h2&gt;操作方法&lt;/h2&gt; 
-		&lt;ul&gt; 
-			&lt;li&gt;&lt;b&gt;初始畫面&lt;/b&gt;&lt;/li&gt; 
-				最初屏幕顯示當前位置地圖。請按菜單按鈕。 
-			&lt;li&gt;&lt;b&gt;搜索搜索熱門拍照點&lt;/b&gt;&lt;/li&gt; 
-				將開始搜索公開照片。完成後，顯示在地圖上。 
-			&lt;li&gt;&lt;b&gt;搜索地方&lt;/b&gt;&lt;/li&gt; 
-				選擇此菜單或按下搜索鍵將開始尋找任何地點。 
-			&lt;li&gt;&lt;b&gt;現在位置&lt;/b&gt;&lt;/li&gt; 
-				將返回到您當前的位置。 
-			&lt;li&gt;&lt;b&gt;地圖模式&lt;/b&gt;&lt;/li&gt; 
-				選擇地圖模式“地圖”或“衛星” 
-			&lt;li&gt;&lt;b&gt;設定&lt;/b&gt;&lt;/li&gt; 
-				您可以選擇照片提供商（默認： Panoramio ）&lt;br&gt; 
-				目前支持的供應商是： 
-				&lt;ul&gt; 
-					&lt;li&gt;&lt;b&gt;Panoramio&lt;/b&gt;&lt;/li&gt; 
-					&lt;li&gt;&lt;b&gt;Picasa Web Album&lt;/b&gt;&lt;/li&gt; 
-					&lt;li&gt;&lt;b&gt;Flickr&lt;/b&gt;&lt;/li&gt; 
-				&lt;/ul&gt; 
-			&lt;li&gt;&lt;b&gt;幫助&lt;/b&gt;&lt;/li&gt; 
-				打開這個網頁
-		&lt;/ul&gt; 
-		&lt;h2&gt;查看結果&lt;/h2&gt; 
-		&lt;ul&gt; 
-			&lt;li&gt;&lt;b&gt;點擊氣球看到內容&lt;/b&gt;&lt;/li&gt; 
-				點擊氣球，顯示圖像畫廊。您可以瀏覽該處的照片。 
-			&lt;li&gt;&lt;b&gt;雙擊縮小地圖&lt;/b&gt;&lt;/li&gt; 
-				雙擊氣球您可以縮放地圖。您也可以用屏幕右下角的按鈕。 
-			&lt;li&gt;&lt;b&gt;放大,縮小&lt;/b&gt;&lt;/li&gt; 
-				放大/縮小地圖將根據縮放級別合併/分離“群集氣球”。 
-				但是，照片不刷新。如果您需要刷新照片， 
-				選擇“刷新熱門拍照點”從菜單中。 &lt;br&gt; 
-			&lt;li&gt;&lt;b&gt;按住縮略圖&lt;/b&gt;&lt;/li&gt; 
-				按住縮略圖，額外的操作會彈出&lt;br&gt; 
-			&lt;li&gt;&lt;b&gt;要隱藏畫廊&lt;/b&gt;&lt;/li&gt; 
-				點擊圖像畫廊底部，將關閉圖像畫廊。 &lt;br&gt; 
-		&lt;/ul&gt; 
-		&lt;h2&gt;秘訣&lt;/h2&gt; 
-		&lt;ul&gt; 
-			&lt;li&gt;&lt;b&gt;選擇服務&lt;/b&gt;&lt;/li&gt; 
-				各服務提供的照片類型不一樣， Panoramio提供優美的風景照片，以便找到名勝歷史的地方。 
-				Picasa Web Album和Flickr包含更多類型的內容，相比Panoramio，它可以檢索到更多更新的內容。 
-		&lt;/ul&gt; 
-		&lt;h2&gt;版權，商標&lt;/h2&gt; 
-			Panoramio和Picasa Web Albums是Google Inc.的商標&lt;br&gt; 
-			Flickr是Yahoo Inc.的商標&lt;br&gt; 
-			該軟体採用上述服務的API，但是上述公司對該軟体不保證。 &lt;br&gt; 
-			所有其它品牌和產品名稱都是各自公司的商標、註冊商標或者服務標誌。 &lt;br&gt;
-			此服務提供的照片和版權屬於他們各自的所有者。 &lt;br&gt; 
-	</string> 
+	<string name="helpcontent">
+		&lt;h2&gt;”熱門拍照點”是什麼?&lt;/h2&gt;
+		”熱門拍照點”讓您搜索任何地方的熱門拍照點。 
+		軟体將搜索公開照片和全球定位系統數據,然後顯示“群集氣球”在地圖上。每個氣球的數字顯示了照片數量。 
+		所以氣球的數字越大，該位置越熱門。 
+		&lt;h2&gt;操作方法&lt;/h2&gt;
+		&lt;ul&gt;
+		&lt;li&gt;&lt;b&gt;初始畫面&lt;/b&gt;&lt;/li&gt;
+		最初屏幕顯示當前位置地圖。請按菜單按鈕。 
+		&lt;li&gt;&lt;b&gt;搜索熱門拍照點&lt;/b&gt;&lt;/li&gt;
+		將開始搜索公開照片。完成後，顯示在地圖上。 
+		&lt;li&gt;&lt;b&gt;搜索地方&lt;/b&gt;&lt;/li&gt;
+		選擇此菜單或按下搜索鍵將開始尋找任何地點。 
+		&lt;li&gt;&lt;b&gt;現在位置&lt;/b&gt;&lt;/li&gt;
+		將返回到您當前的位置。 
+		&lt;li&gt;&lt;b&gt;地圖模式&lt;/b&gt;&lt;/li&gt;
+		選擇地圖模式“地圖”或“衛星” 
+		&lt;li&gt;&lt;b&gt;設定&lt;/b&gt;&lt;/li&gt;
+		您可以選擇照片提供商（默認： Panoramio ）&lt;br&gt;
+		目前支持的供应商是： 
+		&lt;ul&gt;
+		&lt;li&gt;&lt;b&gt;Panoramio&lt;/b&gt;&lt;/li&gt;
+		&lt;li&gt;&lt;b&gt;Picasa Web Album&lt;/b&gt;&lt;/li&gt;
+		&lt;li&gt;&lt;b&gt;Flickr&lt;/b&gt;&lt;/li&gt;
+		&lt;/ul&gt;
+		&lt;li&gt;&lt;b&gt;帮助&lt;/b&gt;&lt;/li&gt;
+		打开这个网页 
+		&lt;/ul&gt;
+		&lt;h2&gt;查看结果&lt;/h2&gt;
+		&lt;ul&gt;
+		&lt;li&gt;&lt;b&gt;點擊氣球看到內容&lt;/b&gt;&lt;/li&gt;
+		点击气球，显示图像画廊。您可以瀏覽該處的照片。 
+		&lt;li&gt;&lt;b&gt;雙擊縮小地圖&lt;/b&gt;&lt;/li&gt;
+		双击气球您可以缩放地图。您也可以用屏幕右下角的按鈕。 
+		&lt;li&gt;&lt;b&gt;放大,縮小&lt;/b&gt;&lt;/li&gt;
+		放大/縮小地圖將根據縮放級別合併/分離“群集氣球”。 
+		但是，照片不刷新。如果您需要刷新照片， 
+		選擇“刷新熱門拍照點”從菜單中。 &lt;br&gt;
+		&lt;li&gt;&lt;b&gt;按住縮略圖&lt;/b&gt;&lt;/li&gt;
+		按住縮略圖，額外的操作會彈出&lt;br&gt;
+		&lt;li&gt;&lt;b&gt;要隱藏畫廊&lt;/b&gt;&lt;/li&gt;
+		點擊圖像畫廊底部，將關閉圖像畫廊。 &lt;br&gt;
+		&lt;/ul&gt;
+		&lt;h2&gt;秘诀&lt;/h2&gt;
+		&lt;ul&gt;
+		&lt;li&gt;&lt;b&gt;選擇服務&lt;/b&gt;&lt;/li&gt;
+		各服務提供的照片類型不一樣， Panoramio提供優美的風景照片，以便找到名勝歷史的地方。 
+		Picasa Web Album和Flickr包含更多類型的內容，相比Panoramio，它可以檢索到更多更新的內容。 
+		&lt;/ul&gt;
+		&lt;h2&gt;版权，商标&lt;/h2&gt;
+		Panoramio和Picasa Web Albums是Google Inc.的商標&lt;br&gt;
+		Flickr是Yahoo Inc.的商标&lt;br&gt;
+		該軟体採用上述服務的API，但是上述公司對該軟体不保證。 &lt;br&gt;
+		所有其它品牌和產品名稱都是各自公司的商標、註冊商標或者服務標誌。 &lt;br&gt;
+		此服務提供的照片和版權屬於他們各自的所有者。 &lt;br&gt;
+		照片的位置也许不準確。 &lt;br&gt;
+	</string>
+
 </resources>
