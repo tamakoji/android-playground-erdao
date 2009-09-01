@@ -131,21 +131,21 @@ public class JsonFeedGetter {
 			for (int i = 0; i < count; i++) {
 				JSONObject obj = array.getJSONObject(i);
 				long id = 0;
-				String title = null, thumb = null, photoUrl = null, owner= null;
+				String title = null, thumbUrl = null, photoUrl = null, author= null;
 				double lat = 0.0,lng = 0.0;
 				if(mode_==MODE_SPOTSEARCH){
 					id = obj.getLong("id");
 					title = obj.getString("title");
-					thumb = obj.getString("thumbUrl");
+					thumbUrl = obj.getString("thumbUrl");
 					photoUrl = obj.getString("photoUrl");
 					lat = obj.getDouble("lat");
 					lng = obj.getDouble("lng");
-					owner = obj.getString("author");
+					author = obj.getString("author");
 					if(title == null || title.length() == 0) {
 						title = context_.getString(R.string.no_title);
 					}
 					PhotoItem item =
-						new PhotoItem(id,thumb,(int)(lat*1E6),(int)(lng*1E6),title,photoUrl,owner);
+						new PhotoItem(id,thumbUrl,(int)(lat*1E6),(int)(lng*1E6),title,photoUrl,author);
 					photoItems_.add(item);
 				}
 				else{

@@ -13,23 +13,12 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
-<resources>
-<item type="id" name="menu_FindSpots"/>
-<item type="id" name="menu_SearchPlace"/>
-<item type="id" name="menu_MyLocation" />
-<item type="id" name="menu_Favorites" />
-<item type="id" name="menu_Preferences" />
-<item type="id" name="menu_MapMode" />
-<item type="id" name="menu_ClearSuggest" />
-<item type="id" name="menu_Help" />
-<item type="id" name="menu_About" />
-
-<item type="id" name="QuerySearchDlg" />
-<item type="id" name="MapModeDlg" />
-<item type="id" name="PreferencesDlg" />
-<item type="id" name="AboutDlg" />
-
-<item type="id" name="menu_Revert" />
-<item type="id" name="menu_DeleteAll" />
-
-</resources>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent" 
+    android:layout_height="wrap_content" 
+    android:textSize="11dip"
+	android:text="@string/FavFooter"
+	android:gravity="center"
+	android:textColor="?android:attr/textColorSecondary"
+/>
+		    

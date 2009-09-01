@@ -15,34 +15,47 @@
 -->
 <resources>
 	<string name="app_name">フォットスポット</string>
+	<string name="help_title">フォットスポット ヘルプ</string>
+	<string name="favorite_title">フォットスポットのお気に入り</string>
+
 	<string name="menu_SearchPhotSpot">スポットを探す</string>
 	<string name="menu_RefreshPhotSpot">スポットを更新</string>
 	<string name="menu_SearchPlace">場所を検索</string>
 	<string name="menu_MyLocation">現在位置</string>
-	<string name="menu_MapMode">地図モード</string>
+	<string name="menu_Favorites">お気に入り</string>
 	<string name="menu_Preferences">サービスの選択</string>
+	<string name="menu_MapMode">地図モード</string>
 	<string name="menu_ClearSuggest">検索履歴の消去</string>
 	<string name="menu_Help">ヘルプ</string>
 	<string name="menu_About">フォットスポットについて</string>
+	<string name="menu_Revert">戻る</string>
+	<string name="menu_DeleteAll">すべて削除</string>
 
 	<string name="QuerySearching">検索中 ...</string>
 	<string name="httpErrorMsg">接続中に問題が発生しました。接続を確認してください。</string>
-	<string name="noResultErrorMsg">スポットが見つかりませんでした。</string>
-
-	<string name="MapModeDlgTitle">地図モードの選択</string>
-	<string name="PreferencesDlgTitle">サービスの選択</string>
-	<string name="ReverseGeoResult">もしかして</string>
-	<string name="ThumbActionDlg">アクションを選択</string>
-	<string name="LocalSearchDlg">選択してGoogle検索します</string>
-	<string name="Dlg_OK">OK</string>
-	<string name="Dlg_Close">閉じる</string>
-
-	<string name="ToastRevGeoCodeRun">場所を検索しています...</string>
-	<string name="ToastRevGeoCodeFail">場所が見つかりませんでした.</string>
-	<string name="ToastLocalSearchFail">ローカ情報がありませんでした.</string>
-	<string name="ToastInstructionNav">Menuキーを押して始めます</string>
+	<string name="noResultErrorMsg">スポットが見つかりませんでした</string>
 	<string name="search_label">場所の検索</string>
 	<string name="search_hint">場所を入力してください</string>
+	<string name="ReverseGeoResult">もしかして</string>
+	<string name="ToastRevGeoCodeRun">場所を検索しています...</string>
+	<string name="ToastRevGeoCodeFail">場所が見つかりませんでした</string>
+	<string name="ToastLocalSearchFail">ローカル情報がありませんでした</string>
+	<string name="ToastInstructionNav">Menuキーを押して始めます</string>
+	<string name="ToastSavedFavorites">お気に入りに保存しました</string>
+	<string name="ToastRemovedFavorites">お気に入りから削除しました</string>
+	<string name="ToastAlreadyExistFavorites">既にお気に入りに項目があります</string>
+	<string name="ToastFavoritesFull">これ以上登録できません</string>
+	<string name="noFavorites">お気に入りが登録されていません</string>
+	<string name="Distance">おおよその距離</string>
+	<string name="FavFooter">スポットの位置は必ずしも正確な位置とは限りません。 \nこれら写真の著作権はそれぞれの所有者にあります。\n</string>
+	<string name="DeleteAllConfirm">すべてのお気に入りを削除しますか？</string>
+
+	<string name="ExtActionDlg">アクションを選択</string>
+	<string name="LocalSearchDlg">選択してGoogle検索します</string>
+	<string name="MapModeDlgTitle">地図モードの選択</string>
+	<string name="PreferencesDlgTitle">サービスの選択</string>
+	<string name="Dlg_OK">OK</string>
+	<string name="Dlg_Close">閉じる</string>
 
 	<string name="AboutDlgTitle">フォットスポットについて</string>
 	<string name="AboutDlgContent">
@@ -52,10 +65,10 @@
 		その他の商品名、製品名、会社名などは、一般に各社の. 商標または登録商標です\n
 		当ソフトウェアは上記サービスのAPIを利用しておりますが、上記いずれの企業も保証責任を負いません。\n
 		上記のサービスが提供する写真の著作権はそれぞれの所有者にあります。
+		スポットの位置は必ずしも正確な位置とは限りません。
 	</string>
-	<string name="copyrightLabel">これら写真の著作権はそれぞれの所有者にあります</string>
+	<string name="copyrightLabel">これら写真の著作権はそれぞれの所有者にあります。</string>
 
-	<string name="helplabel">フォットスポット ヘルプ</string>
 	<string name="helpcontent">
 		&lt;h2&gt;フォットスポットとは?&lt;/h2&gt;
 		フォットスポットは人気写真撮影スポットを簡単に捜すアプリケーションです。
@@ -72,6 +85,10 @@
 			このメニュー、もしくは検索キーを押すことで任意の場所の検索を開始します。
 			&lt;li&gt;&lt;b&gt;現在位置&lt;/b&gt;&lt;/li&gt;
 			地図を移動したりなどした後、現在位置に戻りたい場合などにご利用ください。
+			&lt;li&gt;&lt;b&gt;お気に入り&lt;/b&gt;&lt;/li&gt;
+			お気に入りに登録することであとからそのスポットを見たり、その場所へのルート検索等をすることが出来ます。
+			お気に入りに保存するには、ギャラリー表示される写真サムネールを長押しして「お気に入りに保存」アクションを選択してください。
+			お気に入りは最大256個まで保存可能です。
 			&lt;li&gt;&lt;b&gt;地図モード&lt;/b&gt;&lt;/li&gt;
 			モードは「地図」もしくは「航空写真」が選択可能です
 			&lt;li&gt;&lt;b&gt;サービスの選択&lt;/b&gt;&lt;/li&gt;
@@ -107,12 +124,22 @@
 			さらにこれら2つのサービスはユーザが公開後すぐに取得可能なため、より最新の情報が取得可能です。
 			(お台場ガンダムなどのスポットは2009年8月11日現在Panoramioでは取得できません)
 		&lt;/ul&gt;
+		&lt;h2&gt;さらに&lt;/h2&gt;
+		&lt;ul&gt;
+			&lt;li&gt;&lt;b&gt;コンテンツ拡充に貢献しませんか？&lt;/b&gt;&lt;/li&gt;
+			フォットスポットのコンテンツ拡充に貢献するには、対応するサービスに位置情報付きの写真を
+			アップロードするだけです。アップロードする際は「一般公開」にして各種サービスがフィードに反映
+			出来るようにすればOKです。
+			たくさんのユーザがそれぞれ写真をアップロードすれば、このアプリももっとたくさんのスポットを発見することが
+			出来るようになります。
+		&lt;/ul&gt;
 		&lt;h2&gt;著作権、商標について&lt;/h2&gt;
 		Panoramio および Picasa Web Albums は Google Inc.の商標です&lt;br&gt;
 		Flickr は Yahoo! Inc.の商標です&lt;br&gt;
 		その他の商品名、製品名、会社名などは、一般に各社の. 商標または登録商標です&lt;br&gt;
 		当ソフトウェアは上記サービスのAPIを利用しておりますが、上記いずれの企業も保証責任を負いません。&lt;br&gt;
 		上記のサービスが提供する写真の著作権はそれぞれの所有者にあります。&lt;br&gt;
+		スポットの位置は必ずしも正確な位置とは限りません。&lt;br&gt;
 	</string>
 
 </resources>

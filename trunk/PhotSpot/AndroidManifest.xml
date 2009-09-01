@@ -15,8 +15,8 @@
 -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
       package="com.erdao.PhotSpot"
-      android:versionCode="7"
-      android:versionName="1.2.1">
+      android:versionCode="8"
+      android:versionName="1.3.0">
 	<uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -26,7 +26,7 @@
     	android:label="@string/app_name"
     	android:debuggable="false">
 		<uses-library android:name="com.google.android.maps" />
-        <activity android:name=".PhotSpotActivity"
+        <activity android:name="com.erdao.PhotSpot.PhotSpotActivity"
                   android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -39,8 +39,16 @@
 			<meta-data android:name="android.app.searchable" 
                        android:resource="@xml/searchable" />
         </activity>
-        <activity android:name=".HelpActivity" android:label="@string/helplabel"/>
-        <provider android:name=".PhotSpotSearchSuggestionsProvider"
+        <activity
+        			android:name="com.erdao.PhotSpot.HelpActivity"
+        			android:label="@string/help_title"
+        />
+        <activity
+        			android:name="com.erdao.PhotSpot.FavoritesActivity"
+        			android:label="@string/favorite_title"
+        			android:theme="@style/android:Theme.Light"
+ 		/>
+        <provider android:name="com.erdao.PhotSpot.PhotSpotSearchSuggestionsProvider"
                   android:authorities="com.erdao.PhotSpot.PhotSpotSearchSuggestionsProvider" />
 	</application>
     <uses-sdk android:minSdkVersion="3" />

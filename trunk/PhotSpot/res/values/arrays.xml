@@ -25,10 +25,23 @@
         <item>Flickr</item>
     </string-array>
 
-	<string-array name="thumbnail_action">
+	<string-array name="gallery_extaction">
+        <item>Add to Favorites</item>
         <item>Open with browser</item>
-        <item>Zoom into the place</item>
         <item>What's here?</item>
+        <item>Route to the place</item>
+    </string-array>
+
+	<string-array name="favorite_extaction">
+        <item>Show on Map</item>
+        <item>Route to the place</item>
+        <item>Open with browser</item>
+        <item>Edit Label</item>
+        <item>Remove from Favorites</item>
+    </string-array>
+
+	<string-array name="showmap_extaction">
+        <item>Open with browser</item>
         <item>Route to the place</item>
     </string-array>
 

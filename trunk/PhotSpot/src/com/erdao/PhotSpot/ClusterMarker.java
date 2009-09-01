@@ -19,6 +19,7 @@ package com.erdao.PhotSpot;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 import android.app.AlertDialog;
@@ -58,6 +59,7 @@ import com.erdao.PhotSpot.GeoClusterer.GeoCluster;
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
+import com.google.android.maps.MyLocationOverlay;
 import com.google.android.maps.Overlay;
 import com.google.android.maps.Projection;
 
@@ -80,14 +82,16 @@ public class ClusterMarker extends Overlay {
 	private long tapCheckTime_;
 	private int selItem_;
 	private ArrayList<CharSequence> localSpots_;
+	private PhotSpotActivity activityHndl_;
 
-	private static final int EXT_ACTION_OPENBROWSER = 0;
-	private static final int EXT_ACTION_ZOOM_IN= 1;
-	private static final int EXT_ACTION_WHATS_HERE = 2;
-	private static final int EXT_ACTION_NAVTOPLACE = 3;
+	private static final int EXT_ACTION_ADD_FAVORITES	= 0;
+	private static final int EXT_ACTION_OPENBROWSER		= 1;
+	private static final int EXT_ACTION_WHATS_HERE		= 2;
+	private static final int EXT_ACTION_NAVTOPLACE		= 3;
 	
 	/* constructor */
-	public ClusterMarker(GeoCluster cluster, MapView mapView, Context context, FrameLayout imageFrame) {
+	public ClusterMarker(PhotSpotActivity activityHndl, GeoCluster cluster, MapView mapView, Context context, FrameLayout imageFrame) {
+		activityHndl_ = activityHndl;
 		cluster_ = cluster;
 		mapView_ = mapView;
 		context_ = context;
@@ -211,15 +215,15 @@ public class ClusterMarker extends Overlay {
 		gallery.setOnItemLongClickListener(new OnItemLongClickListener() {
 			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 				new AlertDialog.Builder(context_)
-				.setTitle(R.string.ThumbActionDlg)
+				.setTitle(R.string.ExtActionDlg)
 				.setPositiveButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int whichButton) {
 						dialog.dismiss();
 					}
 				})
-				.setItems(R.array.thumbnail_action, new DialogInterface.OnClickListener() {
+				.setItems(R.array.gallery_extaction, new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int which) {
-						onThumbAction(which);
+						onItemAction(which);
 						dialog.dismiss();
 					}
 				})
@@ -231,21 +235,13 @@ public class ClusterMarker extends Overlay {
 	}
 	
 	/* option tasks for long pressing thumbnail */
-	public void onThumbAction(int cmd){
+	public void onItemAction(int cmd){
 		switch(cmd){
 			case EXT_ACTION_OPENBROWSER:{
 				clearSelect();
 				String url = photoItems_.get(selItem_).getPhotoUrl();
 				Intent i = new Intent(Intent.ACTION_VIEW,Uri.parse(url));
 				context_.startActivity(i);
-				break;
-			}
-			case EXT_ACTION_ZOOM_IN:{
-				MapController mapCtrl = mapView_.getController();
-				GeoPoint location = photoItems_.get(selItem_).getLocation();
-				Projection pro = mapView_.getProjection();
-				Point pt = pro.toPixels(location, null);
-				mapCtrl.zoomInFixing(pt.x, pt.y);
 				break;
 			}
 			case EXT_ACTION_WHATS_HERE:{
@@ -265,18 +261,45 @@ public class ClusterMarker extends Overlay {
 				break;
 			}
 			case EXT_ACTION_NAVTOPLACE:{
+				GeoPoint gp_saddr = null;
+				List<Overlay> overlays = mapView_.getOverlays();
+				for(int i = 0; i < overlays.size(); i++) {
+					Overlay overlay = overlays.get(i);
+					if(overlay.getClass().equals(MyLocationOverlay.class)){
+						gp_saddr = ((MyLocationOverlay)overlay).getMyLocation();
+						break;
+					}
+				}
 				GeoPoint location = photoItems_.get(selItem_).getLocation();
 				double lat = location.getLatitudeE6()/1E6;
 				double lng = location.getLongitudeE6()/1E6;
 				String url = "http://maps.google.com/maps?daddr="+lat+","+lng;
+				if(gp_saddr!=null){
+					url += ( "&saddr=" + gp_saddr.getLatitudeE6()/1E6 + "," + gp_saddr.getLongitudeE6()/1E6 );
+				}
 				Intent i = new Intent(Intent.ACTION_VIEW,Uri.parse(url));
 				i.addCategory(Intent.CATEGORY_BROWSABLE);
 				i.setFlags(0x2800000);
 				context_.startActivity(i);
 				break;
 			}
+			case EXT_ACTION_ADD_FAVORITES:{
+				PhotoItem item = photoItems_.get(selItem_);
+				/* Database for favorite */
+				PhotSpotDBHelper dbHelper = new PhotSpotDBHelper(context_);
+				if(dbHelper==null)
+					break;
+				int ret = dbHelper.insertItem(item,imgAdapter_.getBitmap(selItem_));
+				if(ret == PhotSpotDBHelper.DB_SUCCESS)
+					activityHndl_.ToastMessage(R.string.ToastSavedFavorites, Toast.LENGTH_SHORT);
+				else if(ret == PhotSpotDBHelper.DB_EXISTS)
+					activityHndl_.ToastMessage(R.string.ToastAlreadyExistFavorites, Toast.LENGTH_SHORT);
+				else if(ret == PhotSpotDBHelper.DB_FULL)
+					activityHndl_.ToastMessage(R.string.ToastFavoritesFull, Toast.LENGTH_SHORT);
+				dbHelper.close();
+				break;
+			}
 		}
-
 	}
 
 	/* showImageFrame */
@@ -357,8 +380,8 @@ public class ClusterMarker extends Overlay {
 		public String getDescription(int position) {
 			PhotoItem item = photoItems_.get(position);
 			String desc = item.getTitle();
-			if(item.getOwner()!=null){
-				desc += " (by "+item.getOwner()+")";
+			if(item.getAuthor()!=null){
+				desc += " (by "+item.getAuthor()+")";
 			}
 			return desc;
 		}
@@ -426,7 +449,7 @@ public class ClusterMarker extends Overlay {
 			if(code!=JsonFeedGetter.CODE_HTTPERROR){
 				localSpots_ = getter_.getLocalSpotsList();
 				if(localSpots_.size()==0)
-					Toast.makeText(context_, R.string.ToastLocalSearchFail, Toast.LENGTH_SHORT);
+					activityHndl_.ToastMessage(R.string.ToastLocalSearchFail, Toast.LENGTH_SHORT);
 				else{
 					CharSequence[] arry = (CharSequence[])localSpots_.toArray(new CharSequence[0]);
 					new AlertDialog.Builder(context_)
