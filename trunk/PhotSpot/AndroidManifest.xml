@@ -26,7 +26,7 @@
     	android:label="@string/app_name"
     	android:debuggable="false">
 		<uses-library android:name="com.google.android.maps" />
-        <activity android:name="com.erdao.PhotSpot.PhotSpotActivity"
+        <activity android:name=".PhotSpotActivity"
                   android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -40,15 +40,15 @@
                        android:resource="@xml/searchable" />
         </activity>
         <activity
-        			android:name="com.erdao.PhotSpot.HelpActivity"
+        			android:name=".HelpActivity"
         			android:label="@string/help_title"
         />
         <activity
-        			android:name="com.erdao.PhotSpot.FavoritesActivity"
+        			android:name=".FavoritesActivity"
         			android:label="@string/favorite_title"
         			android:theme="@style/android:Theme.Light"
  		/>
-        <provider android:name="com.erdao.PhotSpot.PhotSpotSearchSuggestionsProvider"
+        <provider android:name=".PhotSpotSearchSuggestionsProvider"
                   android:authorities="com.erdao.PhotSpot.PhotSpotSearchSuggestionsProvider" />
 	</application>
     <uses-sdk android:minSdkVersion="3" />

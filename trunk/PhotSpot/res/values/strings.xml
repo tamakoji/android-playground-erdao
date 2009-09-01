@@ -16,7 +16,7 @@
 <resources>
 	<string name="gmap_key_dbg">YOUR-GOOGLEMAP-KEY</string>
 	<string name="gmap_key_rel">YOUR-GOOGLEMAP-KEY</string>
-	
+		
 	<string name="app_name">PhotSpot</string>
 	<string name="help_title">PhotSpot Help</string>
 	<string name="favorite_title">Favorites</string>
@@ -98,78 +98,78 @@
 
 	<string name="helpcontent">
 		&lt;h2&gt;What is PhotSpot?&lt;/h2&gt;
-		PhotSpot will let you easily find out the popular spot at location of your choice.
-		It will retrieve public geotagged contents on the map screen and show them in clustered balloons.
-		the each number on the balloon shows the number of contents within the cluster, so that
-		the more the number it has, the more people take photos around that area.
+			PhotSpot will let you easily find out the popular spot at location of your choice.
+			It will retrieve public geotagged contents on the map screen and show them in clustered balloons.
+			the each number on the balloon shows the number of contents within the cluster, so that
+			the more the number it has, the more people take photos around that area.
 		&lt;h2&gt;Instruction&lt;/h2&gt;
-		&lt;ul&gt;
-			&lt;li&gt;&lt;b&gt;Initial Screen&lt;/b&gt;&lt;/li&gt;
-			Initial map screen will display the map of current location. Press "menu" button to proceed.
-			&lt;li&gt;&lt;b&gt;Search Spot&lt;/b&gt;&lt;/li&gt;
-			Selecting \"Search Spot\" will retrieve public content and result will be shown on the map.
-			&lt;li&gt;&lt;b&gt;Search Place&lt;/b&gt;&lt;/li&gt;
-			Selecting \"Search Place\" or pressing search button on your device will start search for certain place.
-			&lt;li&gt;&lt;b&gt;My Location&lt;/b&gt;&lt;/li&gt;
-			On initial screen it is turned on, if you wish to set map location to current location, select this.
-			It will require GPS to find your current location.
-			&lt;li&gt;&lt;b&gt;Favorites&lt;/b&gt;&lt;/li&gt;
-			You can save favorite spots and browse them afterwards. You can browse favorites even if you are in offline mode.&lt;br&gt;
-			To Add spots to favorites, long-press the thumbnail on gallery view and select \"Add to Favorites\" on the pop-up menu.&lt;br&gt;
-			You can save up to 256 favorite items. Favorite items also can be labeled.
-			After saving spots to favorites, select item and select \"Edit Label\" action.&lt;br&gt;
-			&lt;li&gt;&lt;b&gt;Map Mode&lt;/b&gt;&lt;/li&gt;
-			You can either select \"map\" mode or \"satellite\" mode (default:map mode)
-			&lt;li&gt;&lt;b&gt;Select Provider&lt;/b&gt;&lt;/li&gt;
-			You can select content provider for retrieving the geotagged content.(default:Panoramio)
-			Currently supported providers are:
 			&lt;ul&gt;
-				&lt;li&gt;&lt;b&gt;Panoramio&lt;/b&gt;&lt;/li&gt;
-				&lt;li&gt;&lt;b&gt;Picasa Web Album&lt;/b&gt;&lt;/li&gt;
-				&lt;li&gt;&lt;b&gt;Flickr&lt;/b&gt;&lt;/li&gt;
+				&lt;li&gt;&lt;b&gt;Initial Screen&lt;/b&gt;&lt;/li&gt;
+				Initial map screen will display the map of current location. Press "menu" button to proceed.
+				&lt;li&gt;&lt;b&gt;Search Spot&lt;/b&gt;&lt;/li&gt;
+				Selecting \"Search Spot\" will retrieve public content and result will be shown on the map.
+				&lt;li&gt;&lt;b&gt;Search Place&lt;/b&gt;&lt;/li&gt;
+				Selecting \"Search Place\" or pressing search button on your device will start search for certain place.
+				&lt;li&gt;&lt;b&gt;My Location&lt;/b&gt;&lt;/li&gt;
+				On initial screen it is turned on, if you wish to set map location to current location, select this.
+				It will require GPS to find your current location.
+				&lt;li&gt;&lt;b&gt;Favorites&lt;/b&gt;&lt;/li&gt;
+				You can save favorite spots and browse them afterwards. You can browse favorites even if you are in offline mode.&lt;br&gt;
+				To Add spots to favorites, long-press the thumbnail on gallery view and select \"Add to Favorites\" on the pop-up menu.&lt;br&gt;
+				You can save up to 256 favorite items. Favorite items also can be labeled.
+				After saving spots to favorites, select item and select \"Edit Label\" action.&lt;br&gt;
+				&lt;li&gt;&lt;b&gt;Map Mode&lt;/b&gt;&lt;/li&gt;
+				You can either select \"map\" mode or \"satellite\" mode (default:map mode)
+				&lt;li&gt;&lt;b&gt;Select Provider&lt;/b&gt;&lt;/li&gt;
+				You can select content provider for retrieving the geotagged content.(default:Panoramio)
+				Currently supported providers are:
+				&lt;ul&gt;
+					&lt;li&gt;&lt;b&gt;Panoramio&lt;/b&gt;&lt;/li&gt;
+					&lt;li&gt;&lt;b&gt;Picasa Web Album&lt;/b&gt;&lt;/li&gt;
+					&lt;li&gt;&lt;b&gt;Flickr&lt;/b&gt;&lt;/li&gt;
+				&lt;/ul&gt;
+				&lt;li&gt;&lt;b&gt;Help&lt;/b&gt;&lt;/li&gt;
+				Opens this content
 			&lt;/ul&gt;
-			&lt;li&gt;&lt;b&gt;Help&lt;/b&gt;&lt;/li&gt;
-			Opens this content
-		&lt;/ul&gt;
 		&lt;h2&gt;Viewing the result&lt;/h2&gt;
-		&lt;ul&gt;
-			&lt;li&gt;&lt;b&gt;Opening gallery view&lt;/b&gt;&lt;/li&gt;
-			By tapping the balloon, Gallery View will show up. You can browse what is in there.
-			&lt;li&gt;&lt;b&gt;Double-Tap to zoom in the map&lt;/b&gt;&lt;/li&gt;
-			You can zoom in/out using zoom control, also you can zoom in by double-tapping the balloon.
-			It will zoom into the detail location of the content you are currently looking at.
-			&lt;li&gt;&lt;b&gt;Zoom in/out to discover more&lt;/b&gt;&lt;/li&gt;
-			Zooming in/out the map will merge/divide clusters according to the zoom level.
-			But content itself are based on result you get by \"Search Spot\" command.
-			If you need to refresh result, select \"Refresh Spot\" from the menu.
-			&lt;li&gt;&lt;b&gt;Long-pressing the thumbnail&lt;/b&gt;&lt;/li&gt;
-			By long-pressing the thumbnail, extra actions will pop-up&lt;br&gt;
-			&lt;li&gt;&lt;b&gt;Dismissing the Gallery View&lt;/b&gt;&lt;/li&gt;
-			By clicking the bar on the bottom of the Gallery View, you can dismiss the Gallery View.&lt;br&gt;
-		&lt;/ul&gt;
+			&lt;ul&gt;
+				&lt;li&gt;&lt;b&gt;Opening gallery view&lt;/b&gt;&lt;/li&gt;
+				By tapping the balloon, Gallery View will show up. You can browse what is in there.
+				&lt;li&gt;&lt;b&gt;Double-Tap to zoom in the map&lt;/b&gt;&lt;/li&gt;
+				You can zoom in/out using zoom control, also you can zoom in by double-tapping the balloon.
+				It will zoom into the detail location of the content you are currently looking at.
+				&lt;li&gt;&lt;b&gt;Zoom in/out to discover more&lt;/b&gt;&lt;/li&gt;
+				Zooming in/out the map will merge/divide clusters according to the zoom level.
+				But content itself are based on result you get by \"Search Spot\" command.
+				If you need to refresh result, select \"Refresh Spot\" from the menu.
+				&lt;li&gt;&lt;b&gt;Long-pressing the thumbnail&lt;/b&gt;&lt;/li&gt;
+				By long-pressing the thumbnail, extra actions will pop-up&lt;br&gt;
+				&lt;li&gt;&lt;b&gt;Dismissing the Gallery View&lt;/b&gt;&lt;/li&gt;
+				By clicking the bar on the bottom of the Gallery View, you can dismiss the Gallery View.&lt;br&gt;
+			&lt;/ul&gt;
 		&lt;h2&gt;Tips&lt;/h2&gt;
-		&lt;ul&gt;
-			&lt;li&gt;&lt;b&gt;Selecting the content provider&lt;/b&gt;&lt;/li&gt;
-			Contents you can get differs by providers, Panoramio will provide beautiful scenery photo content
-			so it is useful to find landmarks and historical places.&lt;br&gt;
-			Picasa Web Album and Flickr can get more casual content, but it can retrieve more up-to-date content
-			compared to using Panoramio.
-		&lt;/ul&gt;
+			&lt;ul&gt;
+				&lt;li&gt;&lt;b&gt;Selecting the content provider&lt;/b&gt;&lt;/li&gt;
+				Contents you can get differs by providers, Panoramio will provide beautiful scenery photo content
+				so it is useful to find landmarks and historical places.&lt;br&gt;
+				Picasa Web Album and Flickr can get more casual content, but it can retrieve more up-to-date content
+				compared to using Panoramio.
+			&lt;/ul&gt;
 		&lt;h2&gt;Furthermore&lt;/h2&gt;
-		&lt;ul&gt;
-			&lt;li&gt;&lt;b&gt;Contribute the PhotSpot&lt;/b&gt;&lt;/li&gt;
-			If you want to contribute this app, it is easy.
-			Just upload photo with geotag to any of the services PhotSpot supports,
-			make sure you set them to public, so that photos are available in their feeds.
-			If many users uploads photos to those services, it means this app will get more richer.
-		&lt;/ul&gt;
+			&lt;ul&gt;
+				&lt;li&gt;&lt;b&gt;Contribute the PhotSpot&lt;/b&gt;&lt;/li&gt;
+				If you want to contribute this app, it is easy.
+				Just upload photo with geotag to any of the services PhotSpot supports,
+				make sure you set them to public, so that photos are available in their feeds.
+				If many users uploads photos to those services, it means this app will get more richer.
+			&lt;/ul&gt;
 		&lt;h2&gt;Legal Notices&lt;/h2&gt;
-		Panoramio and Picasa Web Albums are trademarks of Google Inc.&lt;br&gt;
-		Flickr is a trademark of Yahoo! Inc.&lt;br&gt;
-		All other company and product names may be trademarks of the respective companies with which they are associate.&lt;br&gt;
-		This product uses the APIs of above services but is not endorsed by above companies.&lt;br&gt;
-		Photos provided by above services are under the copyright of their owners.&lt;br&gt;
-		The location of photos may not be accurate.&lt;br&gt;
+			Panoramio and Picasa Web Albums are trademarks of Google Inc.&lt;br&gt;
+			Flickr is a trademark of Yahoo! Inc.&lt;br&gt;
+			All other company and product names may be trademarks of the respective companies with which they are associate.&lt;br&gt;
+			This product uses the APIs of above services but is not endorsed by above companies.&lt;br&gt;
+			Photos provided by above services are under the copyright of their owners.&lt;br&gt;
+			The location of photos may not be accurate.&lt;br&gt;
 	</string>
 
 </resources>
