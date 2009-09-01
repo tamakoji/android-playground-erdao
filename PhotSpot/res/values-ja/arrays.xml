@@ -21,22 +21,22 @@
 
 	<string-array name="gallery_extaction">
         <item>お気に入りへ追加</item>
-        <item>ブラウザで開く</item>
         <item>この場所について</item>
         <item>この場所へのルート</item>
+        <item>ブラウザで開く</item>
     </string-array>
 
 	<string-array name="favorite_extaction">
         <item>マップで見る</item>
         <item>この場所へのルート</item>
-        <item>ブラウザで開く</item>
-        <item>ラベル</item>
+        <item>分類</item>
         <item>お気に入りから削除</item>
+        <item>ブラウザで開く</item>
     </string-array>
 
 	<string-array name="showmap_extaction">
-        <item>ブラウザで開く</item>
         <item>この場所へのルート</item>
+        <item>ブラウザで開く</item>
     </string-array>
 
 </resources>

@@ -91,7 +91,7 @@ public class PhotSpotDBHelper extends SQLiteOpenHelper {
     public static final int DB_UNKNOWN_ERROR	= -4;
 
     
-    private static final String DATABASE_NAME = "photspotfv.db";
+    private static final String DATABASE_NAME = "favorites.db";
     private static final int DATABASE_VERSION = 1;
     private static final String SPOTS_TABLE_NAME = "spots";
     private static final String LABEL_TABLE_NAME = "labels";
@@ -180,9 +180,16 @@ public class PhotSpotDBHelper extends SQLiteOpenHelper {
 	}
 
 	// query all PhotoItem. returns cursor
-	public Cursor queryAll(SQLiteDatabase db){
+	public Cursor queryAllItems(SQLiteDatabase db){
         SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
         qb.setTables(SPOTS_TABLE_NAME);
+        return qb.query(db, null, null, null, null, null, null);
+	}
+
+	// query all Labels. returns cursor
+	public Cursor queryAllLabels(SQLiteDatabase db){
+        SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
+        qb.setTables(LABEL_TABLE_NAME);
         return qb.query(db, null, null, null, null, null, null);
 	}
 
@@ -210,7 +217,7 @@ public class PhotSpotDBHelper extends SQLiteOpenHelper {
 	// insert a PhotoItem. 1:success, -1:exception 0:record exists
 	public int insertItem(PhotoItem item, Bitmap bmp){
 		final SQLiteDatabase db = this.getWritableDatabase();
-		Cursor c = this.queryAll(db);
+		Cursor c = this.queryAllItems(db);
 		if(c.getCount()>=MAX_RECORDS){
 			db.close();
 			return DB_FULL;
@@ -341,7 +348,7 @@ public class PhotSpotDBHelper extends SQLiteOpenHelper {
 	}
 
 	// update item with a new Label
-	public int updateLabel(PhotoItem item, String newLabelName){
+	public long updateLabel(PhotoItem item, String newLabelName){
 		final SQLiteDatabase db = this.getWritableDatabase();
 		Spots spots = this.queryItemById(db,item.getId());
 		if( spots == null ){
@@ -358,7 +365,7 @@ public class PhotSpotDBHelper extends SQLiteOpenHelper {
 		long newLabelId = 0;
 		if(newLabelName.equals(curLabels.label_)){
 			db.close();
-			return DB_EXISTS;
+			return labelId;
 		}
 		// update old label
 		updateLabelCount(db,curLabels.id_,curLabels.counts_-1);
@@ -370,7 +377,7 @@ public class PhotSpotDBHelper extends SQLiteOpenHelper {
 		String whereClause = Spots._ID + "="+item.getId();
 		db.update(SPOTS_TABLE_NAME, cv, whereClause, null);
 		db.close();
-		return DB_SUCCESS;
+		return newLabelId;
 	}
 
 	

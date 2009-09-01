@@ -85,9 +85,9 @@ public class ClusterMarker extends Overlay {
 	private PhotSpotActivity activityHndl_;
 
 	private static final int EXT_ACTION_ADD_FAVORITES	= 0;
-	private static final int EXT_ACTION_OPENBROWSER		= 1;
-	private static final int EXT_ACTION_WHATS_HERE		= 2;
-	private static final int EXT_ACTION_NAVTOPLACE		= 3;
+	private static final int EXT_ACTION_WHATS_HERE		= 1;
+	private static final int EXT_ACTION_NAVTOPLACE		= 2;
+	private static final int EXT_ACTION_OPENBROWSER		= 3;
 	
 	/* constructor */
 	public ClusterMarker(PhotSpotActivity activityHndl, GeoCluster cluster, MapView mapView, Context context, FrameLayout imageFrame) {

@@ -21,22 +21,22 @@
 
 	<string-array name="gallery_extaction">
         <item>加入收藏夾</item>
-        <item>打開用瀏覽器</item>
         <item>這兒有什麼?</item>
         <item>這兒怎麼走?</item>
+        <item>用瀏覽器打開</item>
     </string-array>
 
 	<string-array name="favorite_extaction">
 		<item>看在地图上</item>
-		<item>这儿怎么走?</item>
-		<item>打开用浏览器く</item>
-        <item>標籤</item>
-		<item>刪除收藏夾</item>
+		<item>這兒怎麼走?</item>
+        <item>分類</item>
+		<item>刪除項目</item>
+		<item>用瀏覽器打開</item>
 	</string-array>
 
 	<string-array name="showmap_extaction">
-        <item>打開用瀏覽器</item>
-		<item>这儿怎么走?</item>
+		<item>這兒怎麼走?</item>
+        <item>用瀏覽器打開</item>
     </string-array>
 
 </resources>
