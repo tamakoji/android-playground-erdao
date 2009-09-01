@@ -47,13 +47,13 @@
 	<string name="ToastFavoritesFull">收藏夹是满的</string>
 	<string name="noFavorites">没有项目</string>
 	<string name="Distance">近似距离</string>
-	<string name="FavFooter">照片的位置也许不準確。\n提供的照片和版权属于他们各自的所有者\n</string>
+	<string name="FavFooter">照片的位置也许不准确。\n提供的照片和版权属于他们各自的所有者\n</string>
 	<string name="DeleteAllConfirm">刪除全部项目在收藏夹</string>
 	<string name="EditLabel">分类</string>
 	<string name="UndefinedFavLabel">未分类</string>
 	<string name="Delete">刪除</string>
 	<string name="DeleteConfirm">可以刪除该项目？</string>
-	
+
 	<string name="MapModeDlgTitle">选择地图模式</string>
 	<string name="PreferencesDlgTitle">选择服务</string>
 	<string name="ExtActionDlg">选择动作</string>
@@ -71,8 +71,8 @@
 		- add favorite feature. you can save spots!\n
 		- bugfix: force close when GPS are disabled\n
 		\n
-		詳細の使い方に関してはヘルプをご覧ください:\n
-		[menu]->[more]->[help]\n\n
+		欲了解更多信息，请看帮助:\n
+		[菜单]->[更多]->[帮助]\n\n
 	</string>
 	<string name="AboutDlgContent">
 		热门拍照点 by Huan Erdao\n\n
@@ -87,73 +87,72 @@
 
 	<string name="helpcontent">
 		&lt;h2&gt;”热门拍照点”是什么?&lt;/h2&gt;
-		”热门拍照点”让您搜索任何地方的热门拍照点。 
-		软件将搜索公开照片和全球定位系统数据,然后显示“群集气球”在地图上。每个气球的数字显示了照片数量。
-		所以气球的数字越大，该位置越热门。
+			”热门拍照点”让您搜索任何地方的热门拍照点。 
+			软件将搜索公开照片和全球定位系统数据,然后显示“群集气球”在地图上。每个气球的数字显示了照片数量。
+			所以气球的数字越大，该位置越热门。
 		&lt;h2&gt;操作方法&lt;/h2&gt;
-		&lt;ul&gt;
-			&lt;li&gt;&lt;b&gt;初始画面&lt;/b&gt;&lt;/li&gt;
-			最初屏幕显示当前位置地图。请按菜单按钮。
-			&lt;li&gt;&lt;b&gt;搜索热门拍照点&lt;/b&gt;&lt;/li&gt;
-			将开始搜索公开照片。完成后，显示在地图上。
-			&lt;li&gt;&lt;b&gt;搜索地方&lt;/b&gt;&lt;/li&gt;
-			选择此菜单或按下搜索键将开始寻找任何地点。
-			&lt;li&gt;&lt;b&gt;現在位置&lt;/b&gt;&lt;/li&gt;
-			将返回到您当前的位置。
-			&lt;li&gt;&lt;b&gt;收藏夹&lt;/b&gt;&lt;/li&gt;
-			You can save favorite spots and browse them afterwards. You can browse favorites even if you are in offline mode.&lt;br&gt;
-			To Add spots to favorites, long-press the thumbnail on gallery view and select \"Add to Favorites\" on the pop-up menu.&lt;br&gt;
-			You can save up to 256 favorite items. Favorite items also can be labeled.
-			After saving spots to favorites, select item and select \"Edit Label\" action.&lt;br&gt;
-			&lt;li&gt;&lt;b&gt;地图模式&lt;/b&gt;&lt;/li&gt;
-			选择地图模式“地图”或“卫星”
-			&lt;li&gt;&lt;b&gt;設定&lt;/b&gt;&lt;/li&gt;
-			您可以选择照片提供商 （默认： Panoramio ）&lt;br&gt; 
-			目前支持的供应商是： 
 			&lt;ul&gt;
-				&lt;li&gt;&lt;b&gt;Panoramio&lt;/b&gt;&lt;/li&gt;
-				&lt;li&gt;&lt;b&gt;Picasa Web Album&lt;/b&gt;&lt;/li&gt;
-				&lt;li&gt;&lt;b&gt;Flickr&lt;/b&gt;&lt;/li&gt;
+				&lt;li&gt;&lt;b&gt;初始画面&lt;/b&gt;&lt;/li&gt;
+				最初屏幕显示当前位置地图。请按菜单按钮。
+				&lt;li&gt;&lt;b&gt;搜索热门拍照点&lt;/b&gt;&lt;/li&gt;
+				将开始搜索公开照片。完成后，显示在地图上。
+				&lt;li&gt;&lt;b&gt;搜索地方&lt;/b&gt;&lt;/li&gt;
+				选择此菜单或按下搜索键将开始寻找任何地点。
+				&lt;li&gt;&lt;b&gt;現在位置&lt;/b&gt;&lt;/li&gt;
+				将返回到您当前的位置。
+				&lt;li&gt;&lt;b&gt;收藏夹&lt;/b&gt;&lt;/li&gt;
+				您能保存您喜欢的景点，然后您能看收藏夹虽然您离线的时候。&lt;br&gt;
+				如果你想保存景点,按住缩略图，然后选择 \"加入收藏夹\"从菜单。&lt;br&gt;
+				您能保存最大256项目。此外项目能分类。
+				在分类，选择项目，然后选择 \"分类\"从菜单。&lt;br&gt;
+				&lt;li&gt;&lt;b&gt;地图模式&lt;/b&gt;&lt;/li&gt;
+				选择地图模式“地图”或“卫星”
+				&lt;li&gt;&lt;b&gt;設定&lt;/b&gt;&lt;/li&gt;
+				您可以选择照片提供商 （默认： Panoramio ）&lt;br&gt; 
+				目前支持的供应商是： 
+				&lt;ul&gt;
+					&lt;li&gt;&lt;b&gt;Panoramio&lt;/b&gt;&lt;/li&gt;
+					&lt;li&gt;&lt;b&gt;Picasa Web Album&lt;/b&gt;&lt;/li&gt;
+					&lt;li&gt;&lt;b&gt;Flickr&lt;/b&gt;&lt;/li&gt;
+				&lt;/ul&gt;
+				&lt;li&gt;&lt;b&gt;帮助&lt;/b&gt;&lt;/li&gt;
+				打开这个网页
+				&lt;/ul&gt;
+				&lt;h2&gt;查看结果&lt;/h2&gt;
+				&lt;ul&gt;
+				&lt;li&gt;&lt;b&gt;点击气球看到内容&lt;/b&gt;&lt;/li&gt;
+				点击气球，显示图像画廊。您可以浏览该处的照片。
+				&lt;li&gt;&lt;b&gt;双击缩小地图&lt;/b&gt;&lt;/li&gt;
+				双击气球您可以缩放地图。您也可以用屏幕右下角的按钮。
+				&lt;li&gt;&lt;b&gt;放大,缩小&lt;/b&gt;&lt;/li&gt;
+				放大/缩小地图将根据缩放级别合并/分离 “群集气球”。 
+				但是，照片不刷新。	如果您需要刷新照片，
+				选择 “刷新热门拍照点”从菜单中。&lt;br&gt;
+				&lt;li&gt;&lt;b&gt;按住缩略图&lt;/b&gt;&lt;/li&gt;
+				按住缩略图，将弹出额外的操作菜单&lt;br&gt;
+				&lt;li&gt;&lt;b&gt;要隐藏画廊&lt;/b&gt;&lt;/li&gt;
+				点击图像画廊底部，将关闭图像画廊。&lt;br&gt;
 			&lt;/ul&gt;
-			&lt;li&gt;&lt;b&gt;帮助&lt;/b&gt;&lt;/li&gt;
-			打开这个网页
-		&lt;/ul&gt;
-		&lt;h2&gt;查看结果&lt;/h2&gt;
-		&lt;ul&gt;
-			&lt;li&gt;&lt;b&gt;点击气球看到内容&lt;/b&gt;&lt;/li&gt;
-			点击气球，显示图像画廊。您可以浏览该处的照片。
-			&lt;li&gt;&lt;b&gt;双击缩小地图&lt;/b&gt;&lt;/li&gt;
-			双击气球您可以缩放地图。您也可以用屏幕右下角的按钮。
-			&lt;li&gt;&lt;b&gt;放大,缩小&lt;/b&gt;&lt;/li&gt;
-			放大/缩小地图将根据缩放级别合并/分离 “群集气球”。 
-			但是，照片不刷新。	如果您需要刷新照片，
-			选择 “刷新热门拍照点”从菜单中。&lt;br&gt;
-			&lt;li&gt;&lt;b&gt;按住缩略图&lt;/b&gt;&lt;/li&gt;
-			按住缩略图，额外的操作会弹出&lt;br&gt;
-			&lt;li&gt;&lt;b&gt;要隐藏画廊&lt;/b&gt;&lt;/li&gt;
-			点击图像画廊底部，将关闭图像画廊。&lt;br&gt;
-		&lt;/ul&gt;
 		&lt;h2&gt;秘诀&lt;/h2&gt;
-		&lt;ul&gt;
-			&lt;li&gt;&lt;b&gt;选择服务&lt;/b&gt;&lt;/li&gt;
-			各服务提供的照片类型不一样， Panoramio提供优美的风景照片，以便找到名胜历史的地方。 
-			Picasa Web Album和Flickr包含更多类型的内容，相比Panoramio，它可以检索到更多更新的内容 。
-		&lt;/ul&gt;
+			&lt;ul&gt;
+				&lt;li&gt;&lt;b&gt;选择服务&lt;/b&gt;&lt;/li&gt;
+				各服务提供的照片类型不一样， Panoramio提供优美的风景照片，以便找到名胜历史的地方。 
+				Picasa Web Album和Flickr包含更多类型的内容，相比Panoramio，它可以检索到更多更新的内容 。
+			&lt;/ul&gt;
 		&lt;h2&gt;更多&lt;/h2&gt;
-		&lt;ul&gt;
-			&lt;li&gt;&lt;b&gt;您想貢献对这个软件？&lt;/b&gt;&lt;/li&gt;
-			If you want to contribute this app, it is easy.
-			Just upload photo with geotag to any of the services PhotSpot supports,
-			make sure you set them to public, so that photos are available in their feeds.
-			If many users uploads photos to those services, it means this app will get more richer.
-		&lt;/ul&gt;
+			&lt;ul&gt;
+				&lt;li&gt;&lt;b&gt;您想合作对这个软件？&lt;/b&gt;&lt;/li&gt;
+				如果您想合作这个软件的话，这是很简单的。&lt;br&gt;
+				上载照片含有GPS經緯度資料对这个软件支持的服务。	请不忘设置可见度对『公开』。&lt;br&gt;
+				多照片大家上载，多机会这个软件搜索热门景点。&lt;br&gt;
+			&lt;/ul&gt;
 		&lt;h2&gt;版权，商标&lt;/h2&gt;
-		Panoramio和Picasa Web Albums是Google Inc.的商标&lt;br&gt;
-		Flickr是Yahoo Inc.的商标&lt;br&gt;
-		该软件采用上述服务的API，但是上述公司对该软件不保证。&lt;br&gt;
-		所有其它品牌和产品名称都是各自公司的商标、注册商标或者服务标志。&lt;br&gt;
-		此服务提供的照片和版权属于他们各自的所有者。&lt;br&gt;
-		照片的位置也许不準確。 &lt;br&gt;
+			Panoramio和Picasa Web Albums是Google Inc.的商标&lt;br&gt;
+			Flickr是Yahoo Inc.的商标&lt;br&gt;
+			该软件采用上述服务的API，但是上述公司对该软件不保证。&lt;br&gt;
+			所有其它品牌和产品名称都是各自公司的商标、注册商标或者服务标志。&lt;br&gt;
+			此服务提供的照片和版权属于他们各自的所有者。&lt;br&gt;
+			照片的位置也许不准确。 &lt;br&gt;
 	</string>
 
 </resources>

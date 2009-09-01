@@ -29,7 +29,7 @@
 	<string-array name="favorite_extaction">
 		<item>看在地图上</item>
 		<item>這兒怎麼走?</item>
-        <item>分類</item>
+        <item>分類項目</item>
 		<item>刪除項目</item>
 		<item>用瀏覽器打開</item>
 	</string-array>
