@@ -37,6 +37,7 @@ public class PhotoItem implements Parcelable {
 	private GeoPoint location_;
 	private int isSelected_;
 	private Bitmap bitmap_;
+	private long labelId_;
 	
 	/* constructor */
 	public PhotoItem(long id, String thumbUrl, int latitudeE6, int longitudeE6,
@@ -49,6 +50,7 @@ public class PhotoItem implements Parcelable {
 		author_ = author;
 		isSelected_ = 0;
 		bitmap_ = null;
+		labelId_ = 1;
 	}
 
 	/* constructor (Parcel) */
@@ -61,6 +63,7 @@ public class PhotoItem implements Parcelable {
 		location_ = new GeoPoint(in.readInt(), in.readInt());
 		isSelected_ = 0;
 		bitmap_ = Bitmap.CREATOR.createFromParcel(in);
+		labelId_ = in.readLong();
 	}
 
 	/* describeContents */
@@ -128,6 +131,16 @@ public class PhotoItem implements Parcelable {
 		bitmap_ = bmp;
 	}
 
+	/* getLabelId */
+	public long getLabelId() {
+		return labelId_;
+	}
+
+	/* setLabelId */
+	public void setLabelId(long id) {
+		labelId_ = id;
+	}
+
 	/* Parcelable.Creator */
 	public static final Parcelable.Creator<PhotoItem> CREATOR =
 		new Parcelable.Creator<PhotoItem>() {
@@ -149,6 +162,7 @@ public class PhotoItem implements Parcelable {
 		parcel.writeInt(location_.getLatitudeE6());
 		parcel.writeInt(location_.getLongitudeE6());
 		bitmap_.writeToParcel(parcel, flags);
+		parcel.writeLong(labelId_);
    }
 
 }

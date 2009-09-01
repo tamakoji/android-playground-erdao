@@ -49,6 +49,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.SystemClock;
 import android.provider.SearchRecentSuggestions;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -56,8 +57,11 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.View.OnTouchListener;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ScrollView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.maps.GeoPoint;
@@ -72,6 +76,7 @@ import com.google.android.maps.Projection;
 public class PhotSpotActivity extends MapActivity {
 
 	private PhotSpotActivity me_;
+	private Context context_;
 
 	/* google map variables */
 	private MapView mapView_;
@@ -83,8 +88,13 @@ public class PhotSpotActivity extends MapActivity {
 	private boolean mylocationEnabled_;
 	private boolean mylocationSetFocus_;
 	private List<Address> addresses_;
-	
-	/* for mylocation thread */
+
+	/* settings */
+	private SharedPreferences settings_;
+    private ScrollView msgFrame_;
+    private TextView msgTxtView_;
+
+    /* for mylocation thread */
 	private Handler handler_;
 
 	/* photo feed task */
@@ -94,6 +104,10 @@ public class PhotSpotActivity extends MapActivity {
 	/* Clusterer */
 	private GeoClusterer clusterer_ = null;
 
+	/* favorite ovelay */
+	private boolean favoriteOverlayed_;
+    private Handler favUpdateTimer_ = new Handler();
+	
 	/** Called when the activity is first created. */
 	protected boolean isRouteDisplayed() {
 		return false;
@@ -104,11 +118,52 @@ public class PhotSpotActivity extends MapActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		me_ = this;
+		context_ = this;
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.main);
 		resetViews();
 		handler_ = new Handler();
 
+		/* Read preferences */
+		settings_ = getSharedPreferences(getString(R.string.PhotSpotPreference), 0);
+
+		onCreateMain();
+
+		boolean initialBoot = settings_.getBoolean(getString(R.string.PrefInitialBoot), true);
+		SharedPreferences.Editor editor = settings_.edit();
+		editor.putBoolean(getString(R.string.PrefInitialBoot),false);
+		editor.commit();
+		if(initialBoot){
+			msgTxtView_ = new TextView(this);
+			msgTxtView_.setTextSize(14);
+			msgTxtView_.setText(R.string.InitialMessage);
+			msgTxtView_.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
+			msgFrame_ = new ScrollView(this);
+			msgFrame_.addView(msgTxtView_);
+			new AlertDialog.Builder(this)
+			.setTitle(R.string.AboutDlgTitle)
+			.setIcon(R.drawable.icon)
+			.setView(msgFrame_)
+			.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int whichButton) {
+					dialog.dismiss();
+					ToastMessage(R.string.ToastInstructionNav, Toast.LENGTH_LONG);
+				}
+			})
+			.setNegativeButton(R.string.menu_Help, new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int whichButton) {
+					dialog.dismiss();
+					Intent i = new Intent(context_, HelpActivity.class);
+					startActivity(i);
+				}
+			})
+		   .create()
+		   .show();
+		}
+	}
+	
+	private void onCreateMain(){
+//		Log.i("DEBUG", "onCreateMain");
 		mapView_ = (MapView)findViewById(R.id.mapview);
 		mapCtrl_ = mapView_.getController();
 		mapCtrl_.setZoom(15);
@@ -159,23 +214,25 @@ public class PhotSpotActivity extends MapActivity {
 		setDefaultKeyMode(DEFAULT_KEYS_SEARCH_LOCAL);
 
 		/* Restore preferences */
-		SharedPreferences settings = getSharedPreferences(getString(R.string.PhotSpotPreference), 0);
-		boolean mapmode = settings.getBoolean(getString(R.string.PrefMapMode), false);
+		boolean mapmode = settings_.getBoolean(getString(R.string.PrefMapMode), false);
 		mapView_.setSatellite(mapmode);
-		contentProvider_ = settings.getInt(getString(R.string.PrefContentProvider), 0);
+		contentProvider_ = settings_.getInt(getString(R.string.PrefContentProvider), 0);
 
         /* get and process search query here */
 		final Intent intent = getIntent();
 		final String action = intent.getAction();
-		mylocationSetFocus_ = false;
+		favUpdateTimer_.removeCallbacks(favOverlayUpdateTask_);
 		if (Intent.ACTION_SEARCH.equals(action)) {
 			Toast.makeText(this, R.string.ToastRevGeoCodeRun, Toast.LENGTH_SHORT).show();
+			mylocationSetFocus_ = false;
 			mylocationEnabled_ = false;
+			favoriteOverlayed_ = false;
 			doSearchQuery(intent);
 		}
 		if (Intent.ACTION_VIEW.equals(action)) {
 			mylocationEnabled_ = true;
 			mylocationSetFocus_ = false;
+			favoriteOverlayed_ = true;
 			PhotoItem item = intent.getParcelableExtra(PhotoItem.EXT_PHOTOITEM);
 			mapCtrl_.animateTo(item.getLocation());
 	        final List<Overlay> overlays = mapView_.getOverlays();
@@ -183,9 +240,9 @@ public class PhotSpotActivity extends MapActivity {
 			mapView_.invalidate();
 		}
 		else{
-			Toast.makeText(this, R.string.ToastInstructionNav, Toast.LENGTH_LONG).show();
 			mylocationEnabled_ = true;
 			mylocationSetFocus_ = true;
+			favoriteOverlayed_ = false;
 		}
 	}
 
@@ -217,12 +274,16 @@ public class PhotSpotActivity extends MapActivity {
 				startListening();
 			}
 		}
+		if(favoriteOverlayed_)
+			favUpdateTimer_.postDelayed(favOverlayUpdateTask_, 1000);
 	}
 
 	/* onStop */
 	@Override 
 	public void onStop() {
 //		Log.i("DEBUG", "onStop"); 
+		if(favoriteOverlayed_)
+			favUpdateTimer_.removeCallbacks(favOverlayUpdateTask_);
 		stopListening();
 		super.onStop();
 	}
@@ -327,6 +388,7 @@ public class PhotSpotActivity extends MapActivity {
 				}
 				uri += "&dbg="+debugstr+",android";
 //				Log.i("DEBUG",uri);
+				favUpdateTimer_.removeCallbacks(favOverlayUpdateTask_);
 				getPhotoFeedTask_ = new GetPhotoFeedTask(this);
 				getPhotoFeedTask_.execute(uri);
 				break;
@@ -342,6 +404,7 @@ public class PhotSpotActivity extends MapActivity {
 				break;
 			}
 			case R.id.menu_Favorites:{
+				favUpdateTimer_.removeCallbacks(favOverlayUpdateTask_);
 				Intent i = new Intent(this, FavoritesActivity.class);
 				startActivity(i);
 				break;
@@ -359,6 +422,7 @@ public class PhotSpotActivity extends MapActivity {
 				break;
 			}
 			case R.id.menu_Help:{
+				favUpdateTimer_.removeCallbacks(favOverlayUpdateTask_);
 				Intent i = new Intent(this, HelpActivity.class);
 				startActivity(i);
 				break;
@@ -397,8 +461,7 @@ public class PhotSpotActivity extends MapActivity {
 					public void onClick(DialogInterface dialog, int whichButton) {
 						boolean isSatelite = whichButton == 0 ? false : true;
 						mapView_.setSatellite(isSatelite);
-						SharedPreferences settings = getSharedPreferences(getString(R.string.PhotSpotPreference), 0);
-						SharedPreferences.Editor editor = settings.edit();
+						SharedPreferences.Editor editor = settings_.edit();
 						editor.putBoolean(getString(R.string.PrefMapMode), isSatelite);
 						editor.commit();
 						dismissDialog(R.id.MapModeDlg);
@@ -413,8 +476,7 @@ public class PhotSpotActivity extends MapActivity {
 				.setSingleChoiceItems(R.array.select_service, contentProvider_, new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int whichButton) {
 						contentProvider_ = whichButton;
-						SharedPreferences settings = getSharedPreferences(getString(R.string.PhotSpotPreference), 0);
-						SharedPreferences.Editor editor = settings.edit();
+						SharedPreferences.Editor editor = settings_.edit();
 						editor.putInt(getString(R.string.PrefContentProvider),contentProvider_);
 						editor.commit();
 						dismissDialog(R.id.PreferencesDlg);
@@ -423,10 +485,16 @@ public class PhotSpotActivity extends MapActivity {
 				.create();
 			}
 			case R.id.AboutDlg:{
+				msgTxtView_ = new TextView(this);
+				msgTxtView_.setTextSize(14);
+				msgTxtView_.setText(R.string.AboutDlgContent);
+				msgTxtView_.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
+				msgFrame_ = new ScrollView(this);
+				msgFrame_.addView(msgTxtView_);
 				return new AlertDialog.Builder(this)
 				.setIcon(R.drawable.icon)
 				.setTitle(R.string.AboutDlgTitle)
-				.setMessage(R.string.AboutDlgContent)
+				.setView(msgFrame_)
 				.setPositiveButton(R.string.Dlg_OK, new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int whichButton) {
 					}
@@ -537,6 +605,15 @@ public class PhotSpotActivity extends MapActivity {
 			}
 	}
 	
+	/* timer task for updating favorite overlay */
+	private Runnable favOverlayUpdateTask_ = new Runnable() {
+		public void run() {
+			long current = SystemClock.uptimeMillis();
+			mapView_.invalidate();
+			favUpdateTimer_.postAtTime(this,current+1000);
+		}
+	};
+	
 	/* GetPhotoFeedTask - AsyncTask */
 	private class GetPhotoFeedTask extends AsyncTask<String, Integer, Integer> {
 		JsonFeedGetter getter_;
@@ -594,9 +671,9 @@ public class PhotSpotActivity extends MapActivity {
         private Paint paint_;
         private String title_;
         private String subtitle_;
-    	
-    	private static final int EXT_ACTION_OPENBROWSER		= 0;
-    	private static final int EXT_ACTION_NAVTOPLACE		= 1;
+        
+    	private static final int EXT_ACTION_NAVTOPLACE		= 0;
+    	private static final int EXT_ACTION_OPENBROWSER		= 1;
 
 		public ImageOverlay(Context c, PhotoItem item) { 
 			context_ = c;
@@ -619,31 +696,39 @@ public class PhotSpotActivity extends MapActivity {
 			paint_.setTextSize(14);
 			paint_.setTypeface(Typeface.DEFAULT_BOLD);
 			title_ = item_.getTitle();
-			if(title_.length()>26)
-				title_ = title_.substring(0, 25);
+			if(title_.length()>25)
+				title_ = title_.substring(0, 24);
 			subtitle_ = item_.getAuthor();
-			if(subtitle_.length()>24)
-				subtitle_ = subtitle_.substring(0, 23);
+			if(subtitle_.length()>25)
+				subtitle_ = subtitle_.substring(0, 24);
 			subtitle_ = "by: "+subtitle_;
-		} 
+		}
+
 		/* onTouchEvent */
 		@Override
 	    public boolean onTap(GeoPoint p, MapView mapView){
-			new AlertDialog.Builder(context_)
-			.setTitle(R.string.ExtActionDlg)
-			.setPositiveButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog, int whichButton) {
-					dialog.dismiss();
-				}
-			})
-			.setItems(R.array.showmap_extaction, new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog, int which) {
-					onItemAction(which,item_);
-					dialog.dismiss();
-				}
-			})
-		   .create()
-		   .show();
+			Projection pro = mapView.getProjection();
+			Point ct = pro.toPixels(item_.getLocation(), null);
+			Point pt = pro.toPixels(p, null);
+			/* check if this marker was tapped */
+			if( pt.x > ct.x-frmRect_.width()/2 && pt.x < ct.x+frmRect_.width()/2 && pt.y > ct.y-frmRect_.height()/2 && pt.y < ct.y+frmRect_.height()/2 ){
+				new AlertDialog.Builder(context_)
+				.setTitle(R.string.ExtActionDlg)
+				.setPositiveButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int whichButton) {
+						dialog.dismiss();
+					}
+				})
+				.setItems(R.array.showmap_extaction, new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int which) {
+						onItemAction(which,item_);
+						dialog.dismiss();
+					}
+				})
+			   .create()
+			   .show();
+				return true;
+			}
 			return false;
 		}
 

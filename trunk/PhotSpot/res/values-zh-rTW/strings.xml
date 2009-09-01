@@ -49,6 +49,10 @@
 	<string name="Distance">近似距離</string>
 	<string name="FavFooter">照片的位置也许不準確。 \n提供的照片和版權屬於他們各自的所有者\n</string>
 	<string name="DeleteAllConfirm">刪除全部項目在收藏夾</string>
+	<string name="EditLabel">分類</string>
+	<string name="UndefinedFavLabel">未分類</string>
+	<string name="Delete">刪除</string>
+	<string name="DeleteConfirm">可以刪除該項目？</string>
 
 	<string name="MapModeDlgTitle">選擇地圖模式</string>
 	<string name="PreferencesDlgTitle">選擇服務</string>
@@ -57,15 +61,15 @@
 	<string name="Dlg_OK">OK</string>
 	<string name="Dlg_Close">關</string>
 
-	<string name="AboutDlgTitle">關於</string>
+	<string name="AboutDlgTitle">熱門拍照點</string>
 	<string name="AboutDlgContent">
-		热门拍照点 by Huan Erdao\n 
-		Panoramio和Picasa Web Albums是Google Inc.的商標\n 
-		Flickr是Yahoo Inc.的商标\n 
-		該軟体採用上述服務的API，但是上述公司不保證該軟体功能。 
-		所有其它品牌和產品名稱都是各自公司的商標、註冊商標或者服務標誌。 \n 
-		此服務提供的照片和版權屬於他們各自的所有者。 
-		照片的位置也许不準確。
+		熱門拍照點 by Huan Erdao\n\n
+		Panoramio和Picasa Web Albums是Google Inc.的商標\n
+		Flickr是Yahoo Inc.的商标\n\n
+		該軟体採用上述服務的API，但是上述公司不保證該軟体功能。\n
+		所有其它品牌和產品名稱都是各自公司的商標、註冊商標或者服務標誌。 \n\n
+		此服務提供的照片和版權屬於他們各自的所有者。\n
+		照片的位置也許不准確。\n
 	</string>
 	<string name="copyrightLabel">提供的照片和版權屬於他們各自的所有者</string>
 
@@ -84,6 +88,11 @@
 		選擇此菜單或按下搜索鍵將開始尋找任何地點。 
 		&lt;li&gt;&lt;b&gt;現在位置&lt;/b&gt;&lt;/li&gt;
 		將返回到您當前的位置。 
+		&lt;li&gt;&lt;b&gt;收藏夹&lt;/b&gt;&lt;/li&gt;
+		You can save favorite spots and browse them afterwards. You can browse favorites even if you are in offline mode.&lt;br&gt;
+		To Add spots to favorites, long-press the thumbnail on gallery view and select \"Add to Favorites\" on the pop-up menu.&lt;br&gt;
+		You can save up to 256 favorite items. Favorite items also can be labeled.
+		After saving spots to favorites, select item and select \"Edit Label\" action.&lt;br&gt;
 		&lt;li&gt;&lt;b&gt;地圖模式&lt;/b&gt;&lt;/li&gt;
 		選擇地圖模式“地圖”或“衛星” 
 		&lt;li&gt;&lt;b&gt;設定&lt;/b&gt;&lt;/li&gt;
@@ -114,6 +123,18 @@
 		&lt;/ul&gt;
 		&lt;h2&gt;秘诀&lt;/h2&gt;
 		&lt;ul&gt;
+			&lt;li&gt;&lt;b&gt;选择服务&lt;/b&gt;&lt;/li&gt;
+			各服务提供的照片类型不一样， Panoramio提供优美的风景照片，以便找到名胜历史的地方。 
+			Picasa Web Album和Flickr包含更多类型的内容，相比Panoramio，它可以检索到更多更新的内容 。
+		&lt;/ul&gt;
+		&lt;h2&gt;更多&lt;/h2&gt;
+		&lt;ul&gt;
+			&lt;li&gt;&lt;b&gt;您想貢獻對這個軟体？&lt;/b&gt;&lt;/li&gt;
+			If you want to contribute this app, it is easy.
+			Just upload photo with geotag to any of the services PhotSpot supports,
+			make sure you set them to public, so that photos are available in their feeds.
+			If many users uploads photos to those services, it means this app will get more richer.
+		&lt;/ul&gt;
 		&lt;li&gt;&lt;b&gt;選擇服務&lt;/b&gt;&lt;/li&gt;
 		各服務提供的照片類型不一樣， Panoramio提供優美的風景照片，以便找到名勝歷史的地方。 
 		Picasa Web Album和Flickr包含更多類型的內容，相比Panoramio，它可以檢索到更多更新的內容。 

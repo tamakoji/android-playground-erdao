@@ -37,6 +37,7 @@
 	<string name="PhotSpotPreference">PhotSpotPreference</string>
 	<string name="PrefContentProvider">ContentProvider</string>
 	<string name="PrefMapMode">MapMode</string>
+	<string name="PrefInitialBoot">InitialBoot</string>
 	<string name="no_title">NO TITLE</string>
 	<string name="search_invoke">App/Search/Invoke Search</string>
 
@@ -58,6 +59,10 @@
 	<string name="Distance">Approx Dist</string>
 	<string name="FavFooter">The location of spots may not be accurate.\nPhotos are under the copyright of their owners.\n</string>
 	<string name="DeleteAllConfirm">All items in favorites will be deleted.</string>
+	<string name="EditLabel">Edit Label</string>
+	<string name="UndefinedFavLabel">Undefined</string>
+	<string name="Delete">Delete</string>
+	<string name="DeleteConfirm">This item will be deleted.</string>
 
 	<string name="ExtActionDlg">Select Action</string>
 	<string name="LocalSearchDlg">Select to google search</string>
@@ -67,14 +72,27 @@
 	<string name="Dlg_Close">Close</string>
 
 	<string name="AboutDlgTitle">About PhotSpot</string>
+	<string name="InitialMessage">
+		PhotSpot by Huan Erdao\n\n
+		PhotSpot will let you easily find out the popular spot at location of your choice.
+		It will retrieve public geotagged contents on the map screen and show them in clustered balloons.
+		the each number on the balloon shows the number of contents within the cluster, so that
+		the more the number it has, the more people take photos around that area.\n\n
+		Update in latest version:\n
+		- add favorite feature. you can save spots!\n
+		- bugfix: force close when GPS are disabled\n
+		\n
+		For more instructions, please see help from\n
+		[menu]->[more]->[help]\n\n
+	</string>
 	<string name="AboutDlgContent">
-		PhotSpot by Huan Erdao\n
+		PhotSpot by Huan Erdao\n\n
 		Panoramio and Picasa Web Albums are trademarks of Google Inc.\n
-		Flickr is a trademark of Yahoo! Inc.\n
+		Flickr is a trademark of Yahoo! Inc.\n\n
 		All other company and product names may be trademarks of the respective companies with which they are associate.\n
-		This product uses the APIs of above services but is not endorsed by above companies.\n
-		Photos provided by above services are under the copyright of their owners.
-		The location of photos may not be accurate.
+		This product uses the APIs of above services but is not endorsed by above companies.\n\n
+		Photos provided by above services are under the copyright of their owners.\n
+		The location of photos may not be accurate.\n
 	</string>
 	<string name="copyrightLabel">Photos are under the copyright of their owners.</string>
 
@@ -96,9 +114,10 @@
 			On initial screen it is turned on, if you wish to set map location to current location, select this.
 			It will require GPS to find your current location.
 			&lt;li&gt;&lt;b&gt;Favorites&lt;/b&gt;&lt;/li&gt;
-			You can save favorite spots and browse them afterwards. To Add spots to favorites,
-			long-press the thumbnail on gallery view and select \"Add to Favorites\" on the pop-up menu.
-			You can save up to 256 favorite items.
+			You can save favorite spots and browse them afterwards. You can browse favorites even if you are in offline mode.&lt;br&gt;
+			To Add spots to favorites, long-press the thumbnail on gallery view and select \"Add to Favorites\" on the pop-up menu.&lt;br&gt;
+			You can save up to 256 favorite items. Favorite items also can be labeled.
+			After saving spots to favorites, select item and select \"Edit Label\" action.&lt;br&gt;
 			&lt;li&gt;&lt;b&gt;Map Mode&lt;/b&gt;&lt;/li&gt;
 			You can either select \"map\" mode or \"satellite\" mode (default:map mode)
 			&lt;li&gt;&lt;b&gt;Select Provider&lt;/b&gt;&lt;/li&gt;

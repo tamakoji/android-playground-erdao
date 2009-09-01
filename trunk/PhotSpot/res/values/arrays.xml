@@ -27,17 +27,17 @@
 
 	<string-array name="gallery_extaction">
         <item>Add to Favorites</item>
-        <item>Open with browser</item>
         <item>What's here?</item>
         <item>Route to the place</item>
+        <item>Open with browser</item>
     </string-array>
 
 	<string-array name="favorite_extaction">
         <item>Show on Map</item>
         <item>Route to the place</item>
-        <item>Open with browser</item>
         <item>Edit Label</item>
         <item>Remove from Favorites</item>
+        <item>Open with browser</item>
     </string-array>
 
 	<string-array name="showmap_extaction">
