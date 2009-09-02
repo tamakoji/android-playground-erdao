@@ -18,6 +18,7 @@
 	<string name="gmap_key_rel">YOUR-GOOGLEMAP-KEY</string>
 		
 	<string name="app_name">PhotSpot</string>
+	<string name="app_ver">1.3.0</string>
 	<string name="help_title">PhotSpot Help</string>
 	<string name="favorite_title">Favorites</string>
 
@@ -37,7 +38,7 @@
 	<string name="PhotSpotPreference">PhotSpotPreference</string>
 	<string name="PrefContentProvider">ContentProvider</string>
 	<string name="PrefMapMode">MapMode</string>
-	<string name="PrefInitialBoot">InitialBoot</string>
+	<string name="PrefVersionInfo">VersionInfo</string>
 	<string name="no_title">NO TITLE</string>
 	<string name="search_invoke">App/Search/Invoke Search</string>
 
@@ -102,6 +103,7 @@
 			It will retrieve public geotagged contents on the map screen and show them in clustered balloons.
 			the each number on the balloon shows the number of contents within the cluster, so that
 			the more the number it has, the more people take photos around that area.
+		&lt;hr&gt;
 		&lt;h2&gt;Instruction&lt;/h2&gt;
 			&lt;ul&gt;
 				&lt;li&gt;&lt;b&gt;Initial Screen&lt;/b&gt;&lt;/li&gt;
@@ -131,6 +133,7 @@
 				&lt;li&gt;&lt;b&gt;Help&lt;/b&gt;&lt;/li&gt;
 				Opens this content
 			&lt;/ul&gt;
+		&lt;hr&gt;
 		&lt;h2&gt;Viewing the result&lt;/h2&gt;
 			&lt;ul&gt;
 				&lt;li&gt;&lt;b&gt;Opening gallery view&lt;/b&gt;&lt;/li&gt;
@@ -147,6 +150,7 @@
 				&lt;li&gt;&lt;b&gt;Dismissing the Gallery View&lt;/b&gt;&lt;/li&gt;
 				By clicking the bar on the bottom of the Gallery View, you can dismiss the Gallery View.&lt;br&gt;
 			&lt;/ul&gt;
+		&lt;hr&gt;
 		&lt;h2&gt;Tips&lt;/h2&gt;
 			&lt;ul&gt;
 				&lt;li&gt;&lt;b&gt;Selecting the content provider&lt;/b&gt;&lt;/li&gt;
@@ -155,14 +159,14 @@
 				Picasa Web Album and Flickr can get more casual content, but it can retrieve more up-to-date content
 				compared to using Panoramio.
 			&lt;/ul&gt;
+		&lt;hr&gt;
 		&lt;h2&gt;Furthermore&lt;/h2&gt;
-			&lt;ul&gt;
-				&lt;li&gt;&lt;b&gt;Contribute the PhotSpot&lt;/b&gt;&lt;/li&gt;
+			&lt;h4&gt;Contribute the PhotSpot&lt;/h4&gt;
 				If you want to contribute this app, it is easy.
 				Just upload photo with geotag to any of the services PhotSpot supports,
 				make sure you set them to public, so that photos are available in their feeds.
 				If many users uploads photos to those services, it means this app will get more richer.
-			&lt;/ul&gt;
+		&lt;hr&gt;
 		&lt;h2&gt;Legal Notices&lt;/h2&gt;
 			Panoramio and Picasa Web Albums are trademarks of Google Inc.&lt;br&gt;
 			Flickr is a trademark of Yahoo! Inc.&lt;br&gt;
@@ -170,6 +174,10 @@
 			This product uses the APIs of above services but is not endorsed by above companies.&lt;br&gt;
 			Photos provided by above services are under the copyright of their owners.&lt;br&gt;
 			The location of photos may not be accurate.&lt;br&gt;
+		&lt;hr&gt;
+		&lt;h2&gt;Feedback&lt;/h2&gt;
+			Please send any feedback to &lt;a href=\"mailto:Huan.Erdao@gmail.com\"&gt;Huan.Erdao@gmail.com&lt;/a&gt;&lt;br&gt;
+			Langueages acceptable in :English,Chinese,Japanese
 	</string>
 
 </resources>

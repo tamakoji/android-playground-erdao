@@ -27,7 +27,7 @@
     </string-array>
 
 	<string-array name="favorite_extaction">
-        <item>看在地图上</item>
+        <item>用地图看</item>
         <item>这儿怎么走?</item>
         <item>分类项目</item>
         <item>删除项目</item>
