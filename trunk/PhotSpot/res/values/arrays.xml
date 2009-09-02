@@ -41,8 +41,8 @@
     </string-array>
 
 	<string-array name="showmap_extaction">
-        <item>Open with browser</item>
         <item>Route to the place</item>
+        <item>Open with browser</item>
     </string-array>
 
 </resources>

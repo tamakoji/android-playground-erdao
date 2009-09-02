@@ -129,9 +129,10 @@ public class PhotSpotActivity extends MapActivity {
 
 		onCreateMain();
 
-		boolean initialBoot = settings_.getBoolean(getString(R.string.PrefInitialBoot), true);
+		String version = settings_.getString(getString(R.string.PrefVersionInfo), "");
+		boolean initialBoot = !version.equals(getString(R.string.app_ver));
 		SharedPreferences.Editor editor = settings_.edit();
-		editor.putBoolean(getString(R.string.PrefInitialBoot),false);
+		editor.putString(getString(R.string.PrefVersionInfo),getString(R.string.app_ver));
 		editor.commit();
 		if(initialBoot){
 			msgTxtView_ = new TextView(this);
