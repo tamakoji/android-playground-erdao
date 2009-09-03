@@ -41,8 +41,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.BaseExpandableListAdapter;
-import android.widget.EditText;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -65,7 +66,8 @@ public class FavoritesActivity extends ExpandableListActivity {
 	private int groupPos_;
 	private int childPos_;
 	private ImageAdapter imageAdapter_ = null;
-    private EditText edit_;
+	ArrayAdapter<String> adapter_;
+    AutoCompleteTextView edit_;
 	
 	private static final int EXT_ACTION_SHOWONMAP			= 0;
 	private static final int EXT_ACTION_NAVTOPLACE			= 1;
@@ -297,8 +299,13 @@ public class FavoritesActivity extends ExpandableListActivity {
 				break;
 			}
 			case EXT_ACTION_EDITLABEL:{
-		        edit_ = new EditText(this);
+		        setTheme(android.R.style.Theme_Black);
+				adapter_ = new ArrayAdapter<String>(this,
+		                 android.R.layout.simple_dropdown_item_1line, groups_);
+		        edit_ = new AutoCompleteTextView(this);
+		        edit_.setSingleLine();
 		        edit_.setWidth(50);
+		        edit_.setAdapter(adapter_);
 				String label = dbHelper_.queryLabel(photoItemNodes_.get(groupPos).get(childPos));
 				if(label!=null){
 					edit_.setText(label);
@@ -317,11 +324,13 @@ public class FavoritesActivity extends ExpandableListActivity {
 							updateGroupList();
 							imageAdapter_.notifyDataSetChanged();
 						}
+				        context_.setTheme(android.R.style.Theme_Light);
 						dialog.dismiss();
 					}
 				})
 				.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int whichButton) {
+				        context_.setTheme(android.R.style.Theme_Light);
 						dialog.dismiss();
 					}
 				})

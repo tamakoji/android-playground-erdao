@@ -16,9 +16,9 @@
 <resources>
 	<string name="gmap_key_dbg">YOUR-GOOGLEMAP-KEY</string>
 	<string name="gmap_key_rel">YOUR-GOOGLEMAP-KEY</string>
-		
+			
 	<string name="app_name">PhotSpot</string>
-	<string name="app_ver">1.3.0</string>
+	<string name="app_ver">1.3.1</string>
 	<string name="help_title">PhotSpot Help</string>
 	<string name="favorite_title">Favorites</string>
 
@@ -79,7 +79,11 @@
 		It will retrieve public geotagged contents on the map screen and show them in clustered balloons.
 		the each number on the balloon shows the number of contents within the cluster, so that
 		the more the number it has, the more people take photos around that area.\n\n
-		Update in latest version:\n
+		Recent Updates:\n
+		1.3.1:\n
+		- auto complete for favorite labels\n
+		- changed some icon designs\n
+		1.3.0:\n
 		- add favorite feature. you can save spots!\n
 		- bugfix: force close when GPS are disabled\n
 		\n
@@ -105,24 +109,23 @@
 			the more the number it has, the more people take photos around that area.
 		&lt;hr&gt;
 		&lt;h2&gt;Instruction&lt;/h2&gt;
-			&lt;ul&gt;
-				&lt;li&gt;&lt;b&gt;Initial Screen&lt;/b&gt;&lt;/li&gt;
+			&lt;h4&gt;Initial Screen&lt;/h4&gt;
 				Initial map screen will display the map of current location. Press "menu" button to proceed.
-				&lt;li&gt;&lt;b&gt;Search Spot&lt;/b&gt;&lt;/li&gt;
+			&lt;h4&gt;Search Spot&lt;/h4&gt;
 				Selecting \"Search Spot\" will retrieve public content and result will be shown on the map.
-				&lt;li&gt;&lt;b&gt;Search Place&lt;/b&gt;&lt;/li&gt;
+			&lt;h4&gt;Search Place&lt;/h4&gt;
 				Selecting \"Search Place\" or pressing search button on your device will start search for certain place.
-				&lt;li&gt;&lt;b&gt;My Location&lt;/b&gt;&lt;/li&gt;
+			&lt;h4&gt;My Location&lt;/h4&gt;
 				On initial screen it is turned on, if you wish to set map location to current location, select this.
 				It will require GPS to find your current location.
-				&lt;li&gt;&lt;b&gt;Favorites&lt;/b&gt;&lt;/li&gt;
+			&lt;h4&gt;Favorites&lt;/h4&gt;
 				You can save favorite spots and browse them afterwards. You can browse favorites even if you are in offline mode.&lt;br&gt;
 				To Add spots to favorites, long-press the thumbnail on gallery view and select \"Add to Favorites\" on the pop-up menu.&lt;br&gt;
 				You can save up to 256 favorite items. Favorite items also can be labeled.
 				After saving spots to favorites, select item and select \"Edit Label\" action.&lt;br&gt;
-				&lt;li&gt;&lt;b&gt;Map Mode&lt;/b&gt;&lt;/li&gt;
+			&lt;h4&gt;Map Mode&lt;/h4&gt;
 				You can either select \"map\" mode or \"satellite\" mode (default:map mode)
-				&lt;li&gt;&lt;b&gt;Select Provider&lt;/b&gt;&lt;/li&gt;
+			&lt;h4&gt;Select Provider&lt;/h4&gt;
 				You can select content provider for retrieving the geotagged content.(default:Panoramio)
 				Currently supported providers are:
 				&lt;ul&gt;
@@ -130,35 +133,30 @@
 					&lt;li&gt;&lt;b&gt;Picasa Web Album&lt;/b&gt;&lt;/li&gt;
 					&lt;li&gt;&lt;b&gt;Flickr&lt;/b&gt;&lt;/li&gt;
 				&lt;/ul&gt;
-				&lt;li&gt;&lt;b&gt;Help&lt;/b&gt;&lt;/li&gt;
+			&lt;h4&gt;Help&lt;/h4&gt;
 				Opens this content
-			&lt;/ul&gt;
 		&lt;hr&gt;
 		&lt;h2&gt;Viewing the result&lt;/h2&gt;
-			&lt;ul&gt;
-				&lt;li&gt;&lt;b&gt;Opening gallery view&lt;/b&gt;&lt;/li&gt;
+			&lt;h4&gt;Opening gallery view&lt;/h4&gt;
 				By tapping the balloon, Gallery View will show up. You can browse what is in there.
-				&lt;li&gt;&lt;b&gt;Double-Tap to zoom in the map&lt;/b&gt;&lt;/li&gt;
+			&lt;h4&gt;Double-Tap to zoom in the map&lt;/h4&gt;
 				You can zoom in/out using zoom control, also you can zoom in by double-tapping the balloon.
 				It will zoom into the detail location of the content you are currently looking at.
-				&lt;li&gt;&lt;b&gt;Zoom in/out to discover more&lt;/b&gt;&lt;/li&gt;
+			&lt;h4&gt;Zoom in/out to discover more&lt;/h4&gt;
 				Zooming in/out the map will merge/divide clusters according to the zoom level.
 				But content itself are based on result you get by \"Search Spot\" command.
 				If you need to refresh result, select \"Refresh Spot\" from the menu.
-				&lt;li&gt;&lt;b&gt;Long-pressing the thumbnail&lt;/b&gt;&lt;/li&gt;
+			&lt;h4&gt;Long-pressing the thumbnail&lt;/h4&gt;
 				By long-pressing the thumbnail, extra actions will pop-up&lt;br&gt;
-				&lt;li&gt;&lt;b&gt;Dismissing the Gallery View&lt;/b&gt;&lt;/li&gt;
+			&lt;h4&gt;Dismissing the Gallery View&lt;/h4&gt;
 				By clicking the bar on the bottom of the Gallery View, you can dismiss the Gallery View.&lt;br&gt;
-			&lt;/ul&gt;
 		&lt;hr&gt;
 		&lt;h2&gt;Tips&lt;/h2&gt;
-			&lt;ul&gt;
-				&lt;li&gt;&lt;b&gt;Selecting the content provider&lt;/b&gt;&lt;/li&gt;
+			&lt;h4&gt;Selecting the content provider&lt;/h4&gt;
 				Contents you can get differs by providers, Panoramio will provide beautiful scenery photo content
 				so it is useful to find landmarks and historical places.&lt;br&gt;
 				Picasa Web Album and Flickr can get more casual content, but it can retrieve more up-to-date content
 				compared to using Panoramio.
-			&lt;/ul&gt;
 		&lt;hr&gt;
 		&lt;h2&gt;Furthermore&lt;/h2&gt;
 			&lt;h4&gt;Contribute the PhotSpot&lt;/h4&gt;
@@ -177,7 +175,7 @@
 		&lt;hr&gt;
 		&lt;h2&gt;Feedback&lt;/h2&gt;
 			Please send any feedback to &lt;a href=\"mailto:Huan.Erdao@gmail.com\"&gt;Huan.Erdao@gmail.com&lt;/a&gt;&lt;br&gt;
-			Langueages acceptable in :English,Chinese,Japanese
+			Languages acceptable:English,Chinese,Japanese
 	</string>
 
 </resources>

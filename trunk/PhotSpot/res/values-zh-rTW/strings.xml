@@ -68,8 +68,12 @@
 		軟体將搜索公開照片和全球定位系統數據,然後顯示“群集氣球”在地圖上。每個氣球的數字顯示了照片數量。 
 		所以氣球的數字越大，該位置越熱門。 \n\n 
 		更新內容:\n 
-		-新功能：收藏夾。您能保存喜歡的景點\n 
-		-缺陷修復:如果GPS功能被禁用該軟件將會強制結束\n 
+		1.3.1:\n
+		- 新功能：在收藏夾分類支持自動完成\n
+		- 圖標設計更改\n
+		1.3.0:\n
+		- 新功能：收藏夾。您能保存喜歡的景點\n 
+		- 缺陷修復:如果GPS功能被禁用該軟件將會強制結束\n 
 		\n 
 		欲了解更多信息，請看幫助:\n 
 		[菜單]->[更多]->[幫助]\n\n 
@@ -92,23 +96,22 @@
 			所以氣球的數字越大，該位置越熱門。 
 		&lt;hr&gt;
 		&lt;h2&gt;操作方法&lt;/h2&gt;
-			&lt;ul&gt;
-				&lt;li&gt;&lt;b&gt;初始畫面&lt;/b&gt;&lt;/li&gt;
+			&lt;h4&gt;初始畫面&lt;/h4&gt;
 				最初屏幕顯示當前位置地圖。請按菜單按鈕。 
-				&lt;li&gt;&lt;b&gt;搜索熱門拍照點&lt;/b&gt;&lt;/li&gt;
+			&lt;h4&gt;搜索熱門拍照點&lt;/h4&gt;
 				將開始搜索公開照片。完成後，顯示在地圖上。 
-				&lt;li&gt;&lt;b&gt;搜索地方&lt;/b&gt;&lt;/li&gt;
+			&lt;h4&gt;搜索地方&lt;/h4&gt;
 				選擇此菜單或按下搜索鍵將開始尋找任何地點。 
-				&lt;li&gt;&lt;b&gt;現在位置&lt;/b&gt;&lt;/li&gt;
+			&lt;h4&gt;現在位置&lt;/h4&gt;
 				將返回到您當前的位置。 
-				&lt;li&gt;&lt;b&gt;收藏夾&lt;/b&gt;&lt;/li&gt;
+			&lt;h4&gt;收藏夾&lt;/h4&gt;
 				您能保存喜歡的景點，然後您能看收藏夾即使離線的時候。 &lt;br&gt;
 				如果您想保存景點,按住縮略圖，然後從菜單選擇\"加入收藏夾\"。 &lt;br&gt;
 				您能保存最大256項目。此外項目能分類。 
 				您想分類的時候，選擇項目，然後從菜單選擇\"分類\"。 &lt;br&gt;
-				&lt;li&gt;&lt;b&gt;地圖模式&lt;/b&gt;&lt;/li&gt;
+			&lt;h4&gt;地圖模式&lt;/h4&gt;
 				選擇地圖模式“地圖”或“衛星” 
-				&lt;li&gt;&lt;b&gt;設置&lt;/b&gt;&lt;/li&gt;
+			&lt;h4&gt;設置&lt;/h4&gt;
 				您可以選擇照片提供商（默認： Panoramio ）&lt;br&gt;
 				目前支持的供應商是： 
 				&lt;ul&gt;
@@ -116,32 +119,27 @@
 					&lt;li&gt;&lt;b&gt;Picasa Web Album&lt;/b&gt;&lt;/li&gt;
 					&lt;li&gt;&lt;b&gt;Flickr&lt;/b&gt;&lt;/li&gt;
 				&lt;/ul&gt;
-				&lt;li&gt;&lt;b&gt;幫助&lt;/b&gt;&lt;/li&gt;
+			&lt;h4&gt;幫助&lt;/h4&gt;
 				打開這個網頁 
-			&lt;/ul&gt;
 		&lt;hr&gt;
 		&lt;h2&gt;查看結果&lt;/h2&gt;
-			&lt;ul&gt;
-				&lt;li&gt;&lt;b&gt;點擊氣球看到內容&lt;/b&gt;&lt;/li&gt;
+			&lt;h4&gt;點擊氣球看到內容&lt;/h4&gt;
 				點擊氣球，顯示圖像畫廊。您可以瀏覽該處的照片。 
-				&lt;li&gt;&lt;b&gt;雙擊縮小地圖&lt;/b&gt;&lt;/li&gt;
+			&lt;h4&gt;雙擊縮小地圖&lt;/h4&gt;
 				雙擊氣球您可以縮放地圖。您也可以用屏幕右下角的按鈕。 
-				&lt;li&gt;&lt;b&gt;放大,縮小&lt;/b&gt;&lt;/li&gt;
+			&lt;h4&gt;放大,縮小&lt;/h4&gt;
 				放大/縮小地圖將根據縮放級別合併/分離“群集氣球”。 
 				但是，照片不刷新。如果您需要刷新照片， 
 				從菜單選擇“刷新熱門拍照點”。 &lt;br&gt;
-				&lt;li&gt;&lt;b&gt;按住縮略圖&lt;/b&gt;&lt;/li&gt;
+			&lt;h4&gt;按住縮略圖&lt;/h4&gt;
 				按住縮略圖，將彈出操作菜單&lt;br&gt;
-				&lt;li&gt;&lt;b&gt;要隱藏畫廊&lt;/b&gt;&lt;/li&gt;
+			&lt;h4&gt;要隱藏畫廊&lt;/h4&gt;
 				點擊圖像畫廊底部，將關閉圖像畫廊。 &lt;br&gt;
-			&lt;/ul&gt;
 		&lt;hr&gt;
 		&lt;h2&gt;秘訣&lt;/h2&gt;
-			&lt;ul&gt;
-				&lt;li&gt;&lt;b&gt;選擇服務&lt;/b&gt;&lt;/li&gt;
+			&lt;h4&gt;選擇服務&lt;/h4&gt;
 				各服務提供的照片類型不一樣， Panoramio提供優美的風景照片，以便找到名勝歷史的地方。 
 				Picasa Web Album和Flickr包含更多類型的內容，相比Panoramio，它可以檢索到更多更新的內容。 
-			&lt;/ul&gt;
 		&lt;hr&gt;
 		&lt;h2&gt;更多&lt;/h2&gt;
 			&lt;h4&gt;您想協助這個軟体？ &lt;/h4&gt;
