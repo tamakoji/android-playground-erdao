@@ -68,6 +68,10 @@
 		软件将搜索公开照片和全球定位系统数据,然后显示“群集气球”在地图上。每个气球的数字显示了照片数量。
 		所以气球的数字越大，该位置越热门。\n\n
 		更新内容:\n
+		1.3.1:\n
+		- 新功能：收藏夹分类支持自动完成\n
+		- 图标设计更改\n
+		1.3.0:\n
 		- 新功能：收藏夹。您能保存喜欢的景点\n
 		- 缺陷修复:如果GPS功能被禁用该软件将会強制結束\n
 		\n
@@ -92,23 +96,22 @@
 			所以气球的数字越大，该位置越热门。
 		&lt;hr&gt;
 		&lt;h2&gt;操作方法&lt;/h2&gt;
-			&lt;ul&gt;
-				&lt;li&gt;&lt;b&gt;初始画面&lt;/b&gt;&lt;/li&gt;
+			&lt;h4&gt;初始画面&lt;/h4&gt;
 				最初屏幕显示当前位置地图。请按菜单按钮。
-				&lt;li&gt;&lt;b&gt;搜索热门拍照点&lt;/b&gt;&lt;/li&gt;
+			&lt;h4&gt;搜索热门拍照点&lt;/h4&gt;
 				将开始搜索公开照片。完成后，显示在地图上。
-				&lt;li&gt;&lt;b&gt;搜索地方&lt;/b&gt;&lt;/li&gt;
+			&lt;h4&gt;搜索地方&lt;/h4&gt;
 				选择此菜单或按下搜索键将开始寻找任何地点。
-				&lt;li&gt;&lt;b&gt;現在位置&lt;/b&gt;&lt;/li&gt;
+			&lt;h4&gt;現在位置&lt;/h4&gt;
 				将返回到您当前的位置。
-				&lt;li&gt;&lt;b&gt;收藏夹&lt;/b&gt;&lt;/li&gt;
+			&lt;h4&gt;收藏夹&lt;/h4&gt;
 				您能保存喜欢的景点，然后您能看收藏夹即使离线的时候。&lt;br&gt;
 				如果您想保存景点,按住缩略图，然后从菜单选择 \"加入收藏夹\"。&lt;br&gt;
 				您能保存最大256项目。此外项目能分类。
 				您想分类的时候，选择项目，然后从菜单选择 \"分类\"。&lt;br&gt;
-				&lt;li&gt;&lt;b&gt;地图模式&lt;/b&gt;&lt;/li&gt;
+			&lt;h4&gt;地图模式&lt;/h4&gt;
 				选择地图模式“地图”或“卫星”
-				&lt;li&gt;&lt;b&gt;设置&lt;/b&gt;&lt;/li&gt;
+			&lt;h4&gt;设置&lt;/h4&gt;
 				您可以选择照片提供商 （默认： Panoramio ）&lt;br&gt; 
 				目前支持的供应商是： 
 				&lt;ul&gt;
@@ -116,32 +119,27 @@
 					&lt;li&gt;&lt;b&gt;Picasa Web Album&lt;/b&gt;&lt;/li&gt;
 					&lt;li&gt;&lt;b&gt;Flickr&lt;/b&gt;&lt;/li&gt;
 				&lt;/ul&gt;
-				&lt;li&gt;&lt;b&gt;帮助&lt;/b&gt;&lt;/li&gt;
+			&lt;h4&gt;帮助&lt;/h4&gt;
 				打开这个网页
-			&lt;/ul&gt;
 		&lt;hr&gt;
 		&lt;h2&gt;查看结果&lt;/h2&gt;
-			&lt;ul&gt;
-				&lt;li&gt;&lt;b&gt;点击气球看到内容&lt;/b&gt;&lt;/li&gt;
+			&lt;h4&gt;点击气球看到内容&lt;/h4&gt;
 				点击气球，显示图像画廊。您可以浏览该处的照片。
-				&lt;li&gt;&lt;b&gt;双击缩小地图&lt;/b&gt;&lt;/li&gt;
+			&lt;h4&gt;双击缩小地图&lt;/h4&gt;
 				双击气球您可以缩放地图。您也可以用屏幕右下角的按钮。
-				&lt;li&gt;&lt;b&gt;放大,缩小&lt;/b&gt;&lt;/li&gt;
+			&lt;h4&gt;放大,缩小&lt;/h4&gt;
 				放大/缩小地图将根据缩放级别合并/分离 “群集气球”。 
 				但是，照片不刷新。	如果您需要刷新照片，
 				从菜单选择 “刷新热门拍照点”。&lt;br&gt;
-				&lt;li&gt;&lt;b&gt;按住缩略图&lt;/b&gt;&lt;/li&gt;
+			&lt;h4&gt;按住缩略图&lt;/h4&gt;
 				按住缩略图，将弹出操作菜单&lt;br&gt;
-				&lt;li&gt;&lt;b&gt;要隐藏画廊&lt;/b&gt;&lt;/li&gt;
+			&lt;h4&gt;要隐藏画廊&lt;/h4&gt;
 				点击图像画廊底部，将关闭图像画廊。&lt;br&gt;
-			&lt;/ul&gt;
 		&lt;hr&gt;
 		&lt;h2&gt;秘诀&lt;/h2&gt;
-			&lt;ul&gt;
-				&lt;li&gt;&lt;b&gt;选择服务&lt;/b&gt;&lt;/li&gt;
+			&lt;h4&gt;选择服务&lt;/h4&gt;
 				各服务提供的照片类型不一样， Panoramio提供优美的风景照片，以便找到名胜历史的地方。 
 				Picasa Web Album和Flickr包含更多类型的内容，相比Panoramio，它可以检索到更多更新的内容 。
-			&lt;/ul&gt;
 		&lt;hr&gt;
 		&lt;h2&gt;更多&lt;/h2&gt;
 			&lt;h4&gt;您想协助这个软件？&lt;/h4&gt;
