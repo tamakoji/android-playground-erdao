@@ -6,23 +6,8 @@ PhotSpot is a GoogleMaps and public geotagged photo content mashup app to discov
 It clusteres the geo information and show them on the map as balloon marker.
 Clustering the marker is essential for application those want to manage many geotagged content on the screen, though displaying all the markers makes UI slow and let user hard to see the information.
 
-= Detail =
-For clustering, ported javascript version of [http://code.google.com/p/gmaps-utility-library/ markerclusterer] to java code.
-There are other things in android SDK1.5r3 does not support and needed to tweak a bit.
-Hope apis will get richer in the future.
-  * There are no Bounds class
-  like GLatLngBounds in javascript, there is no bound handling class for android. just made substitute class for it.
-  * Map move/zoom event handling
-  In javascript version of google maps, it can register event handler such as "moveend" and "zoomend" but not in android. for that I needed to hook the draw event of the marker to check the current screen projection (bounds) to know if it is moving or staying still.
-  * ItemizedOverlay are easy but not customizable well enough
-  there are plenty sample sources use ItemizedOverlay but I don't think this class is useful if you need to do many things with markers.
-  * Built-in zoom control can't hook events
-  built-in zoom control are easy but can't hook press event, as well it only zoom to center of current screen so sometime marker in focus will get out of bounds. For that, I needed to implement zoom control as button and zoom manually.
-  * Can't set zoom level directly
-  apis given is ZoomIn or ZoomOut only zooming one level at a time, can't set directly to maximum zoom level. 
-
-= Source Codes =
-http://code.google.com/p/android-playground-erdao/source/browse/#svn/trunk/PhotSpot
+= Developer Resource =
+[Developer Resource]
 
 = ScreenShot =
 <img src="http://android-playground-erdao.googlecode.com/svn/wiki/img/photspot_sc01.png" width="160">
