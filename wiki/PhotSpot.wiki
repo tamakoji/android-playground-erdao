@@ -10,9 +10,10 @@ Clustering the marker is essential for application those want to manage many geo
 [ScreenShots Screen Shots Gallery]
 ----
 = Info =
+<font color="red">
 *ver 1.4.0 known bugs*
   * Gallery Veiw in Favorites does not sync with title
-
+</font>
 * 2009/09/07 ver 1.4.0 released
  * support gallery image size change by gesture.
   * swipe up thumbnail to shrink, swipe down to enlarge gallery thumbnail size.
