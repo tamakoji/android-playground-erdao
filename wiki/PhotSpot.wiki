@@ -1,6 +1,8 @@
 #summary GoogleMaps and Public geotagged content mashup app to discover popular places.
 #labels Featured,Phase-Design
 
+<img src="http://android-playground-erdao.googlecode.com/svn/wiki/img/PhotSpot/photspot_logo.png">
+
 = Introduction =
 PhotSpot is a GoogleMaps and public geotagged photo content mashup app to discover popular places.
 It clusteres the geo information and show them on the map as balloon marker.
@@ -9,7 +11,23 @@ Clustering the marker is essential for application those want to manage many geo
 = Developer Resource =
 [DeveloperResource Developer Resource]
 
-= ScreenShot =
-<img src="http://android-playground-erdao.googlecode.com/svn/wiki/img/photspot_sc01.png" width="160">
-<img src="http://android-playground-erdao.googlecode.com/svn/wiki/img/photspot_sc02.png" width="160">
-<img src="http://android-playground-erdao.googlecode.com/svn/wiki/img/photspot_sc03.png" width="160">
+= Screen Shots =
+== Abstract ==
+|| *initial screen* || *spots in cluster* ||
+||  <img src="http://android-playground-erdao.googlecode.com/svn/wiki/img/PhotSpot/photspot_sc02.png" width="160"> ||  <img src="http://android-playground-erdao.googlecode.com/svn/wiki/img/PhotSpot/photspot_sc01.png" width="160">||
+
+== Changing Size of Gallery by Swipe Gesture ==
+|| *small* || *large* || *full* ||
+||  <img src="http://android-playground-erdao.googlecode.com/svn/wiki/img/PhotSpot/photspot_sc_en.png" width="160"> ||  <img src="http://android-playground-erdao.googlecode.com/svn/wiki/img/PhotSpot/photspot_sc_expand01.png" width="160">||<img src="http://android-playground-erdao.googlecode.com/svn/wiki/img/PhotSpot/photspot_sc_expand02.png" width="160">||
+
+== Favorites View ==
+|| *categorize* || *menu* || *gallery view* ||
+||  <img src="http://android-playground-erdao.googlecode.com/svn/wiki/img/PhotSpot/photspot_sc_fav01.png" width="160"> ||  <img src="http://android-playground-erdao.googlecode.com/svn/wiki/img/PhotSpot/photspot_sc_fav02.png" width="160">||<img src="http://android-playground-erdao.googlecode.com/svn/wiki/img/PhotSpot/photspot_sc_fav03.png" width="160">||
+
+== Extension ==
+|| *show favorite on map* || *route to the spot* ||
+||  <img src="http://android-playground-erdao.googlecode.com/svn/wiki/img/PhotSpot/photspot_sc_fav04.png" width="160"> ||  <img src="http://android-playground-erdao.googlecode.com/svn/wiki/img/PhotSpot/photspot_sc_route.png" width="160">||
+
+== locales support ==
+|| *locale en* || *locale jp* || *locale cn* ||
+||  <img src="http://android-playground-erdao.googlecode.com/svn/wiki/img/PhotSpot/photspot_sc_en.png" width="160"> ||  <img src="http://android-playground-erdao.googlecode.com/svn/wiki/img/PhotSpot/photspot_sc_jpn.png" width="160">||<img src="http://android-playground-erdao.googlecode.com/svn/wiki/img/PhotSpot/photspot_sc_zhcn.png" width="160">||
