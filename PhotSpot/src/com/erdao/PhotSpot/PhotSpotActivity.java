@@ -19,7 +19,6 @@ package com.erdao.PhotSpot;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -398,7 +397,7 @@ public class PhotSpotActivity extends MapActivity {
 			case R.id.menu_FindSpots: {
 				showDialog(R.id.QuerySearchDlg);
 				uri = "http://photspotcloud.appspot.com/photspotcloud?q=searchspot&nwlng="+nwlng+"&selat="+selat+"&nwlat="+nwlat+"&selng="+selng;
-				String debugstr = Locale.getDefault().getDisplayName()+","+Build.MODEL+","+Build.VERSION.RELEASE;
+				String debugstr = Locale.getDefault().getDisplayName()+","+Build.MODEL+","+Build.VERSION.RELEASE+","+context_.getString(R.string.app_ver);
 				try {
 					debugstr = URLEncoder.encode(debugstr,"UTF-8");
 				} catch (UnsupportedEncodingException e) {
@@ -678,7 +677,7 @@ public class PhotSpotActivity extends MapActivity {
 		protected void onPostExecute(Integer code) {
 			onAsyncTaskComplete(code);
 			if(code!=JsonFeedGetter.CODE_HTTPERROR){
-				ArrayList<PhotoItem> photoItems = getter_.getPhotoItemList();
+				List<PhotoItem> photoItems = getter_.getPhotoItemList();
 //				Log.i("DEBUG","result size:"+photoItems.size());
 				mapOverlays_ = mapView_.getOverlays();
 				mapOverlays_.clear();

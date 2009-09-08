@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 Google Inc.
+ * Copyright (C) 2009 Huan Erdao
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -58,14 +58,14 @@ public class FavoritesActivity extends ExpandableListActivity {
 	
 	private PhotSpotDBHelper dbHelper_ = null;
 	private List<String> groups_ = new ArrayList<String>();
-    private List<PhotoItem> photoItemList_ = new ArrayList<PhotoItem>();
-    private List<Bitmap> bitmapsList_ = new ArrayList<Bitmap>();
+    private List<PhotoItem> photoItems_ = new ArrayList<PhotoItem>();
+    private List<Bitmap> bitmaps_ = new ArrayList<Bitmap>();
     private List<List<PhotoItem>> photoItemNodes_ = new ArrayList<List<PhotoItem>>();
     private List<List<Bitmap>> bitmapNodes_ = new ArrayList<List<Bitmap>>();
 	private Context context_;
 	private int groupPos_;
 	private int childPos_;
-	private ImageAdapter imageAdapter_ = null;
+	private ImageExpandableListAdapter imageAdapter_ = null;
 	ArrayAdapter<String> adapter_;
     AutoCompleteTextView edit_;
 	
@@ -82,14 +82,14 @@ public class FavoritesActivity extends ExpandableListActivity {
 		context_ = this;
 		dbHelper_ = new PhotSpotDBHelper(this);
 		updateGroupList();
-		if(photoItemList_.isEmpty())
+		if(photoItems_.isEmpty())
 			setContentView(R.layout.fav_noitem);
 		else{
 			ExpandableListView expListView = getExpandableListView();
 			LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			View footer = inflater.inflate(R.layout.fav_footer, expListView, false);
 			expListView.addFooterView(footer, null, false);
-			imageAdapter_ = new ImageAdapter(this);
+			imageAdapter_ = new ImageExpandableListAdapter(this);
 			setListAdapter(imageAdapter_);
 			expListView.setBackgroundDrawable(null);
 			expListView.setDivider(this.getResources().getDrawable(android.R.drawable.divider_horizontal_bright));
@@ -99,9 +99,9 @@ public class FavoritesActivity extends ExpandableListActivity {
 	
 	/* removeItem */
 	private void removeItem(int groupPos, int childPos) {
-		photoItemList_.remove(photoItemNodes_.get(groupPos).get(childPos));
+		photoItems_.remove(photoItemNodes_.get(groupPos).get(childPos));
 		photoItemNodes_.get(groupPos).remove(childPos);
-		bitmapsList_.remove(bitmapNodes_.get(groupPos).get(childPos));
+		bitmaps_.remove(bitmapNodes_.get(groupPos).get(childPos));
 		bitmapNodes_.get(groupPos).remove(childPos);
 		if(photoItemNodes_.get(groupPos).isEmpty()){
 			photoItemNodes_.remove(groupPos);
@@ -120,8 +120,8 @@ public class FavoritesActivity extends ExpandableListActivity {
 			bitmapNodes_.remove(0);
 		}
 		groups_.removeAll(groups_);
-		photoItemList_.removeAll(photoItemList_);
-		bitmapsList_.removeAll(bitmapsList_);
+		photoItems_.removeAll(photoItems_);
+		bitmaps_.removeAll(bitmaps_);
 	}
 
 	private void removeAllNodes() {
@@ -155,7 +155,7 @@ public class FavoritesActivity extends ExpandableListActivity {
 			bitmapNodes_.add(childBitmapItems);
 			c.moveToNext();
 		}
-		if(photoItemList_.isEmpty()){
+		if(photoItems_.isEmpty()){
 			c = dbHelper_.queryAllItems(db);
 			c.moveToFirst();
 			for (int i = 0; i < c.getCount(); i++) {
@@ -171,28 +171,28 @@ public class FavoritesActivity extends ExpandableListActivity {
 					new PhotoItem(id,thumbUurl,(int)(lat*1E6),(int)(lng*1E6),title,photoUrl,author);
 				item.setLabelId(labelId);
 				int pos = labelMap.get(labelId);
-				photoItemList_.add(item);
+				photoItems_.add(item);
 				photoItemNodes_.get(pos).add(item);
 	 			Bitmap bitmap = null;
 				byte[] bmpStream = c.getBlob(PhotSpotDBHelper.Spots.IDX_THUMBDATA);
 				if(bmpStream!=null){
 					bitmap = BitmapFactory.decodeByteArray(bmpStream, 0, bmpStream.length);
 					bitmapNodes_.get(pos).add(bitmap);
-					bitmapsList_.add(bitmap);
+					bitmaps_.add(bitmap);
 				}
 				else{
 					bitmapNodes_.get(pos).add(null);
-					bitmapsList_.add(null);
+					bitmaps_.add(null);
 				}
 				c.moveToNext();
 			}
 		}
 		else{
-			for (int i = 0; i < photoItemList_.size(); i++) {
-				PhotoItem item = photoItemList_.get(i);
+			for (int i = 0; i < photoItems_.size(); i++) {
+				PhotoItem item = photoItems_.get(i);
 				int pos = labelMap.get(item.getLabelId());
 				photoItemNodes_.get(pos).add(item);
-				bitmapNodes_.get(pos).add(bitmapsList_.get(i));
+				bitmapNodes_.get(pos).add(bitmaps_.get(i));
 			}
 		}
 		c.close();
@@ -354,7 +354,7 @@ public class FavoritesActivity extends ExpandableListActivity {
 						if( dbHelper_.deleteItem(photoItemNodes_.get(groupPos_).get(childPos_)) == PhotSpotDBHelper.DB_SUCCESS ){
 							ToastMessage(R.string.ToastRemovedFavorites, Toast.LENGTH_SHORT);
 							removeItem(groupPos_,childPos_);
-							if(photoItemList_.isEmpty())
+							if(photoItems_.isEmpty())
 								setContentView(R.layout.fav_noitem);
 							else{
 								updateGroupList();
@@ -377,13 +377,13 @@ public class FavoritesActivity extends ExpandableListActivity {
 	}
 
 	/* Image Adapter class for FavoriteActivity */
-	private class ImageAdapter extends BaseExpandableListAdapter {
+	private class ImageExpandableListAdapter extends BaseExpandableListAdapter {
 		/* variables */
 		private final Context context_;
 		int galleryItemBackground_;
 
 		/* constructor */
-		public ImageAdapter(Context c) {
+		public ImageExpandableListAdapter(Context c) {
 			context_ = c;
 			TypedArray a = context_.obtainStyledAttributes(R.styleable.ThumbGallery);
 			galleryItemBackground_ = a.getResourceId(

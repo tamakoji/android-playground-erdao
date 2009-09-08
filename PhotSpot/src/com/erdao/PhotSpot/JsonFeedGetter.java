@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -59,8 +60,8 @@ public class JsonFeedGetter {
 	private final int connection_Timeout = 10000;
 	private final Context context_;
 	int mode_;
-	private ArrayList<PhotoItem> photoItems_ = new ArrayList<PhotoItem>();
-	private ArrayList<CharSequence> localSpots_ = new ArrayList<CharSequence>();
+	private List<PhotoItem> photoItems_ = new ArrayList<PhotoItem>();
+	private List<CharSequence> localSpots_ = new ArrayList<CharSequence>();
 
 	/* constructor */
 	public JsonFeedGetter(int mode, Context context){
@@ -163,12 +164,12 @@ public class JsonFeedGetter {
 	}
 	
 	/* getPhotoItemList */
-	public ArrayList<PhotoItem> getPhotoItemList(){
+	public List<PhotoItem> getPhotoItemList(){
 		return photoItems_;
 	}
 
 	/* getLocalSpotsList */
-	public ArrayList<CharSequence> getLocalSpotsList(){
+	public List<CharSequence> getLocalSpotsList(){
 		return localSpots_;
 	}
 }
