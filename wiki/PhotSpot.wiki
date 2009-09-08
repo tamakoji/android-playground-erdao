@@ -34,6 +34,23 @@ Clustering the marker is essential for application those want to manage many geo
 ||  <img src="http://android-playground-erdao.googlecode.com/svn/wiki/img/PhotSpot/photspot_sc_en.png" width="160"> ||  <img src="http://android-playground-erdao.googlecode.com/svn/wiki/img/PhotSpot/photspot_sc_jpn.png" width="160">||<img src="http://android-playground-erdao.googlecode.com/svn/wiki/img/PhotSpot/photspot_sc_zhcn.png" width="160">||
 
 ----
+= TODO List =
+I am not sure if I would really implement below functions:
+
+=== Improvement Works ===
+  * re-factoring the code.. getting spaghetti.
+  * Store Favorite db to SD?
+  * Enrich Gallery UI
+
+=== NewFunc Works ===
+  * Spots Sharing function(e-mail?)
+  * Time based filtering of the photo content
+  * Data filtering and/or categorization for the spots
+    * food/people/buildings/pets/animals...?
+  * retrieve hi-resolution photograph for fullscreen
+  * integrate navigation
+
+----
 = Special Thanks =
   * Thanks to reviewers in Android Market
   * Thanks to all users who upload geotagged photo content to public
