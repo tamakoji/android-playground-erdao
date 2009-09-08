@@ -1,3 +1,4 @@
+[PhotSpot back to PhotSpot]
 = Screen Shots =
 == Abstract ==
 || *initial screen* || *spots in cluster* ||
