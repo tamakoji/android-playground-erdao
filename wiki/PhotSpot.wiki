@@ -37,5 +37,5 @@ Clustering the marker is essential for application those want to manage many geo
 = Special Thanks =
   * Thanks to reviewers in Android Market
   * Thanks to all users who upload geotagged photo content to public
-  * Thanks to Dr. Andreas Paepcke at Stanford Univ. for advisory
+  * Thanks to Dr. Andreas Paepcke at Stanford Univ. for mentoring
   * Thanks to Google for providing ION phone :-)
