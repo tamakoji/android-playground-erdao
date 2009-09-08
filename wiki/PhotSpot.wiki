@@ -7,7 +7,7 @@ It clusteres the geo information and show them on the map as balloon marker.
 Clustering the marker is essential for application those want to manage many geotagged content on the screen, though displaying all the markers makes UI slow and let user hard to see the information.
 ----
 = Screen Shots Gallery =
-[./ScreenShots Screen Shots Gallery]
+[ScreenShots Screen Shots Gallery]
 ----
 = Info =
 <font color="red">
