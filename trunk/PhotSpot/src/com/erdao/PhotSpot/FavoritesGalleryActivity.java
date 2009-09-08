@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 Google Inc.
+ * Copyright (C) 2009 Huan Erdao
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.TypedArray;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
@@ -34,12 +33,9 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.AdapterView;
-import android.widget.BaseAdapter;
 import android.widget.Gallery;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
@@ -52,10 +48,10 @@ import com.google.android.maps.GeoPoint;
 public class FavoritesGalleryActivity extends Activity {
 	
 	private PhotSpotDBHelper dbHelper_ = null;
-    private List<PhotoItem> photoItemList_ = new ArrayList<PhotoItem>();
-    private List<Bitmap> bitmapsList_ = new ArrayList<Bitmap>();
+    private List<PhotoItem> photoItems_ = new ArrayList<PhotoItem>();
+    private List<Bitmap> bitmaps_ = new ArrayList<Bitmap>();
 	private Context context_;
-	private ImageAdapter imageAdapter_ = null;
+	private ImageListAdapter imageAdapter_ = null;
 	private int selItem_;
 	
 	private static final int EXT_ACTION_SHOWONMAP			= 0;
@@ -84,49 +80,40 @@ public class FavoritesGalleryActivity extends Activity {
 			PhotoItem item =
 				new PhotoItem(id,thumbUurl,(int)(lat*1E6),(int)(lng*1E6),title,photoUrl,author);
 			item.setLabelId(labelId);
-			photoItemList_.add(item);
+			photoItems_.add(item);
  			Bitmap bitmap = null;
 			byte[] bmpStream = c.getBlob(PhotSpotDBHelper.Spots.IDX_THUMBDATA);
 			if(bmpStream!=null){
 				bitmap = BitmapFactory.decodeByteArray(bmpStream, 0, bmpStream.length);
-				bitmapsList_.add(bitmap);
+				bitmaps_.add(bitmap);
 			}
 			else{
-				bitmapsList_.add(null);
+				bitmaps_.add(null);
 			}
 			c.moveToNext();
 		}
 		c.close();
 		db.close();
-		if(photoItemList_.isEmpty())
+		if(photoItems_.isEmpty())
 			setContentView(R.layout.fav_noitem);
 		else{
 			setContentView(R.layout.fav_gallery);
-			imageAdapter_ = new ImageAdapter(context_);
+			imageAdapter_ = new ImageListAdapter(context_,photoItems_,bitmaps_);
+			imageAdapter_.setSize(LayoutParams.FILL_PARENT,LayoutParams.FILL_PARENT);
 			Gallery gallery = (Gallery)findViewById(R.id.fav_gallery);
 			gallery.setAdapter(imageAdapter_);
 			gallery.setCallbackDuringFling(true);
 			TextView txtView = (TextView)findViewById(R.id.fav_imgdesc);
-			PhotoItem item = photoItemList_.get(selItem_);
-			String desc = item.getTitle();
-			if(item.getAuthor()!=null){
-				desc += " (by "+item.getAuthor()+")";
-			}
-			txtView.setText(desc);
-			item.setSelect();
+			txtView.setText(imageAdapter_.getDescription(selItem_));
+			photoItems_.get(selItem_).setSelect();
 			gallery.setSelection(selItem_);
 			gallery.setOnItemSelectedListener(new OnItemSelectedListener() {
 				public void onItemSelected (AdapterView<?> parent, View view, int position, long id){
-					TextView txtView = (TextView)findViewById(R.id.fav_imgdesc);
-					PhotoItem item = photoItemList_.get(selItem_);
-					String desc = item.getTitle();
-					if(item.getAuthor()!=null){
-						desc += " (by "+item.getAuthor()+")";
-					}
-					txtView.setText(desc);
-					item.clearSelect();
-					photoItemList_.get(position).setSelect();
+					photoItems_.get(selItem_).clearSelect();
+					photoItems_.get(position).setSelect();
 					selItem_ = position;
+					TextView txtView = (TextView)findViewById(R.id.fav_imgdesc);
+					txtView.setText(imageAdapter_.getDescription(position));
 				}
 				public void onNothingSelected (AdapterView<?> parent){
 				}
@@ -158,17 +145,17 @@ public class FavoritesGalleryActivity extends Activity {
 	public void onItemAction(int cmd){
 		switch(cmd){
 			case EXT_ACTION_SHOWONMAP:{
-				PhotoItem item = photoItemList_.get(selItem_);
+				PhotoItem item = photoItems_.get(selItem_);
 	            Intent intent = new Intent(this, PhotSpotActivity.class);
 	            intent.setAction(Intent.ACTION_VIEW);
-	            item.setBitmap(bitmapsList_.get(selItem_));
+	            item.setBitmap(bitmaps_.get(selItem_));
 	            intent.putExtra(PhotoItem.EXT_PHOTOITEM, item);
 	            startActivity(intent);
 //	            finish();
 	            break;
 			}
 			case EXT_ACTION_NAVTOPLACE:{
-				PhotoItem item = photoItemList_.get(selItem_);
+				PhotoItem item = photoItems_.get(selItem_);
 				GeoPoint location = item.getLocation();
 				double lat = location.getLatitudeE6()/1E6;
 				double lng = location.getLongitudeE6()/1E6;
@@ -180,7 +167,7 @@ public class FavoritesGalleryActivity extends Activity {
 				break;
 			}
 			case EXT_ACTION_OPENBROWSER:{
-				PhotoItem item = photoItemList_.get(selItem_);
+				PhotoItem item = photoItems_.get(selItem_);
 				String url = item.getPhotoUrl();
 				Intent i = new Intent(Intent.ACTION_VIEW,Uri.parse(url));
 				context_.startActivity(i);
@@ -207,48 +194,5 @@ public class FavoritesGalleryActivity extends Activity {
 		}
 		return true;
 	}
-
-	/* Image Adapter class for gallery */
-	public class ImageAdapter extends BaseAdapter {
-		/* variables */
-		int galleryItemBackground_;
-		private final Context context_;
-
-		/* constructor */
-		public ImageAdapter(Context c) {
-			context_ = c;
-			TypedArray a = context_.obtainStyledAttributes(R.styleable.ThumbGallery);
-			galleryItemBackground_ = a.getResourceId(
-					R.styleable.ThumbGallery_android_galleryItemBackground, 0);
-			a.recycle();
-		}
-
-		/* getCount */
-		public int getCount() {
-			return photoItemList_.size();
-		}
-
-		/* getItem */
-		public Object getItem(int position) {
-			return photoItemList_.get(position);
-		}
-
-		/* getItemId */
-		public long getItemId(int position) {
-			return position;
-		}
-
-		/* getView */
-		public View getView(int position, View convertView, ViewGroup parent) {
-			ImageView imgView = new ImageView(context_);
-			Bitmap bmp = bitmapsList_.get(position);
-			imgView.setImageBitmap(bmp);
-			imgView.setScaleType(ImageView.ScaleType.FIT_CENTER);//.CENTER_INSIDE);
-			imgView.setLayoutParams(new Gallery.LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.FILL_PARENT));
-			imgView.setBackgroundResource(galleryItemBackground_);		 
-			return imgView;
-		}
-
-	};
 
 }

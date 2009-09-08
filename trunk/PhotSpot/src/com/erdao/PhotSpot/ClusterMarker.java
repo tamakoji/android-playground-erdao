@@ -26,7 +26,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -37,20 +36,16 @@ import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
-import android.os.Handler;
 import android.os.SystemClock;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnTouchListener;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
-import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.Gallery;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -74,16 +69,17 @@ public class ClusterMarker extends Overlay {
 	private final FrameLayout imageFrame_;
 	private final GeoPoint center_;
 	private final Paint paint_;
-	private final ArrayList<PhotoItem> photoItems_;
+	private final List<PhotoItem> photoItems_;
+	private List<Bitmap> bitmaps_ = new ArrayList<Bitmap>();
 	private Bitmap bmp_;
-	private ImageAdapter imageAdapter_;
+	private ImageListAdapter imageAdapter_;
 	private Point balloonGrid_;
 	private Point bmpSize_;
 	private final int sizeThresh_ = 10;
 	private boolean isSelected_ = false;
 	private long tapCheckTime_;
 	private int selItem_;
-	private ArrayList<CharSequence> localSpots_;
+	private List<CharSequence> localSpots_;
 	private PhotSpotActivity activityHndl_;
 	private Point galleryActionPt_ = new Point();
 	private int gallery_width_;
@@ -106,6 +102,8 @@ public class ClusterMarker extends Overlay {
 		imageFrame_ = imageFrame;
 		center_ = cluster_.getLocation();
 		photoItems_ = cluster_.getItems();
+		for(int i=0; i< photoItems_.size();i++)
+			bitmaps_.add(null);
 		selItem_ = 0;
 		paint_ = new Paint();
 		paint_.setStyle(Paint.Style.STROKE);
@@ -192,7 +190,7 @@ public class ClusterMarker extends Overlay {
 	
 	/* show Gallery View */
 	public void showGallery(){
-		imageAdapter_ = new ImageAdapter(context_, photoItems_);
+		imageAdapter_ = new ImageListAdapter(context_, photoItems_, bitmaps_);
 		Gallery gallery = (Gallery)imageFrame_.findViewById(R.id.gallery);
 		gallery.setAdapter(imageAdapter_);
 		gallery.setCallbackDuringFling(true);
@@ -278,10 +276,12 @@ public class ClusterMarker extends Overlay {
 		showImageFrame();
 		gallery.setOnItemSelectedListener(new OnItemSelectedListener() {
 			public void onItemSelected (AdapterView<?> parent, View view, int position, long id){
+				PhotoItem prev = photoItems_.get(selItem_);
+				PhotoItem curr = photoItems_.get(position);
 				TextView txtView = (TextView)imageFrame_.findViewById(R.id.imgdesc);
 				txtView.setText(imageAdapter_.getDescription(position));
-				photoItems_.get(selItem_).clearSelect();
-				photoItems_.get(position).setSelect();
+				prev.clearSelect();
+				curr.setSelect();
 				selItem_ = position;
 			}
 			public void onNothingSelected (AdapterView<?> parent){
@@ -322,7 +322,7 @@ public class ClusterMarker extends Overlay {
 				GeoPoint location = photoItems_.get(selItem_).getLocation();
 				double lat = location.getLatitudeE6()/1E6;
 				double lng = location.getLongitudeE6()/1E6;
-				String debugstr = Locale.getDefault().getDisplayName()+","+Build.MODEL+","+Build.VERSION.RELEASE;
+				String debugstr = Locale.getDefault().getDisplayName()+","+Build.MODEL+","+Build.VERSION.RELEASE+","+context_.getString(R.string.app_ver);
 				try {
 					debugstr = URLEncoder.encode(debugstr,"UTF-8");
 				} catch (UnsupportedEncodingException e) {
@@ -425,106 +425,6 @@ public class ClusterMarker extends Overlay {
 	public GeoPoint getSelectedItemLocation(){
 		return photoItems_.get(selItem_).getLocation();
 	}
-
-	/* Image Adapter class for gallery */
-	public class ImageAdapter extends BaseAdapter {
-		/* variables */
-		int galleryItemBackground_;
-		private final Context context_;
-		private final ArrayList<PhotoItem> photoItems_;
-		private ArrayList<Bitmap> bitmaps_ = new ArrayList<Bitmap>();
-		private int width_ = 160;
-		private int height_ = 120;
-
-		/* constructor */
-		public ImageAdapter(Context c, ArrayList<PhotoItem> list) {
-			context_ = c;
-			photoItems_ = list;
-			for(int i=0; i< list.size();i++)
-				bitmaps_.add(null);
-			TypedArray a = context_.obtainStyledAttributes(R.styleable.ThumbGallery);
-			galleryItemBackground_ = a.getResourceId(
-					R.styleable.ThumbGallery_android_galleryItemBackground, 0);
-			a.recycle();
-		}
-
-		/* getCount */
-		public int getCount() {
-			return photoItems_.size();
-		}
-
-		/* getItem */
-		public Object getItem(int position) {
-			return photoItems_.get(position);
-		}
-
-		/* getItemId */
-		public long getItemId(int position) {
-			return position;
-		}
-
-		/* getBitmap */
-		public Bitmap getBitmap(int position) {
-			return bitmaps_.get(position);
-		}
-
-		/* getDescription */
-		public String getDescription(int position) {
-			PhotoItem item = photoItems_.get(position);
-			String desc = item.getTitle();
-			if(item.getAuthor()!=null){
-				desc += " (by "+item.getAuthor()+")";
-			}
-			return desc;
-		}
-		
-		public void setSize(int w, int h){
-			width_ = w;
-			height_ = h;
-			notifyDataSetChanged();			
-		}
-		
-		/* getView */
-		public View getView(int position, View convertView, ViewGroup parent) {
-			ImageView imgView = new ImageView(context_);
-			Bitmap bmp = bitmaps_.get(position);
-			if( bmp == null ){
-				imgView.setImageResource(R.drawable.imgloading);
-				Handler handler = new Handler();
-				PhotoItem item = photoItems_.get(position);
-				new BitmapLoadThread(handler,position,item.getThumbUrl()).start();
-			}
-			else{
-				imgView.setImageBitmap(bmp);
-			}
-			imgView.setScaleType(ImageView.ScaleType.FIT_CENTER);//.CENTER_INSIDE);
-			imgView.setLayoutParams(new Gallery.LayoutParams(width_, height_));
-			imgView.setBackgroundResource(galleryItemBackground_);		 
-			return imgView;
-		}
-
-		/* Thread Class to load Bitmap */
-		private class BitmapLoadThread extends Thread {
-			private int pos_;
-			private String url_;
-			private Handler handler_;
-			public BitmapLoadThread(Handler handler, int position, String url ){
-				pos_ = position;
-				url_ = url;
-				handler_ = handler;
-			}
-			@Override
-			public void run() {
-				Bitmap bmp = BitmapUtils.loadBitmap(url_);
-				bitmaps_.set(pos_,bmp);
-				handler_.post(new Runnable() {
-					public void run() {
-						notifyDataSetChanged();
-					}
-				});
-			}
-		}
-	};
 
 	/* GetPhotoFeedTask - AsyncTask */
 	private class LocalSearchTask extends AsyncTask<String, Integer, Integer> {

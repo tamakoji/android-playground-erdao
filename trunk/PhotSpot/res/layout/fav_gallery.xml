@@ -21,8 +21,8 @@
 	<TextView
     	android:id="@+id/fav_imgdesc"
  		android:layout_width="fill_parent" 
-	    android:layout_height="30dip" 
-	    android:textSize="14dip"
+	    android:layout_height="wrap_content" 
+	    android:textSize="12dip"
 		android:gravity="center"
 	    android:singleLine="false"
 	    android:ellipsize="end"
