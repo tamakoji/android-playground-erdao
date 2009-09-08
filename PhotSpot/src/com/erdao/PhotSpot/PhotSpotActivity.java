@@ -91,10 +91,10 @@ public class PhotSpotActivity extends MapActivity {
 
 	/* settings */
 	private SharedPreferences settings_;
-    private ScrollView msgFrame_;
-    private TextView msgTxtView_;
+	private ScrollView msgFrame_;
+	private TextView msgTxtView_;
 
-    /* for mylocation thread */
+	/* for mylocation thread */
 	private Handler handler_;
 
 	/* photo feed task */
@@ -106,7 +106,7 @@ public class PhotSpotActivity extends MapActivity {
 
 	/* favorite ovelay */
 	private boolean favoriteOverlayed_;
-    private Handler favUpdateTimer_ = new Handler();
+	private Handler favUpdateTimer_ = new Handler();
 	
 	/** Called when the activity is first created. */
 	protected boolean isRouteDisplayed() {
@@ -188,9 +188,9 @@ public class PhotSpotActivity extends MapActivity {
 		Button ziBtn = (Button)findViewById(R.id.zoominbtn);
 		ziBtn.setOnTouchListener(new OnTouchListener() {
 			public boolean onTouch(View v, MotionEvent event) {
-				Button zoBtn = (Button)findViewById(R.id.zoominbtn);
+				Button ziBtn = (Button)findViewById(R.id.zoominbtn);
 				if(event.getAction() == MotionEvent.ACTION_DOWN) {
-					zoBtn.setBackgroundResource(R.drawable.btn_zoom_in_pressed);
+					ziBtn.setBackgroundResource(R.drawable.btn_zoom_in_pressed);
 					if(clusterer_ != null){
 						clusterer_.zoomInFixing();
 					}else{
@@ -198,7 +198,7 @@ public class PhotSpotActivity extends MapActivity {
 					}
 				}
 				else if(event.getAction() == MotionEvent.ACTION_UP){
-					zoBtn.setBackgroundResource(R.drawable.btn_zoom_in_normal);
+					ziBtn.setBackgroundResource(R.drawable.btn_zoom_in_normal);
 				}
 				return false;
 			}	
@@ -219,7 +219,7 @@ public class PhotSpotActivity extends MapActivity {
 		mapView_.setSatellite(mapmode);
 		contentProvider_ = settings_.getInt(getString(R.string.PrefContentProvider), 0);
 
-        /* get and process search query here */
+		/* get and process search query here */
 		final Intent intent = getIntent();
 		final String action = intent.getAction();
 		favUpdateTimer_.removeCallbacks(favOverlayUpdateTask_);
@@ -236,8 +236,8 @@ public class PhotSpotActivity extends MapActivity {
 			favoriteOverlayed_ = true;
 			PhotoItem item = intent.getParcelableExtra(PhotoItem.EXT_PHOTOITEM);
 			mapCtrl_.animateTo(item.getLocation());
-	        final List<Overlay> overlays = mapView_.getOverlays();
-	        overlays.add(new ImageOverlay(this,item));
+			final List<Overlay> overlays = mapView_.getOverlays();
+			overlays.add(new ImageOverlay(this,item));
 			mapView_.invalidate();
 		}
 		else{
@@ -245,6 +245,39 @@ public class PhotSpotActivity extends MapActivity {
 			mylocationSetFocus_ = true;
 			favoriteOverlayed_ = false;
 		}
+        final Object data = getLastNonConfigurationInstance();
+        if (data != null) {
+        	final PhotoItem[] items = (PhotoItem[]) data;
+			FrameLayout imageFrame = (FrameLayout)findViewById(R.id.imageframe);
+			clusterer_ = new GeoClusterer(me_,context_, mapView_,imageFrame);
+			for(int i=0; i<items.length;i++) {
+				clusterer_.addItem(items[i]);
+			}
+			/* jesus,,, there is no way to know if the mapview gets ready...
+			 * (if mapview isnt visible, all items will regarded as out of bounds)
+			 * so that try to post re-clustering x ms after...
+			 * setOnFocusChangedListner does not work......*/
+			Handler handler = new Handler();
+			handler.postDelayed(new Runnable (){
+				public void run() {
+					clusterer_.resetViewport();
+				}
+			},1000);
+        }
+	}
+
+	/* for orientation */
+	@Override
+	public Object onRetainNonConfigurationInstance() {
+		if(clusterer_!=null){
+			List<PhotoItem> items = clusterer_.getPhotoItems();
+			final PhotoItem[] list = new PhotoItem[items.size()];
+			for(int i = 0; i<items.size();i++){
+				list[i] = new PhotoItem(items.get(i));
+			}
+			return list;
+		}
+		return null;
 	}
 
 	/* resetViews */
@@ -329,7 +362,7 @@ public class PhotSpotActivity extends MapActivity {
 			menu_SearchPhotSpot.setIcon(R.drawable.ic_menu_searchspot);
 		}else{
 			MenuItem menu_SearchPhotSpot = menu.add(0,R.id.menu_FindSpots,0,R.string.menu_RefreshPhotSpot);
-			menu_SearchPhotSpot.setIcon(R.drawable.ic_menu_refreshspot);
+			menu_SearchPhotSpot.setIcon(R.drawable.ic_menu_searchspot);
 		}
 		MenuItem menu_SearchPlace = menu.add(0,R.id.menu_SearchPlace,0,R.string.menu_SearchPlace);
 		menu_SearchPlace.setIcon(R.drawable.ic_menu_searchplace);
@@ -529,6 +562,14 @@ public class PhotSpotActivity extends MapActivity {
 			ad.create();
 			ad.show();
 		}
+		else if(code==JsonFeedGetter.CODE_JSONERROR){
+			AlertDialog.Builder ad = new AlertDialog.Builder(this);
+			ad.setMessage(R.string.jsonErrorMsg);
+			ad.setPositiveButton(android.R.string.ok,null);
+			ad.setTitle(R.string.app_name);
+			ad.create();
+			ad.show();
+		}
 		else if(code==JsonFeedGetter.CODE_NORESULT){
 			AlertDialog.Builder ad = new AlertDialog.Builder(this);
 			ad.setMessage(R.string.noResultErrorMsg);
@@ -662,38 +703,38 @@ public class PhotSpotActivity extends MapActivity {
 		}
 	};
 
-    public class ImageOverlay extends Overlay {
-    	private final PhotoItem item_;
-    	private final Drawable frame_;
-    	private final Bitmap thumbnail_;
-    	private final Rect frmRect_;
-    	private final Rect thmRect_;
-    	private final Context context_;
-        private Paint paint_;
-        private String title_;
-        private String subtitle_;
-        
-    	private static final int EXT_ACTION_NAVTOPLACE		= 0;
-    	private static final int EXT_ACTION_OPENBROWSER		= 1;
+	public class ImageOverlay extends Overlay {
+		private final PhotoItem item_;
+		private final Drawable frame_;
+		private final Bitmap thumbnail_;
+		private final Rect frmRect_;
+		private final Rect thmRect_;
+		private final Context context_;
+		private Paint paint_;
+		private String title_;
+		private String subtitle_;
+		
+		private static final int EXT_ACTION_NAVTOPLACE		= 0;
+		private static final int EXT_ACTION_OPENBROWSER		= 1;
 
 		public ImageOverlay(Context c, PhotoItem item) { 
 			context_ = c;
 			item_ = item;
-	    	frame_ = c.getResources().getDrawable(R.drawable.balloon_fv);
-	    	thumbnail_ = item.getBitmap();
-	        final int frmWidth = frame_.getIntrinsicWidth();	// 75
-	        final int frmHeight = frame_.getIntrinsicHeight();	// 75
-	        frame_.setBounds(0, 0, frmWidth, frmHeight);
-	        int ltx = -(frmWidth/2);
-	        int lty = -frmHeight;
-	        frmRect_ = new Rect(ltx,lty,ltx+frmWidth,lty+frmHeight);
-	        int thmbWidth = 57;
-	        int thmbHeight= 57;
-	        ltx += 6;
-	        lty += 6;
-	        thmRect_ = new Rect(ltx,lty,ltx+thmbWidth,lty+thmbHeight);
-	        paint_ = new Paint();
-	        paint_.setAntiAlias(true);
+			frame_ = c.getResources().getDrawable(R.drawable.balloon_fv);
+			thumbnail_ = item.getBitmap();
+			final int frmWidth = frame_.getIntrinsicWidth();	// 75
+			final int frmHeight = frame_.getIntrinsicHeight();	// 75
+			frame_.setBounds(0, 0, frmWidth, frmHeight);
+			int ltx = -(frmWidth/2);
+			int lty = -frmHeight;
+			frmRect_ = new Rect(ltx,lty,ltx+frmWidth,lty+frmHeight);
+			int thmbWidth = 57;
+			int thmbHeight= 57;
+			ltx += 6;
+			lty += 6;
+			thmRect_ = new Rect(ltx,lty,ltx+thmbWidth,lty+thmbHeight);
+			paint_ = new Paint();
+			paint_.setAntiAlias(true);
 			paint_.setTextSize(14);
 			paint_.setTypeface(Typeface.DEFAULT_BOLD);
 			title_ = item_.getTitle();
@@ -707,7 +748,7 @@ public class PhotSpotActivity extends MapActivity {
 
 		/* onTouchEvent */
 		@Override
-	    public boolean onTap(GeoPoint p, MapView mapView){
+		public boolean onTap(GeoPoint p, MapView mapView){
 			Projection pro = mapView.getProjection();
 			Point ct = pro.toPixels(item_.getLocation(), null);
 			Point pt = pro.toPixels(p, null);
@@ -734,45 +775,45 @@ public class PhotSpotActivity extends MapActivity {
 		}
 
 		@Override
-        public void draw(Canvas canvas, MapView mapView, boolean shadow) {
-            if (!shadow) {
-                Point p = new Point();
-                Projection proj = mapView.getProjection();
-                proj.toPixels(item_.getLocation(), p);
-                super.draw(canvas, mapView, shadow);
-                drawAt(canvas, frame_, p.x+frmRect_.left, p.y+frmRect_.top, shadow);
-                int l = p.x+thmRect_.left;
-                int t = p.y+thmRect_.top;
-                int r = l + thmRect_.width();
-                int b = t + thmRect_.height();
-                canvas.drawBitmap(thumbnail_, null , new Rect(l,t,r,b),paint_);
-    			paint_.setTextSize(14);
-    			paint_.setTypeface(Typeface.DEFAULT_BOLD);
-    			int x = r+5;
-                int y = (int) (t+paint_.getTextSize()+3);
-                canvas.drawText(title_,x,y,paint_);
-    			paint_.setTextSize(11);
-    			paint_.setTypeface(Typeface.DEFAULT);
-    			y += (int) (paint_.getTextSize()+4);
-        		canvas.drawText(subtitle_,x,y,paint_);
-        		if(myLocationOverlay_!=null){
-        			GeoPoint myLoc = myLocationOverlay_.getMyLocation();
-        			if(myLoc!=null){
-	        			GeoPoint ovLoc = item_.getLocation();
-	        			final int EARTH_RADIUS_KM = 6371;
-	        			double myLatRad = Math.toRadians(myLoc.getLatitudeE6()/(double)1E6);
-	        			double ovLatRad = Math.toRadians(ovLoc.getLatitudeE6()/(double)1E6);
-	        	        double deltaLonRad = Math.toRadians((ovLoc.getLongitudeE6()-myLoc.getLongitudeE6())/(double)1E6);
-	        	        double distKm = Math.acos(Math.sin(myLatRad) * Math.sin(ovLatRad) + Math.cos(myLatRad) * Math.cos(ovLatRad)
-	        	                * Math.cos(deltaLonRad))
-	        	                * EARTH_RADIUS_KM;
-	        			y += (int) (paint_.getTextSize()+4);
-	        			String distMsg = String.format(":%6.2f[km]", distKm);
-	            		canvas.drawText(getString(R.string.Distance)+distMsg,x,y,paint_);
-        			}
-        		}
-            }
-        }
+		public void draw(Canvas canvas, MapView mapView, boolean shadow) {
+			if (!shadow) {
+				Point p = new Point();
+				Projection proj = mapView.getProjection();
+				proj.toPixels(item_.getLocation(), p);
+				super.draw(canvas, mapView, shadow);
+				drawAt(canvas, frame_, p.x+frmRect_.left, p.y+frmRect_.top, shadow);
+				int l = p.x+thmRect_.left;
+				int t = p.y+thmRect_.top;
+				int r = l + thmRect_.width();
+				int b = t + thmRect_.height();
+				canvas.drawBitmap(thumbnail_, null , new Rect(l,t,r,b),paint_);
+				paint_.setTextSize(14);
+				paint_.setTypeface(Typeface.DEFAULT_BOLD);
+				int x = r+5;
+				int y = (int) (t+paint_.getTextSize()+3);
+				canvas.drawText(title_,x,y,paint_);
+				paint_.setTextSize(11);
+				paint_.setTypeface(Typeface.DEFAULT);
+				y += (int) (paint_.getTextSize()+4);
+				canvas.drawText(subtitle_,x,y,paint_);
+				if(myLocationOverlay_!=null){
+					GeoPoint myLoc = myLocationOverlay_.getMyLocation();
+					if(myLoc!=null){
+						GeoPoint ovLoc = item_.getLocation();
+						final int EARTH_RADIUS_KM = 6371;
+						double myLatRad = Math.toRadians(myLoc.getLatitudeE6()/(double)1E6);
+						double ovLatRad = Math.toRadians(ovLoc.getLatitudeE6()/(double)1E6);
+						double deltaLonRad = Math.toRadians((ovLoc.getLongitudeE6()-myLoc.getLongitudeE6())/(double)1E6);
+						double distKm = Math.acos(Math.sin(myLatRad) * Math.sin(ovLatRad) + Math.cos(myLatRad) * Math.cos(ovLatRad)
+								* Math.cos(deltaLonRad))
+								* EARTH_RADIUS_KM;
+						y += (int) (paint_.getTextSize()+4);
+						String distMsg = String.format(":%6.2f[km]", distKm);
+						canvas.drawText(getString(R.string.Distance)+distMsg,x,y,paint_);
+					}
+				}
+			}
+		}
 
 		/* option tasks for long pressing item */
 		public void onItemAction(int cmd, PhotoItem item){
@@ -802,6 +843,6 @@ public class PhotSpotActivity extends MapActivity {
 				}
 			}
 		}
-    };
+	};
 
 }

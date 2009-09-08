@@ -30,6 +30,7 @@
 <item type="id" name="AboutDlg" />
 
 <item type="id" name="menu_Revert" />
+<item type="id" name="menu_GalleryView" />
 <item type="id" name="menu_DeleteAll" />
 
 </resources>

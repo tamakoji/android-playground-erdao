@@ -53,6 +53,19 @@ public class PhotoItem implements Parcelable {
 		labelId_ = 1;
 	}
 
+	/* constructor (PhotoItem) */
+	public PhotoItem(PhotoItem src) {
+		id_ = src.id_;
+		location_ = new GeoPoint(src.location_.getLatitudeE6(),src.location_.getLongitudeE6());
+		title_ = src.title_;
+		thumbUrl_ = src.thumbUrl_;
+		photoUrl_ = src.photoUrl_;
+		author_ = src.author_;
+		isSelected_ = 0;
+		bitmap_ = src.bitmap_;
+		labelId_ = src.labelId_;
+	}
+
 	/* constructor (Parcel) */
 	public PhotoItem(Parcel in) {
 		id_ = in.readLong();

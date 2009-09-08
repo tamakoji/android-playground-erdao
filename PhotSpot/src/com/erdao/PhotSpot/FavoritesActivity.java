@@ -204,6 +204,8 @@ public class FavoritesActivity extends ExpandableListActivity {
 		super.onCreateOptionsMenu(menu);
 		MenuItem menu_Revert = menu.add(0,R.id.menu_Revert,0,R.string.menu_Revert);
 		menu_Revert.setIcon(android.R.drawable.ic_menu_revert);
+		MenuItem menu_GalleryView = menu.add(0,R.id.menu_GalleryView,0,R.string.menu_GalleryView);
+		menu_GalleryView.setIcon(R.drawable.ic_menu_galleryview);
 		MenuItem menu_DeleteAll = menu.add(0,R.id.menu_DeleteAll,0,R.string.menu_DeleteAll);
 		menu_DeleteAll.setIcon(android.R.drawable.ic_menu_delete);
 		return true;
@@ -214,6 +216,11 @@ public class FavoritesActivity extends ExpandableListActivity {
 		switch (item.getItemId()) {
 			case R.id.menu_Revert: {
 				finish();
+				break;
+			}
+			case R.id.menu_GalleryView: {
+				Intent i = new Intent(context_, FavoritesGalleryActivity.class);
+				startActivity(i);
 				break;
 			}
 			case R.id.menu_DeleteAll: {
@@ -278,7 +285,7 @@ public class FavoritesActivity extends ExpandableListActivity {
 	            item.setBitmap(bitmapNodes_.get(groupPos).get(childPos));
 	            intent.putExtra(PhotoItem.EXT_PHOTOITEM, item);
 	            startActivity(intent);
-	            finish();
+//	            finish();
 	            break;
 			}
 			case EXT_ACTION_NAVTOPLACE:{

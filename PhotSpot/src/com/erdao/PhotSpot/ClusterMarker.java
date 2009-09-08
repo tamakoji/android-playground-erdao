@@ -39,9 +39,10 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Handler;
 import android.os.SystemClock;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
@@ -50,9 +51,10 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.Gallery;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
 
 import com.erdao.PhotSpot.GeoClusterer.GeoCluster;
@@ -74,7 +76,7 @@ public class ClusterMarker extends Overlay {
 	private final Paint paint_;
 	private final ArrayList<PhotoItem> photoItems_;
 	private Bitmap bmp_;
-	private ImageAdapter imgAdapter_;
+	private ImageAdapter imageAdapter_;
 	private Point balloonGrid_;
 	private Point bmpSize_;
 	private final int sizeThresh_ = 10;
@@ -83,6 +85,12 @@ public class ClusterMarker extends Overlay {
 	private int selItem_;
 	private ArrayList<CharSequence> localSpots_;
 	private PhotSpotActivity activityHndl_;
+	private Point galleryActionPt_ = new Point();
+	private int gallery_width_;
+	private int gallery_height_;
+	private static final int GALLERY_DEFAULT_WIDTH = 160;
+	private static final int GALLERY_DEFAULT_HEIGHT = 120;
+	private boolean onGalleryGesture_;
 
 	private static final int EXT_ACTION_ADD_FAVORITES	= 0;
 	private static final int EXT_ACTION_WHATS_HERE		= 1;
@@ -104,6 +112,7 @@ public class ClusterMarker extends Overlay {
 		paint_.setColor(Color.WHITE);
 		paint_.setTextSize(15);
 		paint_.setTypeface(Typeface.DEFAULT_BOLD);
+		onGalleryGesture_ = false;
 		/* check if we have selected item in cluster */
 		for(int i=0; i<photoItems_.size(); i++) {
 			if(photoItems_.get(i).isSelected()) {
@@ -183,28 +192,94 @@ public class ClusterMarker extends Overlay {
 	
 	/* show Gallery View */
 	public void showGallery(){
-		imgAdapter_ = new ImageAdapter(context_, photoItems_);
+		imageAdapter_ = new ImageAdapter(context_, photoItems_);
 		Gallery gallery = (Gallery)imageFrame_.findViewById(R.id.gallery);
-		gallery.setAdapter(imgAdapter_);
+		gallery.setAdapter(imageAdapter_);
 		gallery.setCallbackDuringFling(true);
 		TextView txtView = (TextView)imageFrame_.findViewById(R.id.imgdesc);
-		txtView.setText(imgAdapter_.getDescription(selItem_));
+		txtView.setText(imageAdapter_.getDescription(selItem_));
 		photoItems_.get(selItem_).setSelect();
 		gallery.setSelection(selItem_);
-		Button button = (Button)imageFrame_.findViewById(R.id.closebtn);
-		button.setOnClickListener(new OnClickListener() {
-			public void onClick(View v){
-				hideImageFrame();
-				clearSelect();
-			}
+		gallery.setOnTouchListener(new OnTouchListener() {
+			public boolean onTouch(View v, MotionEvent event) {
+				if(event.getAction() == MotionEvent.ACTION_DOWN) {
+					galleryActionPt_.x = (int)event.getX();
+					galleryActionPt_.y = (int)event.getY();
+				}
+				else if(event.getAction() == MotionEvent.ACTION_UP){
+					if( onGalleryGesture_ ){
+						onGalleryGesture_ = false;
+						return true;
+					}
+					return false;
+				}
+				else if(event.getAction() == MotionEvent.ACTION_MOVE){
+					int posX = (int)event.getX();
+					int posY = (int)event.getY();
+					RelativeLayout mainframe = (RelativeLayout)activityHndl_.findViewById(R.id.mainframe);
+					int diffX = posX-galleryActionPt_.x;
+					int diffY = posY-galleryActionPt_.y;
+					galleryActionPt_.x = posX;
+					galleryActionPt_.y = posY;
+					/* if swipe to the edge then hide the gallery */
+					if(posY<0){
+						hideImageFrame();
+						clearSelect();
+						showZoomButtons();
+						return true;
+					}
+					/* if x move is large then assume swiping left or right */
+					if(diffX > 25 || diffX < -25)
+						return false;
+					/* if y move is small then assume as click */
+					if(diffY < 10 && diffY > -10)
+						return false;
+					onGalleryGesture_ = true;
+					gallery_height_ += (int)(diffY*1.0);
+					gallery_width_ = (int)(gallery_height_/3.0*4.0);
+					if( gallery_height_ > (mainframe.getHeight()-30) ){
+						gallery_height_ = (mainframe.getHeight()-30);
+						gallery_width_ = (int)(gallery_height_/3.0*4.0);
+					}
+					else if( gallery_width_ < GALLERY_DEFAULT_WIDTH ){
+						gallery_width_ = GALLERY_DEFAULT_WIDTH;
+						gallery_height_ = GALLERY_DEFAULT_HEIGHT;
+					}
+					if( gallery_width_ > mainframe.getWidth() )
+						gallery_width_ = mainframe.getWidth();
+					if(gallery_height_ == (mainframe.getHeight()-30))
+						hideZoomButtons();
+					else
+						showZoomButtons();
+					imageAdapter_.setSize(gallery_width_,gallery_height_);
+					return true;
+				}
+				return false;
+			}	
 		});
+		/*
+		Button favBtn = (Button)imageFrame_.findViewById(R.id.favbtn);
+		favBtn.setOnTouchListener(new OnTouchListener() {
+			public boolean onTouch(View v, MotionEvent event) {
+				Button favBtn = (Button)imageFrame_.findViewById(R.id.favbtn);
+				if(event.getAction() == MotionEvent.ACTION_DOWN) {
+					favBtn.setBackgroundResource(R.drawable.gallery_btn_fav_psh);
+				}
+				else if(event.getAction() == MotionEvent.ACTION_UP){
+					favBtn.setBackgroundResource(R.drawable.gallery_btn_fav_nrm);
+					onItemAction(EXT_ACTION_ADD_FAVORITES);
+				}
+				return false;
+			}	
+		});
+		*/
 		Animation anim = AnimationUtils.loadAnimation(context_, R.anim.stretch);
 		gallery.startAnimation(anim);
 		showImageFrame();
 		gallery.setOnItemSelectedListener(new OnItemSelectedListener() {
 			public void onItemSelected (AdapterView<?> parent, View view, int position, long id){
 				TextView txtView = (TextView)imageFrame_.findViewById(R.id.imgdesc);
-				txtView.setText(imgAdapter_.getDescription(position));
+				txtView.setText(imageAdapter_.getDescription(position));
 				photoItems_.get(selItem_).clearSelect();
 				photoItems_.get(position).setSelect();
 				selItem_ = position;
@@ -212,8 +287,8 @@ public class ClusterMarker extends Overlay {
 			public void onNothingSelected (AdapterView<?> parent){
 			}
 		});
-		gallery.setOnItemLongClickListener(new OnItemLongClickListener() {
-			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+		gallery.setOnItemClickListener(new OnItemClickListener() {
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				new AlertDialog.Builder(context_)
 				.setTitle(R.string.ExtActionDlg)
 				.setPositiveButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
@@ -229,7 +304,6 @@ public class ClusterMarker extends Overlay {
 				})
 			   .create()
 			   .show();
-				return true;
 			}
 		});
 	}
@@ -289,7 +363,7 @@ public class ClusterMarker extends Overlay {
 				PhotSpotDBHelper dbHelper = new PhotSpotDBHelper(context_);
 				if(dbHelper==null)
 					break;
-				int ret = dbHelper.insertItem(item,imgAdapter_.getBitmap(selItem_));
+				int ret = dbHelper.insertItem(item,imageAdapter_.getBitmap(selItem_));
 				if(ret == PhotSpotDBHelper.DB_SUCCESS)
 					activityHndl_.ToastMessage(R.string.ToastSavedFavorites, Toast.LENGTH_SHORT);
 				else if(ret == PhotSpotDBHelper.DB_EXISTS)
@@ -312,6 +386,22 @@ public class ClusterMarker extends Overlay {
 	/* hideImageFrame */
 	public void hideImageFrame(){
 		imageFrame_.setVisibility(View.GONE);
+	}
+
+	/* hideZoomButtons */
+	public void hideZoomButtons(){
+		Button zoBtn = (Button)activityHndl_.findViewById(R.id.zoominbtn);
+		zoBtn.setVisibility(View.GONE);
+		Button ziBtn = (Button)activityHndl_.findViewById(R.id.zoomoutbtn);
+		ziBtn.setVisibility(View.GONE);
+	}
+
+	/* showZoomButtons */
+	public void showZoomButtons(){
+		Button zoBtn = (Button)activityHndl_.findViewById(R.id.zoominbtn);
+		zoBtn.setVisibility(View.VISIBLE);
+		Button ziBtn = (Button)activityHndl_.findViewById(R.id.zoomoutbtn);
+		ziBtn.setVisibility(View.VISIBLE);
 	}
 
 	/* isSelected */
@@ -343,6 +433,8 @@ public class ClusterMarker extends Overlay {
 		private final Context context_;
 		private final ArrayList<PhotoItem> photoItems_;
 		private ArrayList<Bitmap> bitmaps_ = new ArrayList<Bitmap>();
+		private int width_ = 160;
+		private int height_ = 120;
 
 		/* constructor */
 		public ImageAdapter(Context c, ArrayList<PhotoItem> list) {
@@ -386,6 +478,12 @@ public class ClusterMarker extends Overlay {
 			return desc;
 		}
 		
+		public void setSize(int w, int h){
+			width_ = w;
+			height_ = h;
+			notifyDataSetChanged();			
+		}
+		
 		/* getView */
 		public View getView(int position, View convertView, ViewGroup parent) {
 			ImageView imgView = new ImageView(context_);
@@ -399,8 +497,8 @@ public class ClusterMarker extends Overlay {
 			else{
 				imgView.setImageBitmap(bmp);
 			}
-			imgView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
-			imgView.setLayoutParams(new Gallery.LayoutParams(160, 120));
+			imgView.setScaleType(ImageView.ScaleType.FIT_CENTER);//.CENTER_INSIDE);
+			imgView.setLayoutParams(new Gallery.LayoutParams(width_, height_));
 			imgView.setBackgroundResource(galleryItemBackground_);		 
 			return imgView;
 		}

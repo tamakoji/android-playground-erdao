@@ -34,7 +34,13 @@
         <item>ブラウザで開く</item>
     </string-array>
 
-	<string-array name="showmap_extaction">
+	<string-array name="favorite_gallery_action">
+        <item>マップで見る</item>
+        <item>この場所へのルート</item>
+        <item>ブラウザで開く</item>
+    </string-array>
+    
+    <string-array name="showmap_extaction">
         <item>この場所へのルート</item>
         <item>ブラウザで開く</item>
     </string-array>

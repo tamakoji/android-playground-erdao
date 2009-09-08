@@ -34,6 +34,12 @@
 		<item>用瀏覽器打開</item>
 	</string-array>
 
+	<string-array name="favorite_gallery_action">
+		<item>用地图看</item>
+		<item>這兒怎麼走?</item>
+		<item>用瀏覽器打開</item>
+    </string-array>
+
 	<string-array name="showmap_extaction">
 		<item>這兒怎麼走?</item>
         <item>用瀏覽器打開</item>

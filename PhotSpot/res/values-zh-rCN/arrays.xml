@@ -34,7 +34,13 @@
         <item>用浏览器打开</item>
     </string-array>
 
-	<string-array name="showmap_extaction">
+	<string-array name="favorite_gallery_action">
+        <item>用地图看</item>
+        <item>这儿怎么走?</item>
+        <item>用浏览器打开</item>
+    </string-array>
+    
+    <string-array name="showmap_extaction">
         <item>这儿怎么走?</item>
         <item>用浏览器打开</item>
     </string-array>

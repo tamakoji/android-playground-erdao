@@ -50,7 +50,8 @@ public class JsonFeedGetter {
 	public static final int MODE_SPOTSEARCH = 0;
 	public static final int MODE_LOCALSEARCH = 1;
 
-	public final static int CODE_HTTPERROR	= -1;
+	public final static int CODE_HTTPERROR	= -2;
+	public final static int CODE_JSONERROR	= -1;
 	public final static int CODE_NORESULT	= 0;
 	public final static int CODE_OK			= 1;
 	/* variables */
@@ -158,7 +159,7 @@ public class JsonFeedGetter {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return CODE_NORESULT;
+		return CODE_JSONERROR;
 	}
 	
 	/* getPhotoItemList */
