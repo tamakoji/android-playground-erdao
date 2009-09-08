@@ -29,11 +29,13 @@
 	<string name="menu_Help">帮助</string>
 	<string name="menu_About">关于</string>
 	<string name="menu_Revert">返回</string>
+	<string name="menu_GalleryView">图片画廊</string>
 	<string name="menu_DeleteAll">全部刪除</string>
 
 	<string name="QuerySearching">正在搜索中 ...</string>
 	<string name="httpErrorMsg">互联网连接有问题。请检查连接。</string>
 	<string name="noResultErrorMsg">这里没有热门拍照点</string>
+	<string name="jsonErrorMsg">搜索功能有问题。请再搜索</string>
 	<string name="search_label">搜索地方</string>
 	<string name="search_hint">请输入地方</string>
 	<string name="ReverseGeoResult">您是不是要找</string>
@@ -68,12 +70,16 @@
 		软件将搜索公开照片和全球定位系统数据,然后显示“群集气球”在地图上。每个气球的数字显示了照片数量。
 		所以气球的数字越大，该位置越热门。\n\n
 		更新内容:\n
+		1.4.0:\n
+		- 新功能：支持调整图片画廊尺寸。\n
+		  - 向上滑动将缩小，向下滑动将放大。\n
+		  - 滑动到上限将关闭图片画廊。\n
+		  - 收藏夹也可能看在图片画廊。\n
+		- 图片画廊的长按操作改为点击操作。\n
+		- 图标设计更改\n
 		1.3.1:\n
 		- 新功能：收藏夹分类支持自动完成\n
 		- 图标设计更改\n
-		1.3.0:\n
-		- 新功能：收藏夹。您能保存喜欢的景点\n
-		- 缺陷修复:如果GPS功能被禁用该软件将会強制結束\n
 		\n
 		欲了解更多信息，请看帮助:\n
 		[菜单]->[更多]->[帮助]\n\n
@@ -106,7 +112,7 @@
 				将返回到您当前的位置。
 			&lt;h4&gt;收藏夹&lt;/h4&gt;
 				您能保存喜欢的景点，然后您能看收藏夹即使离线的时候。&lt;br&gt;
-				如果您想保存景点,按住缩略图，然后从菜单选择 \"加入收藏夹\"。&lt;br&gt;
+				如果您想保存景点,点击缩略图，然后从菜单选择 \"加入收藏夹\"。&lt;br&gt;
 				您能保存最大256项目。此外项目能分类。
 				您想分类的时候，选择项目，然后从菜单选择 \"分类\"。&lt;br&gt;
 			&lt;h4&gt;地图模式&lt;/h4&gt;
@@ -124,17 +130,18 @@
 		&lt;hr&gt;
 		&lt;h2&gt;查看结果&lt;/h2&gt;
 			&lt;h4&gt;点击气球看到内容&lt;/h4&gt;
-				点击气球，显示图像画廊。您可以浏览该处的照片。
+				点击气球，显示图片画廊。您可以浏览该处的照片。
 			&lt;h4&gt;双击缩小地图&lt;/h4&gt;
 				双击气球您可以缩放地图。您也可以用屏幕右下角的按钮。
 			&lt;h4&gt;放大,缩小&lt;/h4&gt;
 				放大/缩小地图将根据缩放级别合并/分离 “群集气球”。 
 				但是，照片不刷新。	如果您需要刷新照片，
 				从菜单选择 “刷新热门拍照点”。&lt;br&gt;
-			&lt;h4&gt;按住缩略图&lt;/h4&gt;
-				按住缩略图，将弹出操作菜单&lt;br&gt;
-			&lt;h4&gt;要隐藏画廊&lt;/h4&gt;
-				点击图像画廊底部，将关闭图像画廊。&lt;br&gt;
+			&lt;h4&gt;点击缩略图&lt;/h4&gt;
+				点击缩略图，将弹出操作菜单&lt;br&gt;
+			&lt;h4&gt;放大,缩小,关闭画廊&lt;/h4&gt;
+				 向上滑动将缩小，向下滑动放大图片。&lt;br&gt;
+				滑动到上限将关闭图片画廊。&lt;br&gt;
 		&lt;hr&gt;
 		&lt;h2&gt;秘诀&lt;/h2&gt;
 			&lt;h4&gt;选择服务&lt;/h4&gt;

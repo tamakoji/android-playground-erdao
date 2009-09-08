@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) 2009 Huan Erdao
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+  
+          http://www.apache.org/licenses/LICENSE-2.0
+  
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/fav_gallery_main"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+	<TextView
+    	android:id="@+id/fav_imgdesc"
+ 		android:layout_width="fill_parent" 
+	    android:layout_height="30dip" 
+	    android:textSize="14dip"
+		android:gravity="center"
+	    android:singleLine="false"
+	    android:ellipsize="end"
+		android:textColor="?android:attr/textColorPrimary"
+    />
+	<Gallery android:id="@+id/fav_gallery"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+        android:layout_weight="1"
+	/>
+	<TextView
+    	android:id="@+id/fav_copyright"
+ 		android:layout_width="fill_parent" 
+	    android:layout_height="20dip" 
+	    android:textSize="11dip"
+		android:gravity="center"
+		android:textColor="?android:attr/textColorPrimary"
+	    android:text="@string/copyrightLabel"
+    />
+</LinearLayout>

@@ -101,6 +101,11 @@ public class GeoClusterer {
 //		cluster.redraw();
 	}
 
+	/* getPhotItems */
+	public List<PhotoItem> getPhotoItems(){
+		return items_;
+	}
+
 	/* redraw */
 	public void redraw(){
 		for(int i=0; i<clusters_.size(); i++) {
@@ -188,7 +193,7 @@ public class GeoClusterer {
 	}
 
 	/* resetViewport */
-	private void resetViewport() {
+	public void resetViewport() {
 //		Log.i("DEBUG","resetViewport");
 		ArrayList<GeoCluster> clusters = getClustersInViewport();
 		ArrayList<PhotoItem> tmpItems = new ArrayList<PhotoItem>();

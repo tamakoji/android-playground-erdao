@@ -29,11 +29,13 @@
 	<string name="menu_Help">幫助</string>
 	<string name="menu_About">關於</string>
 	<string name="menu_Revert">返回</string>
+	<string name="menu_GalleryView">圖片畫廊</string>
 	<string name="menu_DeleteAll">全部刪除</string>
 
 	<string name="QuerySearching">正在搜索中...</string>
 	<string name="httpErrorMsg">互聯網連接有問題。請檢查連接。 </string>
 	<string name="noResultErrorMsg">這裡沒有熱門拍照點</string>
+	<string name="jsonErrorMsg">搜索功能有問題。請再搜索</string>
 	<string name="search_label">搜索地方</string>
 	<string name="search_hint">請輸入地方</string>
 	<string name="ReverseGeoResult">您是不是要找</string>
@@ -68,8 +70,12 @@
 		軟体將搜索公開照片和全球定位系統數據,然後顯示“群集氣球”在地圖上。每個氣球的數字顯示了照片數量。 
 		所以氣球的數字越大，該位置越熱門。 \n\n 
 		更新內容:\n 
-		1.3.1:\n
-		- 新功能：在收藏夾分類支持自動完成\n
+		1.4.0:\n
+		- 新功能：支持調整圖片畫廊尺寸。 \n
+		  - 向上滑動將縮小，向下滑動將放大。 \n
+		  - 滑動到上限將關閉圖片畫廊。 \n
+		  - 收藏夾也可能看在圖片畫廊。\n
+		- 圖片畫廊的長按操作改為點擊操作。\n
 		- 圖標設計更改\n
 		1.3.0:\n
 		- 新功能：收藏夾。您能保存喜歡的景點\n 
@@ -106,7 +112,7 @@
 				將返回到您當前的位置。 
 			&lt;h4&gt;收藏夾&lt;/h4&gt;
 				您能保存喜歡的景點，然後您能看收藏夾即使離線的時候。 &lt;br&gt;
-				如果您想保存景點,按住縮略圖，然後從菜單選擇\"加入收藏夾\"。 &lt;br&gt;
+				如果您想保存景點,點擊縮略圖，然後從菜單選擇\"加入收藏夾\"。 &lt;br&gt;
 				您能保存最大256項目。此外項目能分類。 
 				您想分類的時候，選擇項目，然後從菜單選擇\"分類\"。 &lt;br&gt;
 			&lt;h4&gt;地圖模式&lt;/h4&gt;
@@ -124,17 +130,18 @@
 		&lt;hr&gt;
 		&lt;h2&gt;查看結果&lt;/h2&gt;
 			&lt;h4&gt;點擊氣球看到內容&lt;/h4&gt;
-				點擊氣球，顯示圖像畫廊。您可以瀏覽該處的照片。 
+				點擊氣球，顯示圖片畫廊。您可以瀏覽該處的照片。 
 			&lt;h4&gt;雙擊縮小地圖&lt;/h4&gt;
 				雙擊氣球您可以縮放地圖。您也可以用屏幕右下角的按鈕。 
 			&lt;h4&gt;放大,縮小&lt;/h4&gt;
 				放大/縮小地圖將根據縮放級別合併/分離“群集氣球”。 
 				但是，照片不刷新。如果您需要刷新照片， 
 				從菜單選擇“刷新熱門拍照點”。 &lt;br&gt;
-			&lt;h4&gt;按住縮略圖&lt;/h4&gt;
-				按住縮略圖，將彈出操作菜單&lt;br&gt;
-			&lt;h4&gt;要隱藏畫廊&lt;/h4&gt;
-				點擊圖像畫廊底部，將關閉圖像畫廊。 &lt;br&gt;
+			&lt;h4&gt;點擊縮略圖&lt;/h4&gt;
+				點擊縮略圖，將彈出操作菜單&lt;br&gt;
+			&lt;h4&gt;放大,縮小,關閉畫廊&lt;/h4&gt; 
+				向上滑動將縮小，向下滑動放大圖片。 &lt;br&gt;
+				滑動到上限將關閉圖片畫廊。 &lt;br&gt;
 		&lt;hr&gt;
 		&lt;h2&gt;秘訣&lt;/h2&gt;
 			&lt;h4&gt;選擇服務&lt;/h4&gt;

@@ -16,9 +16,9 @@
 <resources>
 	<string name="gmap_key_dbg">YOUR-GOOGLEMAP-KEY</string>
 	<string name="gmap_key_rel">YOUR-GOOGLEMAP-KEY</string>
-			
+		
 	<string name="app_name">PhotSpot</string>
-	<string name="app_ver">1.3.1</string>
+	<string name="app_ver">1.4.0</string>
 	<string name="help_title">PhotSpot Help</string>
 	<string name="favorite_title">Favorites</string>
 
@@ -33,6 +33,7 @@
 	<string name="menu_Help">Help</string>
 	<string name="menu_About">About</string>
 	<string name="menu_Revert">Return</string>
+	<string name="menu_GalleryView">Gallery View</string>
 	<string name="menu_DeleteAll">Delete all items</string>
 
 	<string name="PhotSpotPreference">PhotSpotPreference</string>
@@ -45,6 +46,7 @@
 	<string name="QuerySearching">Searching ...</string>
 	<string name="httpErrorMsg">there is problem in connection. please check your connection.</string>
 	<string name="noResultErrorMsg">No Spots were found.</string>
+	<string name="jsonErrorMsg">there was problem in search. please try again.</string>
 	<string name="search_label">Search Place</string>
 	<string name="search_hint">Enter Place Name</string>
 	<string name="ReverseGeoResult">Did you mean</string>
@@ -80,12 +82,17 @@
 		the each number on the balloon shows the number of contents within the cluster, so that
 		the more the number it has, the more people take photos around that area.\n\n
 		Recent Updates:\n
+		1.4.0:\n
+		- support gallery image size change by gesture.\n
+		  - swipe up thumbnail to shrink, swipe down to enlarge gallery thumbnail size.\n
+		  - swipe up to the frame limit will hide gallery view.\n
+		  - gallery view support on favorites
+		- "long-press" thumbnail action been changed to "tap"\n
+		  if prefer long-press, please give comment.
+		- icon design change\n
 		1.3.1:\n
 		- auto complete for favorite labels\n
 		- changed some icon designs\n
-		1.3.0:\n
-		- add favorite feature. you can save spots!\n
-		- bugfix: force close when GPS are disabled\n
 		\n
 		For more instructions, please see help from\n
 		[menu]->[more]->[help]\n\n
@@ -120,7 +127,7 @@
 				It will require GPS to find your current location.
 			&lt;h4&gt;Favorites&lt;/h4&gt;
 				You can save favorite spots and browse them afterwards. You can browse favorites even if you are in offline mode.&lt;br&gt;
-				To Add spots to favorites, long-press the thumbnail on gallery view and select \"Add to Favorites\" on the pop-up menu.&lt;br&gt;
+				To Add spots to favorites, tap the thumbnail on gallery view and select \"Add to Favorites\" on the pop-up menu.&lt;br&gt;
 				You can save up to 256 favorite items. Favorite items also can be labeled.
 				After saving spots to favorites, select item and select \"Edit Label\" action.&lt;br&gt;
 			&lt;h4&gt;Map Mode&lt;/h4&gt;
@@ -146,10 +153,11 @@
 				Zooming in/out the map will merge/divide clusters according to the zoom level.
 				But content itself are based on result you get by \"Search Spot\" command.
 				If you need to refresh result, select \"Refresh Spot\" from the menu.
-			&lt;h4&gt;Long-pressing the thumbnail&lt;/h4&gt;
-				By long-pressing the thumbnail, extra actions will pop-up&lt;br&gt;
-			&lt;h4&gt;Dismissing the Gallery View&lt;/h4&gt;
-				By clicking the bar on the bottom of the Gallery View, you can dismiss the Gallery View.&lt;br&gt;
+			&lt;h4&gt;tapping the thumbnail&lt;/h4&gt;
+				By tapping the thumbnail, extra actions will pop-up&lt;br&gt;
+			&lt;h4&gt;Changing image size of the Gallery View&lt;/h4&gt;
+				By swiping gesture, you can change the thumbnail size. Swipe up to shrink, swipe down to enlarge.&lt;br&gt;
+				By swiping up to the frame limit, hides out the Gallery View. 
 		&lt;hr&gt;
 		&lt;h2&gt;Tips&lt;/h2&gt;
 			&lt;h4&gt;Selecting the content provider&lt;/h4&gt;
