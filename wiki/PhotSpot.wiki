@@ -42,12 +42,12 @@ I am not sure if I would really implement below functions:
   * Store Favorite db to SD?
   * Enrich Gallery UI
 
-=== NewFunc Works ===
+=== New Functions ===
   * Spots Sharing function(e-mail?)
   * Time based filtering of the photo content
   * Data filtering and/or categorization for the spots
     * food/people/buildings/pets/animals...?
-  * retrieve hi-resolution photograph for fullscreen
+  * retrieve hi-resolution photograph for full-screen
   * integrate navigation
 
 ----
