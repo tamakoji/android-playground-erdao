@@ -1,5 +1,5 @@
 #summary PhotSpot implementation notes
-
+[PhotSpot back to PhotSpot]
 = Implementation Notes =
 == Client (android) ==
 For clustering, ported javascript version of [http://code.google.com/p/gmaps-utility-library/ markerclusterer] to java code.
