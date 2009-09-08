@@ -1,19 +1,25 @@
 #summary GoogleMaps and Public geotagged content mashup app to discover popular places.
 #labels Featured,Phase-Design
-
 <img src="http://android-playground-erdao.googlecode.com/svn/wiki/img/PhotSpot/photspot_logo.png">
-
 = Introduction =
 PhotSpot is a GoogleMaps and public geotagged photo content mashup app to discover popular places.
 It clusteres the geo information and show them on the map as balloon marker.
 Clustering the marker is essential for application those want to manage many geotagged content on the screen, though displaying all the markers makes UI slow and let user hard to see the information.
-
-----
-= Developer Resource =
-[DeveloperResource Developer Resource]
 ----
 = Screen Shots Gallery =
 [ScreenShots Screen Shots Gallery]
+----
+= Info =
+*ver 1.4.0 known bugs*
+  * Gallery Veiw in Favorites does not sync with title
+
+* 2009/09/07 ver 1.4.0 released
+ * support gallery image size change by gesture.
+  * swipe up thumbnail to shrink, swipe down to enlarge gallery thumbnail size.
+  * swipe up to the frame limit will hide gallery view.
+ * gallery view support on favorites
+ * "long-press" thumbnail action been changed to "tap"
+ * icon design change
 
 ----
 = TODO List =
@@ -32,6 +38,9 @@ I am not sure if I would really implement below functions:
   * retrieve hi-resolution photograph for full-screen
   * integrate navigation
 
+----
+= Developer Resource =
+[DeveloperResource Developer Resource]
 ----
 = Special Thanks =
   * Thanks to reviewers in Android Market
