@@ -35,6 +35,7 @@ I am not sure if I would really implement below functions:
   * Enrich Gallery UI
 
 === New Functions ===
+  * Invoke Radar?
   * Spots Sharing function(e-mail?)
   * Time based filtering of the photo content
   * Data filtering and/or categorization for the spots
