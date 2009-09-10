@@ -74,7 +74,7 @@ public class ImageListAdapter extends BaseAdapter {
 		PhotoItem item = photoItems_.get(pos);
 		String desc = item.getTitle();
 		if(item.getAuthor()!=null){
-			desc += " (by "+item.getAuthor()+")";
+			desc += "\nby "+item.getAuthor();
 		}
 		return desc;
 	}

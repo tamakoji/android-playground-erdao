@@ -322,6 +322,8 @@ public class ClusterMarker extends Overlay {
 				GeoPoint location = photoItems_.get(selItem_).getLocation();
 				double lat = location.getLatitudeE6()/1E6;
 				double lng = location.getLongitudeE6()/1E6;
+				String uri = "http://photspotcloud.appspot.com/photspotcloud?q=localsearch&latlng="+lat+","+lng;
+				uri += "&appver="+context_.getString(R.string.app_ver);
 				String debugstr = Locale.getDefault().getDisplayName()+","+Build.MODEL+","+Build.VERSION.RELEASE+","+context_.getString(R.string.app_ver);
 				try {
 					debugstr = URLEncoder.encode(debugstr,"UTF-8");
@@ -329,7 +331,7 @@ public class ClusterMarker extends Overlay {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				String uri = "http://photspotcloud.appspot.com/photspotcloud?q=localsearch&latlng="+lat+","+lng+"&dbg="+debugstr;
+				uri += "&dbg="+debugstr;
 				LocalSearchTask task = new LocalSearchTask(context_);
 				task.execute(uri);
 				break;
