@@ -397,7 +397,8 @@ public class PhotSpotActivity extends MapActivity {
 			case R.id.menu_FindSpots: {
 				showDialog(R.id.QuerySearchDlg);
 				uri = "http://photspotcloud.appspot.com/photspotcloud?q=searchspot&nwlng="+nwlng+"&selat="+selat+"&nwlat="+nwlat+"&selng="+selng;
-				String debugstr = Locale.getDefault().getDisplayName()+","+Build.MODEL+","+Build.VERSION.RELEASE+","+context_.getString(R.string.app_ver);
+				uri += "&appver="+context_.getString(R.string.app_ver);
+				String debugstr = Locale.getDefault().getDisplayName()+","+Build.MODEL+","+Build.VERSION.RELEASE;
 				try {
 					debugstr = URLEncoder.encode(debugstr,"UTF-8");
 				} catch (UnsupportedEncodingException e) {
@@ -737,8 +738,8 @@ public class PhotSpotActivity extends MapActivity {
 			paint_.setTextSize(14);
 			paint_.setTypeface(Typeface.DEFAULT_BOLD);
 			title_ = item_.getTitle();
-			if(title_.length()>25)
-				title_ = title_.substring(0, 24);
+			if(title_.length()>24)
+				title_ = title_.substring(0, 23);
 			subtitle_ = item_.getAuthor();
 			if(subtitle_.length()>25)
 				subtitle_ = subtitle_.substring(0, 24);
