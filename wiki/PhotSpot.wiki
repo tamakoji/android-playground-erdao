@@ -13,15 +13,15 @@ Clustering the marker is essential for application those want to manage many geo
 [ScreenShots Screen Shots Gallery]
 ----
 = Info =
-* 2009/09/09 ver 1.4.1 released
- * Bugfix:Gallery Veiw in Favorites does not sync with title
-* 2009/09/07 ver 1.4.0 released
- * support gallery image size change by gesture.
-  * swipe up thumbnail to shrink, swipe down to enlarge gallery thumbnail size.
-  * swipe up to the frame limit will hide gallery view.
- * gallery view support on favorites
- * "long-press" thumbnail action been changed to "tap"
- * icon design change
+*2009/09/09 ver 1.4.1 released*
+  * Bugfix:Gallery Veiw in Favorites does not sync with title
+*2009/09/07 ver 1.4.0 released*
+  * support gallery image size change by gesture.
+    * swipe up thumbnail to shrink, swipe down to enlarge gallery thumbnail size.
+    * swipe up to the frame limit will hide gallery view.
+  * gallery view support on favorites
+  * "long-press" thumbnail action been changed to "tap"
+  * icon design change
 
 ----
 = TODO List =
