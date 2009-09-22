@@ -32,32 +32,60 @@ import android.provider.BaseColumns;
 
 import com.google.android.maps.GeoPoint;
 
-
+/**
+ * Database manager class for PhotSpot.
+ * @author Huan Erdao
+ */
 public class PhotSpotDBHelper extends SQLiteOpenHelper {
 
-    public final class Spots implements BaseColumns {
+	/**
+	 * Database storage definition for Spots
+	 */
+	public final class Spots implements BaseColumns {
         public Spots() {}
+    	/** DEFAULT_SORT_ORDER */
         public static final String DEFAULT_SORT_ORDER	= "modified DESC";
+    	/** TITLE */
         public static final String TITLE				= "title";
+    	/** AUTHOR */
         public static final String AUTHOR				= "author";
+    	/** THUMB_URL */
         public static final String THUMB_URL			= "thumb_url";
+    	/** PHOTO_URL */
         public static final String PHOTO_URL			= "photo_url";
+    	/** LATITUDE */
         public static final String LATITUDE				= "latitude";
+    	/** LONGITUDE */
         public static final String LONGITUDE			= "longitude";
+    	/** THUMBNAIL IMAGE DATA */
         public static final String THUMBDATA			= "thumbdata";
+    	/** LABEL ID */
         public static final String LABEL				= "label";
+    	/** REGION ID - RFU */
         public static final String REGION				= "region";
+    	/** INDEX OF ID */
         public static final int IDX_ID			= 0;
+    	/** INDEX OF TITLE */
         public static final int IDX_TITLE		= 1;
+    	/** INDEX OF AUTHOR */
         public static final int IDX_AUTHOR		= 2;
+    	/** INDEX OF THUMB_URL */
         public static final int IDX_THUMB_URL	= 3;
+    	/** INDEX OF PHOTO_URL */
         public static final int IDX_PHOTO_URL	= 4;
+    	/** INDEX OF LATITUDE */
         public static final int IDX_LATITUDE	= 5;
+    	/** INDEX OF LONGITUDE */
         public static final int IDX_LONGITUDE	= 6;
+    	/** INDEX OF THUMB_DATA */
         public static final int IDX_THUMBDATA	= 7;
+    	/** INDEX OF LABEL ID */
         public static final int IDX_LABEL		= 8;
+    	/** INDEX OF REGION */
         public static final int IDX_REGIOIN		= 9;
+        /** id */
         public long id_;
+        /** labelId */
         public long labelId_;
         /*
         public String title_;
@@ -70,40 +98,71 @@ public class PhotSpotDBHelper extends SQLiteOpenHelper {
         public String region_;
         */
     }
+	/**
+	 * Database storage definition for Labels 
+	 */
     public final class Labels implements BaseColumns {
         public Labels() {}
-        public static final String UNDEFINED_LABEL		= "undefined";
+    	/** DEFAULT_SORT_ORDER */
         public static final String DEFAULT_SORT_ORDER	= "modified DESC";
+    	/** UNDEFINED_LABEL */
+        public static final String UNDEFINED_LABEL		= "undefined";
+    	/** LABEL */
         public static final String LABEL				= "label";
+    	/** LABEL COUNT */
         public static final String COUNTS				= "counts";
+    	/** INDEX OF ID */
         public static final int IDX_ID			= 0;
+    	/** INDEX OF LABEL */
         public static final int IDX_LABEL		= 1;
+    	/** INDEX OF COUNTS */
         public static final int IDX_COUNTS		= 2;
+    	/** id */
         public long id_;
+    	/** label */
         public String label_;
+    	/** count */
         public long counts_;
     }
     
+	/** DB Success ERRORCODE */
     public static final int DB_SUCCESS			= 0;
+	/** DB General Failure ERRORCODE */
     public static final int DB_FAILED			= -1;
+	/** DB Already Exist ERRORCODE */
     public static final int DB_EXISTS			= -2;
+	/** DB Full ERRORCODE */
     public static final int DB_FULL				= -3;
+	/** DB Unknown Error ERRORCODE */
     public static final int DB_UNKNOWN_ERROR	= -4;
 
     
+	/** DB filename */
     private static final String DATABASE_NAME = "favorites.db";
+	/** DB version */
     private static final int DATABASE_VERSION = 1;
+	/** table name for spots */
     private static final String SPOTS_TABLE_NAME = "spots";
+	/** table name for labels */
     private static final String LABEL_TABLE_NAME = "labels";
 	
+	/** IO Buffer size to read */
 	private static final int IO_BUFFER_SIZE = 4 * 1024;
 	
+	/** Maximum Record */
 	private static final int MAX_RECORDS = 256;	// MAX 256 
 
+	/**
+	 * @param context Context object
+	 */
     PhotSpotDBHelper(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
 	}
 
+	/**
+	 * onCreate
+	 * @param db SQLiteDatabase
+	 */
 	@Override
 	public void onCreate(SQLiteDatabase db) {
 		db.execSQL("CREATE TABLE " + SPOTS_TABLE_NAME + " ("
@@ -125,13 +184,24 @@ public class PhotSpotDBHelper extends SQLiteOpenHelper {
 				+ ");");
 	}
 
+	/**
+	 * onUpgrade. if upgrading to newer db, then implement here
+	 * @param db SQLiteDatabase
+	 * @param oldVersion old version
+	 * @param newVersion new version
+	 */
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 		db.execSQL("DROP TABLE IF EXISTS"+SPOTS_TABLE_NAME);
 		onCreate(db);
 	}
 	
-	// query a PhotoItem from THUMB_URL
+	/**
+	 * query a PhotoItem from THUMB_URL key
+	 * @param db SQLiteDatabase
+	 * @param thumb_url query key
+	 * @return Spots object. if not found, return null.
+	 */
 	private Spots queryItemByThumbURL(SQLiteDatabase db, String thumb_url ){
         SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
         qb.setTables(SPOTS_TABLE_NAME);
@@ -155,7 +225,12 @@ public class PhotSpotDBHelper extends SQLiteOpenHelper {
         return spots;
 	}
 
-	// query a PhotoItem
+	/**
+	 * query a PhotoItem from id key
+	 * @param db SQLiteDatabase
+	 * @param id query key
+	 * @return Spots object. if not found, return null.
+	 */
 	private Spots queryItemById(SQLiteDatabase db, long id){
         SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
         qb.setTables(SPOTS_TABLE_NAME);
@@ -179,21 +254,33 @@ public class PhotSpotDBHelper extends SQLiteOpenHelper {
         return spots;
 	}
 
-	// query all PhotoItem. returns cursor
+	/**
+	 * query all PhotoItem. returns cursor
+	 * @param db SQLiteDatabase
+	 * @return Cursor object.
+	 */
 	public Cursor queryAllItems(SQLiteDatabase db){
         SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
         qb.setTables(SPOTS_TABLE_NAME);
         return qb.query(db, null, null, null, null, null, null);
 	}
 
-	// query all Labels. returns cursor
+	/**
+	 * query all Labels. returns cursor
+	 * @param db SQLiteDatabase
+	 * @return Cursor object.
+	 */
 	public Cursor queryAllLabels(SQLiteDatabase db){
         SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
         qb.setTables(LABEL_TABLE_NAME);
         return qb.query(db, null, null, null, null, null, null);
 	}
 
-	// query for a Label. if undefined, return null
+	/**
+	 * query a Label from PhotoItem
+	 * @param item PhotoItem object
+	 * @return label string. if undefined, return null.
+	 */
 	public String queryLabel(PhotoItem item){
 		final SQLiteDatabase db = this.getWritableDatabase();
 		Spots spots = queryItemById(db, item.getId());
@@ -214,7 +301,12 @@ public class PhotSpotDBHelper extends SQLiteOpenHelper {
 		return labels.label_;
 	}
 	
-	// insert a PhotoItem. 1:success, -1:exception 0:record exists
+	/**
+	 * insert a PhotoItem.
+	 * @param item PhotoItem object
+	 * @param bmp Bitmap object
+	 * @return  1:success, -1:exception 0:record exists
+	 */
 	public int insertItem(PhotoItem item, Bitmap bmp){
 		final SQLiteDatabase db = this.getWritableDatabase();
 		Cursor c = this.queryAllItems(db);
@@ -279,7 +371,12 @@ public class PhotSpotDBHelper extends SQLiteOpenHelper {
 		return DB_SUCCESS;
 	}
 	
-	// query a Label from Label Name. returns Labels
+	/**
+	 * query a Label from Label Name.
+	 * @param db SQLiteDatabase object
+	 * @param label label string
+	 * @return  Labels object. if not found, return null.
+	 */
 	private Labels queryLabel(SQLiteDatabase db, String label){
         SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
         qb.setTables(LABEL_TABLE_NAME);
@@ -295,11 +392,16 @@ public class PhotSpotDBHelper extends SQLiteOpenHelper {
         return labels;
 	}
 
-	// query a Label from Id. returns current counts
-	private Labels queryLabel(SQLiteDatabase db, long id){
+	/**
+	 * query a Label from labelId
+	 * @param db SQLiteDatabase object
+	 * @param labelId label id
+	 * @return  Labels object. if not found, return null.
+	 */
+	private Labels queryLabel(SQLiteDatabase db, long labelId){
         SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
         qb.setTables(LABEL_TABLE_NAME);
-        qb.appendWhere(Labels._ID+ "="+id);
+        qb.appendWhere(Labels._ID+ "="+labelId);
         Cursor c = qb.query(db, null, null, null, null, null, null);
         if(c.getCount()==0)
         	return null;
@@ -311,9 +413,14 @@ public class PhotSpotDBHelper extends SQLiteOpenHelper {
         return labels;
 	}
 
-	// query a Label from Id
-	private void updateLabelCount(SQLiteDatabase db, long id, long count){
-		String whereClause = Labels._ID + "="+id;
+	/**
+	 * update label count in label table
+	 * @param db SQLiteDatabase object
+	 * @param labelId label id
+	 * @param count label count
+	 */
+	private void updateLabelCount(SQLiteDatabase db, long labelId, long count){
+		String whereClause = Labels._ID + "="+labelId;
 		if(count == 0){
     		db.delete(LABEL_TABLE_NAME, whereClause, null);
 		}
@@ -324,7 +431,12 @@ public class PhotSpotDBHelper extends SQLiteOpenHelper {
 		}
 	}
 	
-	// insert a Label
+	/**
+	 * insert new label to label table
+	 * @param db SQLiteDatabase object
+	 * @param newLabelName new label name string
+	 * @return label id for new label. if already exists, update label count andreturn existing id.
+	 */
 	public long insertLabel(SQLiteDatabase db, String newLabelName){
 		Labels labels = this.queryLabel(db,newLabelName);
 		long id = 0;
@@ -347,7 +459,12 @@ public class PhotSpotDBHelper extends SQLiteOpenHelper {
 		return id;
 	}
 
-	// update item with a new Label
+	/**
+	 * update label to a new label
+	 * @param item PhotoItem object
+	 * @param newLabelName new label name string
+	 * @return label id for new label. if same, current labelid will return. if failed, DB_FAILED will return.
+	 */
 	public long updateLabel(PhotoItem item, String newLabelName){
 		final SQLiteDatabase db = this.getWritableDatabase();
 		Spots spots = this.queryItemById(db,item.getId());
@@ -381,7 +498,11 @@ public class PhotSpotDBHelper extends SQLiteOpenHelper {
 	}
 
 	
-	// delete a PhotoItem from table
+	/**
+	 * delete a PhotoItem from table
+	 * @param item PhotoItem object
+	 * @return DB ERROR CODE.
+	 */
 	public int deleteItem(PhotoItem item){
 		final SQLiteDatabase db = this.getWritableDatabase();
 		Spots spots = this.queryItemById(db, item.getId());
@@ -405,7 +526,10 @@ public class PhotSpotDBHelper extends SQLiteOpenHelper {
 		return DB_SUCCESS;
 	}
 	
-	// delete all PhotoItem from table
+	/**
+	 * delete all PhotoItem from table
+	 * @return DB ERROR CODE.
+	 */
 	public int deleteAll(){
 		final SQLiteDatabase db = this.getWritableDatabase();
 		try {

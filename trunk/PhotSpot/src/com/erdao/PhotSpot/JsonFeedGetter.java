@@ -45,7 +45,10 @@ import org.json.JSONObject;
 
 import android.content.Context;
 
-/* Class for Getting the JsonFeed */
+/**
+ * JSON Feed get and parse utility
+ * @author Huan Erdao
+ */
 public class JsonFeedGetter {
 	/* constant */
 	public static final int MODE_SPOTSEARCH = 0;
@@ -147,7 +150,7 @@ public class JsonFeedGetter {
 						title = context_.getString(R.string.no_title);
 					}
 					PhotoItem item =
-						new PhotoItem(id,thumbUrl,(int)(lat*1E6),(int)(lng*1E6),title,photoUrl,author);
+						new PhotoItem(id,(int)(lat*1E6),(int)(lng*1E6),title,author,thumbUrl,photoUrl);
 					photoItems_.add(item);
 				}
 				else{

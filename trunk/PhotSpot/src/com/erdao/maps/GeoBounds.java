@@ -14,22 +14,34 @@
  * limitations under the License.
  */
 
-package com.erdao.PhotSpot;
+package com.erdao.maps;
 
 import com.google.android.maps.GeoPoint;
 
-/* Utility Class to handle GeoBounds, which is not available for 1.5SDK */
+/**
+ * Utility Class to handle GeoBounds, which is not available for 1.5SDK.
+ * @author Huan Erdao
+ */
 public class GeoBounds {
+
+	/** North-West geo point of the bound */
 	private GeoPoint nw_;
+	/** South-East geo point of the bound */
 	private GeoPoint se_;
 
-	/* constructor */
+	/**
+	 * @param nw North-West geo point of the bound
+	 * @param se South-East geo point of the bound
+	 */
 	public GeoBounds( GeoPoint nw, GeoPoint se ){
 		nw_ = nw;
 		se_ = se;
 	}
 	
-	/* isInBounds */
+	/**
+	 * @param pt a GeoPoint to be checked
+	 * @return true if point is in the bound.
+	 */
 	public boolean isInBounds( GeoPoint pt ){
 		return (pt.getLatitudeE6()<=nw_.getLatitudeE6()
 				&&pt.getLatitudeE6()>=se_.getLatitudeE6()
@@ -37,22 +49,29 @@ public class GeoBounds {
 				&&pt.getLongitudeE6()<=se_.getLongitudeE6());
 	}
 
-	/* getSouthEast */
+	/**
+	 * @return South-East point of the bound
+	 */
 	public GeoPoint getSouthEast(){
 		return se_;
 	}
 
-	/* getNorthWest */
+	/**
+	 * @return North-West point of the bound
+	 */
 	public GeoPoint getNorthWest(){
 		return nw_;
 	}
 
-	/* isEqual */
-	public Boolean isEqual(GeoBounds b){
-		return (nw_.getLatitudeE6()==b.nw_.getLatitudeE6()&&
-				nw_.getLongitudeE6()==b.nw_.getLongitudeE6()&&
-				se_.getLatitudeE6()==b.se_.getLatitudeE6()&&
-				se_.getLongitudeE6()==b.se_.getLongitudeE6());
+	/**
+	 * @param src a GeoBounds to be checked
+	 * @return true if the bound are same
+	 */
+	public Boolean isEqual(GeoBounds src){
+		return (nw_.getLatitudeE6()==src.nw_.getLatitudeE6()&&
+				nw_.getLongitudeE6()==src.nw_.getLongitudeE6()&&
+				se_.getLatitudeE6()==src.se_.getLatitudeE6()&&
+				se_.getLongitudeE6()==src.se_.getLongitudeE6());
 	}
 
 

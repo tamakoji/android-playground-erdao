@@ -23,9 +23,15 @@ import android.view.MenuItem;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 
-/* activity class for help document */
+/**
+ * Activity Class for Help Document.
+ * @author Huan Erdao
+ */
 public class HelpActivity extends Activity {
 
+	/**
+	 * onCreate handler.
+	 */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -42,6 +48,9 @@ public class HelpActivity extends Activity {
 		wv.loadDataWithBaseURL("dummy",getString(R.string.helpcontent), mimeType, encoding, null);
 	}
 	
+	/**
+	 * onCreateOptionsMenu handler.
+	 */
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
@@ -50,6 +59,9 @@ public class HelpActivity extends Activity {
 		return true;
 	}
 
+	/**
+	 * onOptionsItemSelected handler.
+	 */
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
