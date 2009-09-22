@@ -43,22 +43,35 @@ import android.widget.AdapterView.OnItemSelectedListener;
 import com.google.android.maps.GeoPoint;
 
 /**
- * Activity which displays the list of images.
+ * Activity Class for Displaying Favorites in Gallery View.
+ * @author Huan Erdao
  */
 public class FavoritesGalleryActivity extends Activity {
 	
+	/** PhotSpotDBHelper object */
 	private PhotSpotDBHelper dbHelper_ = null;
+	/** PhotoItem list */
     private List<PhotoItem> photoItems_ = new ArrayList<PhotoItem>();
+	/** Bitmap list */
     private List<Bitmap> bitmaps_ = new ArrayList<Bitmap>();
+	/** Context object */
 	private Context context_;
+	/** ImageListAdapter for gallery */
 	private ImageListAdapter imageAdapter_ = null;
+	/** current selected item */
 	private int selItem_;
 	
+	/** Extra Action - Show on Map */
 	private static final int EXT_ACTION_SHOWONMAP			= 0;
+	/** Extra Action - Navigate to place */
 	private static final int EXT_ACTION_NAVTOPLACE			= 1;
+	/** Extra Action - Open with Browser */
 	private static final int EXT_ACTION_OPENBROWSER			= 2;
 
 
+	/**
+	 * onCreate handler.
+	 */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -72,13 +85,13 @@ public class FavoritesGalleryActivity extends Activity {
             long id = c.getLong(PhotSpotDBHelper.Spots.IDX_ID);
 			String title = c.getString(PhotSpotDBHelper.Spots.IDX_TITLE);
 			String author = c.getString(PhotSpotDBHelper.Spots.IDX_AUTHOR);
-			String thumbUurl = c.getString(PhotSpotDBHelper.Spots.IDX_THUMB_URL);
+			String thumbUrl = c.getString(PhotSpotDBHelper.Spots.IDX_THUMB_URL);
 			String photoUrl = c.getString(PhotSpotDBHelper.Spots.IDX_PHOTO_URL);
 			double lat = c.getDouble(PhotSpotDBHelper.Spots.IDX_LATITUDE);
 			double lng = c.getDouble(PhotSpotDBHelper.Spots.IDX_LONGITUDE);
 			long labelId = c.getLong(PhotSpotDBHelper.Spots.IDX_LABEL);
 			PhotoItem item =
-				new PhotoItem(id,thumbUurl,(int)(lat*1E6),(int)(lng*1E6),title,photoUrl,author);
+				new PhotoItem(id,(int)(lat*1E6),(int)(lng*1E6),title,author,thumbUrl,photoUrl);
 			item.setLabelId(labelId);
 			photoItems_.add(item);
  			Bitmap bitmap = null;
@@ -105,12 +118,12 @@ public class FavoritesGalleryActivity extends Activity {
 			gallery.setCallbackDuringFling(true);
 			TextView txtView = (TextView)findViewById(R.id.fav_imgdesc);
 			txtView.setText(imageAdapter_.getDescription(selItem_));
-			photoItems_.get(selItem_).setSelect();
+			photoItems_.get(selItem_).setSelect(true);
 			gallery.setSelection(selItem_);
 			gallery.setOnItemSelectedListener(new OnItemSelectedListener() {
 				public void onItemSelected (AdapterView<?> parent, View view, int position, long id){
-					photoItems_.get(selItem_).clearSelect();
-					photoItems_.get(position).setSelect();
+					photoItems_.get(selItem_).setSelect(false);
+					photoItems_.get(position).setSelect(true);
 					selItem_ = position;
 					TextView txtView = (TextView)findViewById(R.id.fav_imgdesc);
 					txtView.setText(imageAdapter_.getDescription(position));
@@ -141,7 +154,10 @@ public class FavoritesGalleryActivity extends Activity {
 	}
 
 	
-	/* option tasks for long pressing item */
+	/**
+	 * option tasks for long pressing item
+	 * @param cmd action command
+	 */
 	public void onItemAction(int cmd){
 		switch(cmd){
 			case EXT_ACTION_SHOWONMAP:{
@@ -176,6 +192,9 @@ public class FavoritesGalleryActivity extends Activity {
 		}
 	}
 
+	/**
+	 * onCreateOptionsMenu handler
+	 */
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
@@ -184,6 +203,9 @@ public class FavoritesGalleryActivity extends Activity {
 		return true;
 	}
 
+	/**
+	 * onOptionsItemSelected handler
+	 */
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {

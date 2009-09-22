@@ -16,11 +16,18 @@
 
 package com.erdao.PhotSpot;
 
-/* enum class for Content Provider */
+/**
+ * enum class for Content Provider
+ * @author Huan Erdao
+ */
 public class TypesService {
+	/** this is static class. cannot call constructor */
 	private TypesService(){};
-	public final static int Panoramio = 0;
-	public final static int PicasaWeb = 1;
-	public final static int Flickr = 2;
+	/** Use Panoramio */
+	public final static int PANORAMIO = 0;
+	/** Use Picasa Web Albums */
+	public final static int PICASAWEB = 1;
+	/** Use Flickr */
+	public final static int FLICKR = 2;
 
 }

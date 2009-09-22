@@ -21,140 +21,150 @@ import android.graphics.Bitmap;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.google.android.maps.GeoPoint;
+import com.erdao.maps.GeoItem;
 
-/* Class for PhotoItem */
-public class PhotoItem implements Parcelable {
+/**
+ * Class for managing Photo item
+ * @author Huan Erdao
+ */
+public class PhotoItem extends GeoItem {
 	
+	/** for intent handling */
     public static final String EXT_PHOTOITEM = "photoitem";
 
-    /* variables */
-	private long id_;
+	/** title of the item */
 	private String title_;
+	/** author of the item */
 	private String author_;
+	/** thumbnail url of the item */
 	private String thumbUrl_;
+	/** orginal link of the item */
 	private String photoUrl_;
-	private GeoPoint location_;
-	private int isSelected_;
+	/** bitmap object of the item */
 	private Bitmap bitmap_;
+	/** label if of the item */
 	private long labelId_;
 	
-	/* constructor */
-	public PhotoItem(long id, String thumbUrl, int latitudeE6, int longitudeE6,
-			String title, String photoUrl, String author) {
-		id_ = id;
-		location_ = new GeoPoint(latitudeE6, longitudeE6);
+	/**
+	 * @param id			id of item.
+	 * @param latitudeE6	latitude of the item in microdegrees (degrees * 1E6).
+	 * @param longitudeE6	longitude of the item in microdegrees (degrees * 1E6).
+	 * @param title			title of item.
+	 * @param author		author of item.
+	 * @param photoUrl		original url of item.
+	 * @param thumbUrl		thumbnail url of item.
+	 */
+	public PhotoItem(long id, int latitudeE6, int longitudeE6,
+			String title, String author, String thumbUrl, String photoUrl ) {
+		super(id,latitudeE6,longitudeE6);
 		title_ = title;
+		author_ = author;
 		thumbUrl_ = thumbUrl;
 		photoUrl_ = photoUrl;
-		author_ = author;
-		isSelected_ = 0;
 		bitmap_ = null;
 		labelId_ = 1;
 	}
 
-	/* constructor (PhotoItem) */
+	/**
+	 * @param src			source PhotoItem.
+	 */
 	public PhotoItem(PhotoItem src) {
-		id_ = src.id_;
-		location_ = new GeoPoint(src.location_.getLatitudeE6(),src.location_.getLongitudeE6());
+		super(src);
 		title_ = src.title_;
 		thumbUrl_ = src.thumbUrl_;
 		photoUrl_ = src.photoUrl_;
 		author_ = src.author_;
-		isSelected_ = 0;
 		bitmap_ = src.bitmap_;
 		labelId_ = src.labelId_;
 	}
 
-	/* constructor (Parcel) */
-	public PhotoItem(Parcel in) {
-		id_ = in.readLong();
-		title_ = in.readString();
-		author_ = in.readString();
-		thumbUrl_ = in.readString();
-		photoUrl_ = in.readString();
-		location_ = new GeoPoint(in.readInt(), in.readInt());
-		isSelected_ = 0;
-		bitmap_ = Bitmap.CREATOR.createFromParcel(in);
-		labelId_ = in.readLong();
+	/**
+	 * @param src			source Parcel.
+	 */
+	public PhotoItem(Parcel src) {
+		super(src);
+		title_ = src.readString();
+		author_ = src.readString();
+		thumbUrl_ = src.readString();
+		photoUrl_ = src.readString();
+		bitmap_ = Bitmap.CREATOR.createFromParcel(src);
+		labelId_ = src.readLong();
 	}
 
-	/* describeContents */
+	/**
+	 * describeContents
+	 */
 	public int describeContents() {
 		return 0;
 	}
 
-	/* getId */
-	public long getId() {
-		return id_;
-	}
-	
-	/* setId */
-	public void setId(long id) {
-		id_ = id;;
-	}
-
-	/* getLocation */
-	public GeoPoint getLocation() {
-		return location_;
-	}
-
-	/* isSelected */
-	public boolean isSelected() {
-		return (isSelected_ == 1);
-	}
-
-	/* setSelect */
-	public void setSelect() {
-		isSelected_ = 1;
-	}
-
-	/* clearSelect */
-	public void clearSelect() {
-		isSelected_ = 0;
-	}
-
-	/* getTitle */
+	/**
+	 * get title
+	 * @return title of item.
+	 */
 	public String getTitle() {
 		return title_;
 	}
 	
-	/* getauthor */
+	/**
+	 * get author
+	 * @return author of item.
+	 */
 	public String getAuthor() {
 		return author_;	   
 	}
 
-	/* getThumbUrl */
+	/**
+	 * get thumbnail url
+	 * @return thumbnail url of item.
+	 */
 	public String getThumbUrl() {
 		return thumbUrl_;
 	}
 
-	/* getPhotoUrl */
+	/**
+	 * get original url
+	 * @return original url of item.
+	 */
 	public String getPhotoUrl() {
 		return photoUrl_;
 	}
 
-	/* getBitmap */
+	/**
+	 * get bitmap object
+	 * @return bitmap object of item.
+	 */
 	public Bitmap getBitmap() {
 		return bitmap_;
 	}
 
-	/* setBitmap */
+	/**
+	 * set bitmap object
+	 * @param bmp bitmap object of item.
+	 */
 	public void setBitmap(Bitmap bmp) {
 		bitmap_ = bmp;
 	}
 
-	/* getLabelId */
+	/**
+	 * get label id
+	 * @return label id of item.
+	 */
 	public long getLabelId() {
 		return labelId_;
 	}
 
-	/* setLabelId */
+	/**
+	 * set label id
+	 * @param id label id of item.
+	 */
 	public void setLabelId(long id) {
 		labelId_ = id;
 	}
 
-	/* Parcelable.Creator */
+	/**
+	 * Parcelable.Creator
+	 */
 	public static final Parcelable.Creator<PhotoItem> CREATOR =
 		new Parcelable.Creator<PhotoItem>() {
 		public PhotoItem createFromParcel(Parcel in) {
@@ -165,15 +175,15 @@ public class PhotoItem implements Parcelable {
 		}
 	};
 
-	/* writeToParcel */
+	/**
+	 * writeToParcel
+	 */
 	public void writeToParcel(Parcel parcel, int flags) {
-		parcel.writeLong(id_);
+		super.writeToParcel(parcel, flags);
 		parcel.writeString(title_);
 		parcel.writeString(author_);
 		parcel.writeString(thumbUrl_);
 		parcel.writeString(photoUrl_);
-		parcel.writeInt(location_.getLatitudeE6());
-		parcel.writeInt(location_.getLongitudeE6());
 		bitmap_.writeToParcel(parcel, flags);
 		parcel.writeLong(labelId_);
    }

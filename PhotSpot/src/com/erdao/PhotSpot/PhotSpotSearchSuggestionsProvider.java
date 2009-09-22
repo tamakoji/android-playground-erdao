@@ -18,9 +18,14 @@ package com.erdao.PhotSpot;
 
 import android.content.SearchRecentSuggestionsProvider;
 
-/* Custom SearchRecentSuggestionsProvider to store suggestion */
+/**
+ * Custom SearchRecentSuggestionsProvider to store suggestion
+ * @author Huan Erdao
+ */
 public class PhotSpotSearchSuggestionsProvider extends SearchRecentSuggestionsProvider {
+	/** AUTHORITY */
 	final static String AUTHORITY = "com.erdao.PhotSpot.PhotSpotSearchSuggestionsProvider";
+	/** MODE */
 	final static int MODE = DATABASE_MODE_QUERIES;
 	public PhotSpotSearchSuggestionsProvider() {
 		super();

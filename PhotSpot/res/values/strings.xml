@@ -16,9 +16,9 @@
 <resources>
 	<string name="gmap_key_dbg">YOUR-GOOGLEMAP-KEY</string>
 	<string name="gmap_key_rel">YOUR-GOOGLEMAP-KEY</string>
-			
+		
 	<string name="app_name">PhotSpot</string>
-	<string name="app_ver">1.4.1</string>
+	<string name="app_ver">1.4.2</string>
 	<string name="help_title">PhotSpot Help</string>
 	<string name="favorite_title">Favorites</string>
 
@@ -82,16 +82,11 @@
 		the each number on the balloon shows the number of contents within the cluster, so that
 		the more the number it has, the more people take photos around that area.\n\n
 		Updates:\n
-		1.4.1:\n
-		- bugfix:favorite gallery view title sync error
-		1.4.0:\n
-		- support gallery image size change by gesture.\n
-		  - swipe up thumbnail to shrink, swipe down to enlarge gallery thumbnail size.\n
-		  - swipe up to the frame limit will hide gallery view.\n
-		  - gallery view support on favorites
-		- "long-press" thumbnail action been changed to "tap"\n
-		  if prefer long-press, please give comment.
-		- icon design change\n
+		v1.4.2:\n
+		- code refactoring. stabilizes more.\n
+		- balloon icon changes according to the service.\n
+		v1.4.1:\n
+		- bugfix:favorite gallery view title sync error\n
 		\n
 		For more instructions, please see help from\n
 		[menu]->[more]->[help]\n\n

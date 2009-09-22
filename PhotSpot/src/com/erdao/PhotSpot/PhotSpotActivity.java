@@ -19,6 +19,7 @@ package com.erdao.PhotSpot;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -32,6 +33,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.DialogInterface.OnCancelListener;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Point;
@@ -63,6 +65,8 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.erdao.maps.GeoItem;
+import com.erdao.maps.markerclusterer.MarkerBitmap;
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapActivity;
 import com.google.android.maps.MapController;
@@ -71,48 +75,77 @@ import com.google.android.maps.MyLocationOverlay;
 import com.google.android.maps.Overlay;
 import com.google.android.maps.Projection;
 
-/* Main Activity Class for PhotSpot */
+/**
+ * Main Activity Class for PhotSpot
+ * @author Huan Erdao
+ */
 public class PhotSpotActivity extends MapActivity {
 
+	/** self object */
 	private PhotSpotActivity me_;
+	/** Context object */
 	private Context context_;
 
 	/* google map variables */
+	/** MapView object */
 	private MapView mapView_;
+	/** MapController object */
 	private MapController mapCtrl_;
+	/** LocationManager object */
 	private LocationManager locationMgr_;
+	/** Criteria object */
 	private Criteria criteria_;
+	/** MyLocationOverlay object */
 	private MyLocationOverlay myLocationOverlay_ = null;
+	/** list of Overlay object */
 	private List<Overlay> mapOverlays_;
+	/** flag if mylocation enabled */
 	private boolean mylocationEnabled_;
+	/** flag if mylocation centering enabled */
 	private boolean mylocationSetFocus_;
+	/** List of Address for search place */
 	private List<Address> addresses_;
 
 	/* settings */
+	/** SharedPreferences object for saving preference */
 	private SharedPreferences settings_;
+	/** message frame for update notification */
 	private ScrollView msgFrame_;
+	/** message body update notification */
 	private TextView msgTxtView_;
 
 	/* for mylocation thread */
+	/** Handler object to refresh UI from thread */
 	private Handler handler_;
 
 	/* photo feed task */
+	/** Photo feed retrieving Async task object */
 	private GetPhotoFeedTask getPhotoFeedTask_;
-	private int contentProvider_;
+	/** service to retrieve photo */
+	private int serviceProvider_;
 
 	/* Clusterer */
-	private GeoClusterer clusterer_ = null;
+	/** Clusterer object */
+	private PhotSpotClusterer clusterer_ = null;
+	/** Bitmap for marker icons */
+	private List<MarkerBitmap> markerIconBmps_ = new ArrayList<MarkerBitmap>();
 
 	/* favorite ovelay */
+	/** flag if favorite is overlayed */
 	private boolean favoriteOverlayed_;
+	/** Handler to refresh favorite overlay(distance to current)*/
 	private Handler favUpdateTimer_ = new Handler();
 	
-	/** Called when the activity is first created. */
+	/**
+	 * isRouteDisplayed
+	 */
 	protected boolean isRouteDisplayed() {
 		return false;
 	}
 	
-	/** Called when the activity is first created. */
+	/**
+	 * onCreate handler
+	 */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -162,8 +195,10 @@ public class PhotSpotActivity extends MapActivity {
 		}
 	}
 	
+	/**
+	 * setup initial objects main routine
+	 */
 	private void onCreateMain(){
-//		Log.i("DEBUG", "onCreateMain");
 		mapView_ = (MapView)findViewById(R.id.mapview);
 		mapCtrl_ = mapView_.getController();
 		mapCtrl_.setZoom(15);
@@ -216,7 +251,7 @@ public class PhotSpotActivity extends MapActivity {
 		/* Restore preferences */
 		boolean mapmode = settings_.getBoolean(getString(R.string.PrefMapMode), false);
 		mapView_.setSatellite(mapmode);
-		contentProvider_ = settings_.getInt(getString(R.string.PrefContentProvider), 0);
+		serviceProvider_ = settings_.getInt(getString(R.string.PrefContentProvider), 0);
 
 		/* get and process search query here */
 		final Intent intent = getIntent();
@@ -236,7 +271,7 @@ public class PhotSpotActivity extends MapActivity {
 			PhotoItem item = intent.getParcelableExtra(PhotoItem.EXT_PHOTOITEM);
 			mapCtrl_.animateTo(item.getLocation());
 			final List<Overlay> overlays = mapView_.getOverlays();
-			overlays.add(new ImageOverlay(this,item));
+			overlays.add(new FavoriteOverlay(this,item));
 			mapView_.invalidate();
 		}
 		else{
@@ -248,7 +283,8 @@ public class PhotSpotActivity extends MapActivity {
         if (data != null) {
         	final PhotoItem[] items = (PhotoItem[]) data;
 			FrameLayout imageFrame = (FrameLayout)findViewById(R.id.imageframe);
-			clusterer_ = new GeoClusterer(me_,context_, mapView_,imageFrame);
+			setupMarkerIcons();
+			clusterer_ = new PhotSpotClusterer(me_,markerIconBmps_, mapView_,imageFrame);
 			for(int i=0; i<items.length;i++) {
 				clusterer_.addItem(items[i]);
 			}
@@ -265,21 +301,68 @@ public class PhotSpotActivity extends MapActivity {
         }
 	}
 
-	/* for orientation */
+	/**
+	 * set up marker Icons according to the service
+	 */
+	private void setupMarkerIcons(){
+		// create marker bitmaps
+		markerIconBmps_.clear();
+		Bitmap bmp_s_n,bmp_s_s,bmp_l_n,bmp_l_s;
+		Point grid = new Point(20,20);
+		switch( serviceProvider_ ){
+			case TypesService.PANORAMIO:
+			default:{
+				bmp_s_n = BitmapFactory.decodeResource(getResources(), R.drawable.balloon_pano_s_n);
+				bmp_s_s = BitmapFactory.decodeResource(getResources(), R.drawable.balloon_pano_s_s);
+				bmp_l_n = BitmapFactory.decodeResource(getResources(), R.drawable.balloon_pano_l_n);
+				bmp_l_s = BitmapFactory.decodeResource(getResources(), R.drawable.balloon_pano_l_s);
+				break;
+			}
+			case TypesService.PICASAWEB:{
+				bmp_s_n = BitmapFactory.decodeResource(getResources(), R.drawable.balloon_picasa_s_n);
+				bmp_s_s = BitmapFactory.decodeResource(getResources(), R.drawable.balloon_picasa_s_s);
+				bmp_l_n = BitmapFactory.decodeResource(getResources(), R.drawable.balloon_picasa_l_n);
+				bmp_l_s = BitmapFactory.decodeResource(getResources(), R.drawable.balloon_picasa_l_s);
+				break;
+			}
+			case TypesService.FLICKR:{
+				bmp_s_n = BitmapFactory.decodeResource(getResources(), R.drawable.balloon_flickr_s_n);
+				bmp_s_s = BitmapFactory.decodeResource(getResources(), R.drawable.balloon_flickr_s_s);
+				bmp_l_n = BitmapFactory.decodeResource(getResources(), R.drawable.balloon_flickr_l_n);
+				bmp_l_s = BitmapFactory.decodeResource(getResources(), R.drawable.balloon_flickr_l_s);
+				break;
+			}
+		}
+		MarkerBitmap markerBitmap = new MarkerBitmap(bmp_s_n,grid);
+		markerIconBmps_.add(markerBitmap);
+		markerBitmap = new MarkerBitmap(bmp_s_s,grid);
+		markerIconBmps_.add(markerBitmap);
+		grid = new Point(28,28);
+		markerBitmap = new MarkerBitmap(bmp_l_n,grid);
+		markerIconBmps_.add(markerBitmap);
+		markerBitmap = new MarkerBitmap(bmp_l_s,grid);
+		markerIconBmps_.add(markerBitmap);
+	}
+	/**
+	 * setup before orientation change
+	 */
 	@Override
 	public Object onRetainNonConfigurationInstance() {
 		if(clusterer_!=null){
-			List<PhotoItem> items = clusterer_.getPhotoItems();
+			List<GeoItem> items = clusterer_.getItems();
 			final PhotoItem[] list = new PhotoItem[items.size()];
 			for(int i = 0; i<items.size();i++){
-				list[i] = new PhotoItem(items.get(i));
+				PhotoItem item = (PhotoItem)items.get(i);
+				list[i] = new PhotoItem(item);
 			}
 			return list;
 		}
 		return null;
 	}
 
-	/* resetViews */
+	/**
+	 * reset View. hide gallery frames.
+	 */
 	private void resetViews(){
 		// hide imageframe
 		FrameLayout frameLayout = (FrameLayout)findViewById(R.id.imageframe);
@@ -287,11 +370,12 @@ public class PhotSpotActivity extends MapActivity {
 			frameLayout.setVisibility(View.GONE);
 	}
 
-	/* onStart */
+	/**
+	 * onStart handler.
+	 */
 	@Override
 	public void onStart() {
 		super.onStart();
-//		Log.i("DEBUG", "onStart");
 		if(clusterer_ == null && mylocationEnabled_){
 			String provider = locationMgr_.getBestProvider(criteria_, true);
 			if(provider != null){
@@ -311,19 +395,22 @@ public class PhotSpotActivity extends MapActivity {
 			favUpdateTimer_.postDelayed(favOverlayUpdateTask_, 1000);
 	}
 
-	/* onStop */
+	/**
+	 * onStop handler.
+	 */
 	@Override 
 	public void onStop() {
-//		Log.i("DEBUG", "onStop"); 
 		if(favoriteOverlayed_)
 			favUpdateTimer_.removeCallbacks(favOverlayUpdateTask_);
 		stopListening();
 		super.onStop();
 	}
 
-	/* startListening */
+	/**
+	 * Start listening to location manager and
+	 * enabling myLocation.
+	 */
 	private void startListening() {
-//		Log.i("DEBUG", "startListeningGPS"); 
 		if( myLocationOverlay_ == null ){
 			myLocationOverlay_ = new MyLocationOverlay(this, mapView_);
 		}
@@ -345,13 +432,18 @@ public class PhotSpotActivity extends MapActivity {
 		});
 	}
 
-	/* stopListening */
+	/**
+	 * Stop listening to location manager and
+	 * disabling myLocation.
+	 */
 	private void stopListening() {
 		if(myLocationOverlay_!= null)
 			myLocationOverlay_.disableMyLocation();
 	}
 
-	/* create Menu */
+	/**
+	 * onPrepareOptionsMenu handler
+	 */
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		super.onPrepareOptionsMenu(menu);
@@ -382,7 +474,9 @@ public class PhotSpotActivity extends MapActivity {
 		return true;
 	}
 
-	/* Menu handling */
+	/**
+	 * onOptionsItemSelected handler
+	 */
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		String uri = "";
@@ -405,17 +499,17 @@ public class PhotSpotActivity extends MapActivity {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				switch( contentProvider_ ){
-					case TypesService.Panoramio:
+				switch( serviceProvider_ ){
+					case TypesService.PANORAMIO:
 					default:{
 							uri += "&svc=panoramio";
 						break;
 					}
-					case TypesService.PicasaWeb:{
+					case TypesService.PICASAWEB:{
 						uri += "&svc=picasa";
 						break;
 					}
-					case TypesService.Flickr:{
+					case TypesService.FLICKR:{
 						uri += "&svc=flickr";
 						break;
 					}
@@ -469,7 +563,9 @@ public class PhotSpotActivity extends MapActivity {
 		return true;
 	}
 
-	/* onCreateDialog */
+	/**
+	 * onCreateDialog handler
+	 */
 	protected Dialog onCreateDialog(int id) {
 		switch (id) {
 			// create progress dialog for search
@@ -507,11 +603,11 @@ public class PhotSpotActivity extends MapActivity {
 			case R.id.PreferencesDlg: {
 				return new AlertDialog.Builder(this)
 				.setTitle(R.string.PreferencesDlgTitle)
-				.setSingleChoiceItems(R.array.select_service, contentProvider_, new DialogInterface.OnClickListener() {
+				.setSingleChoiceItems(R.array.select_service, serviceProvider_, new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int whichButton) {
-						contentProvider_ = whichButton;
+						serviceProvider_ = whichButton;
 						SharedPreferences.Editor editor = settings_.edit();
-						editor.putInt(getString(R.string.PrefContentProvider),contentProvider_);
+						editor.putInt(getString(R.string.PrefContentProvider),serviceProvider_);
 						editor.commit();
 						dismissDialog(R.id.PreferencesDlg);
 					}
@@ -539,19 +635,28 @@ public class PhotSpotActivity extends MapActivity {
 		return null;
 	}
 
-	/* Toast Message */
+	/**
+	 * ToastMessage utility
+	 * @param messageId		message resource id
+	 * @param duration		Toast duration
+	 */
 	public void ToastMessage(int messageId, int duration){
 		Toast.makeText(this, messageId, duration).show();
 	}
 
-	/* clearSearchHistory */
+	/**
+	 * Clears SearchHistory
+	 */
 	private void clearSearchHistory() {
 		SearchRecentSuggestions suggestions = new SearchRecentSuggestions(this, 
 				PhotSpotSearchSuggestionsProvider.AUTHORITY, PhotSpotSearchSuggestionsProvider.MODE);
 		suggestions.clearHistory();
 	}
 	
-	/* onAsyncTaskComplete */
+	/**
+	 * Callback for AsyncTask completion.
+	 * @param code return code from AsyncTask
+	 */
 	protected void onAsyncTaskComplete(Integer code){
 		dismissDialog(R.id.QuerySearchDlg);
 		if(code==JsonFeedGetter.CODE_HTTPERROR){
@@ -583,19 +688,21 @@ public class PhotSpotActivity extends MapActivity {
 		}
 	}
 
-	/* onSearchRequested */
+	/**
+	 * onSearchRequested handler.
+	 */
 	@Override
 	public boolean onSearchRequested() {
-//		Log.i("DEBUG","onSearchRequested");
 		Bundle appData = new Bundle();
 		startSearch( null, false, appData, false);
 		return true;
 	}
 
-	/* doSearchQuery */
+	/**
+	 * query for a place main routine.
+	 */
 	private void doSearchQuery(final Intent queryIntent) {
 		final String queryString = queryIntent.getStringExtra(SearchManager.QUERY);
-//		Log.i("DEBUG","doSearchQuery:"+queryString);
 		SearchRecentSuggestions suggestions = new SearchRecentSuggestions(this, 
 				PhotSpotSearchSuggestionsProvider.AUTHORITY, PhotSpotSearchSuggestionsProvider.MODE);
 		suggestions.saveRecentQuery(queryString, null);
@@ -642,12 +749,13 @@ public class PhotSpotActivity extends MapActivity {
 				}	
 			} catch (IOException e) {
 				Toast.makeText(this, R.string.ToastRevGeoCodeFail, Toast.LENGTH_SHORT).show();
-//				Log.i("DEBUG","IOException");
 				e.printStackTrace();
 			}
 	}
 	
-	/* timer task for updating favorite overlay */
+	/**
+	 * timer task for updating favorite overlay
+	 */
 	private Runnable favOverlayUpdateTask_ = new Runnable() {
 		public void run() {
 			long current = SystemClock.uptimeMillis();
@@ -656,37 +764,50 @@ public class PhotSpotActivity extends MapActivity {
 		}
 	};
 	
-	/* GetPhotoFeedTask - AsyncTask */
+	/**
+	 * Photo Feed Retrieving AsyncTask class
+	 * @author Huan Erdao
+	 */
 	private class GetPhotoFeedTask extends AsyncTask<String, Integer, Integer> {
+		/** JSON feed getter utility */
 		JsonFeedGetter getter_;
+		/** Context object */
 		Context context_;
-		/* constructor */
+
+		/**
+		 * @param c	Context object
+		 */
 		public GetPhotoFeedTask(Context c) {
 			context_ = c;
 			getter_ = new JsonFeedGetter(JsonFeedGetter.MODE_SPOTSEARCH,context_);
 		}
 
-		/* doInBackground */
+		/**
+		 * execute AsyncTask to retrieve LocalSearch
+		 * @param uris uri for retrieving feed.
+		 */
 		@Override
 		protected Integer doInBackground(String... uris) {
-//			Log.i("DEBUG","doInBackground");
 			return getter_.getFeed(uris[0]);
 		}
 
-		/* onPostExecute */
+		/**
+		 * callback from AsyncTask upon completion.
+		 * @param code errorcode.
+		 */
 		@Override
 		protected void onPostExecute(Integer code) {
 			onAsyncTaskComplete(code);
 			if(code!=JsonFeedGetter.CODE_HTTPERROR){
 				List<PhotoItem> photoItems = getter_.getPhotoItemList();
-//				Log.i("DEBUG","result size:"+photoItems.size());
 				mapOverlays_ = mapView_.getOverlays();
 				mapOverlays_.clear();
 				if(myLocationOverlay_!=null&&mylocationEnabled_){
 					mapOverlays_.add(myLocationOverlay_);
 				}
 				FrameLayout imageFrame = (FrameLayout)findViewById(R.id.imageframe);
-				clusterer_ = new GeoClusterer(me_,context_, mapView_,imageFrame);
+				setupMarkerIcons();
+				clusterer_ = new PhotSpotClusterer(me_,markerIconBmps_, mapView_,imageFrame);
 				for(int i=0; i<photoItems.size(); i++) {
 					PhotoItem item = photoItems.get(i);
 					clusterer_.addItem(item);
@@ -696,28 +817,48 @@ public class PhotSpotActivity extends MapActivity {
 			}
 		}
 		
-		/* onCancelled */
+		/**
+		 * onCancel handler.
+		 */
 		@Override
 		protected void onCancelled() {
-//			Log.i("DEBUG","onCancelled");
 		}
 	};
 
-	public class ImageOverlay extends Overlay {
+	/**
+	 * Class for overlaying Favorite item on the map
+	 * @author Huan Erdao
+	 */
+	public class FavoriteOverlay extends Overlay {
+		/** PhotoItem object */
 		private final PhotoItem item_;
+		/** marker frame object */
 		private final Drawable frame_;
+		/** thumbnail object */
 		private final Bitmap thumbnail_;
+		/** Frame Rect object */
 		private final Rect frmRect_;
+		/** Thumbnail Rect object */
 		private final Rect thmRect_;
+		/** Context object */
 		private final Context context_;
+		/** Paint object for messages */
 		private Paint paint_;
+		/** Title string */
 		private String title_;
+		/** sub title string */
 		private String subtitle_;
 		
+		/** Extra Action - Navigate to Place */
 		private static final int EXT_ACTION_NAVTOPLACE		= 0;
+		/** Extra Action - Open with Browser */
 		private static final int EXT_ACTION_OPENBROWSER		= 1;
 
-		public ImageOverlay(Context c, PhotoItem item) { 
+		/**
+		 * @param c		Context object
+		 * @param item	PhotoItem object
+		 */
+		public FavoriteOverlay(Context c, PhotoItem item) { 
 			context_ = c;
 			item_ = item;
 			frame_ = c.getResources().getDrawable(R.drawable.balloon_fv);
@@ -746,7 +887,9 @@ public class PhotSpotActivity extends MapActivity {
 			subtitle_ = "by: "+subtitle_;
 		}
 
-		/* onTouchEvent */
+		/**
+		 * onTap event handler
+		 */
 		@Override
 		public boolean onTap(GeoPoint p, MapView mapView){
 			Projection pro = mapView.getProjection();
@@ -763,7 +906,7 @@ public class PhotSpotActivity extends MapActivity {
 				})
 				.setItems(R.array.showmap_extaction, new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int which) {
-						onItemAction(which,item_);
+						onItemAction(which);
 						dialog.dismiss();
 					}
 				})
@@ -774,6 +917,9 @@ public class PhotSpotActivity extends MapActivity {
 			return false;
 		}
 
+		/**
+		 * draw Tap event handler. draw overlay
+		 */
 		@Override
 		public void draw(Canvas canvas, MapView mapView, boolean shadow) {
 			if (!shadow) {
@@ -815,17 +961,21 @@ public class PhotSpotActivity extends MapActivity {
 			}
 		}
 
-		/* option tasks for long pressing item */
-		public void onItemAction(int cmd, PhotoItem item){
+		/**
+		 * Extra Action handler
+		 * @param cmd action command
+		 * @param item PhotoItem object
+		 */
+		public void onItemAction(int cmd){
 			switch(cmd){
 				case EXT_ACTION_OPENBROWSER:{
-					String url = item.getPhotoUrl();
+					String url = item_.getPhotoUrl();
 					Intent i = new Intent(Intent.ACTION_VIEW,Uri.parse(url));
 					context_.startActivity(i);
 					break;
 				}
 				case EXT_ACTION_NAVTOPLACE:{
-					GeoPoint location = item.getLocation();
+					GeoPoint location = item_.getLocation();
 					double lat = location.getLatitudeE6()/1E6;
 					double lng = location.getLongitudeE6()/1E6;
 					GeoPoint gp_saddr = null;

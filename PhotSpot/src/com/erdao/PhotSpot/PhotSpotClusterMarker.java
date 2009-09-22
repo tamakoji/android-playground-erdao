@@ -27,12 +27,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.graphics.Point;
-import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -52,7 +47,10 @@ import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
 
-import com.erdao.PhotSpot.GeoClusterer.GeoCluster;
+import com.erdao.PhotSpot.PhotSpotClusterer.PhotSpotGeoCluster;
+import com.erdao.maps.GeoItem;
+import com.erdao.maps.markerclusterer.ClusterMarker;
+import com.erdao.maps.markerclusterer.MarkerBitmap;
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
@@ -60,112 +58,94 @@ import com.google.android.maps.MyLocationOverlay;
 import com.google.android.maps.Overlay;
 import com.google.android.maps.Projection;
 
-/* Cluster Marker class */
-public class ClusterMarker extends Overlay {
-	/* variables */
-	private final Context context_;
-	private final GeoCluster cluster_;
-	private final MapView mapView_;
-	private final FrameLayout imageFrame_;
-	private final GeoPoint center_;
-	private final Paint paint_;
-	private final List<PhotoItem> photoItems_;
-	private List<Bitmap> bitmaps_ = new ArrayList<Bitmap>();
-	private Bitmap bmp_;
-	private ImageListAdapter imageAdapter_;
-	private Point balloonGrid_;
-	private Point bmpSize_;
-	private final int sizeThresh_ = 10;
-	private boolean isSelected_ = false;
-	private long tapCheckTime_;
-	private int selItem_;
-	private List<CharSequence> localSpots_;
+/**
+ * Custom ClusterMarker class for PhotSpot.
+ * adding gallery and extra actions.
+ * @author Huan Erdao
+ */
+public class PhotSpotClusterMarker extends ClusterMarker {
+	/** acvitity handle for posting ToastMessage. */
 	private PhotSpotActivity activityHndl_;
+	/** Context object. */
+	private final Context context_;
+	/** PhotSpotGeoCluster object. */
+	private final PhotSpotGeoCluster cluster_;
+	/** MapView object. */
+	private final MapView mapView_;
+	/** FrameLayout for gallery. */
+	private final FrameLayout imageFrame_;
+	/** PhotoItem list for gallery. */
+	private List<PhotoItem> photoItems_ = new ArrayList<PhotoItem>();
+	/** Bitmap list for gallery. */
+	private List<Bitmap> bitmaps_ = new ArrayList<Bitmap>();
+	/** check time object for tapping. */
+	private long tapCheckTime_;
+
+	/** ImageListAdapter for gallery. */
+	private ImageListAdapter imageAdapter_;
+
+	/** List of localsearch result. */
+	private List<CharSequence> localSpots_;
+
+	/** For Swipe gesture. action point latch */
 	private Point galleryActionPt_ = new Point();
-	private int gallery_width_;
-	private int gallery_height_;
-	private static final int GALLERY_DEFAULT_WIDTH = 160;
-	private static final int GALLERY_DEFAULT_HEIGHT = 120;
+	/** flag to detect if it is gesture mode. */
 	private boolean onGalleryGesture_;
 
+	/** parameter for gallery width. */
+	private int gallery_width_;
+	/** parameter for gallery height. */
+	private int gallery_height_;
+	/** default gallery width. */
+	private static final int GALLERY_DEFAULT_WIDTH = 160;
+	/** default gallery height. */
+	private static final int GALLERY_DEFAULT_HEIGHT = 120;
+
+	/** Extra Action constants. */
 	private static final int EXT_ACTION_ADD_FAVORITES	= 0;
+	/** Extra Action constants. */
 	private static final int EXT_ACTION_WHATS_HERE		= 1;
+	/** Extra Action constants. */
 	private static final int EXT_ACTION_NAVTOPLACE		= 2;
+	/** Extra Action constants. */
 	private static final int EXT_ACTION_OPENBROWSER		= 3;
 	
-	/* constructor */
-	public ClusterMarker(PhotSpotActivity activityHndl, GeoCluster cluster, MapView mapView, Context context, FrameLayout imageFrame) {
+	/**
+	 * @param activityHndl		acvitity handle 
+	 * @param cluster			cluster object
+	 * @param markerIconBmps	icon objects for markers
+	 * @param mapView			MapView object
+	 * @param imageFrame		FrameLayout object for gallery
+	 */
+	public PhotSpotClusterMarker(PhotSpotActivity activityHndl, PhotSpotGeoCluster cluster,
+			List<MarkerBitmap> markerIconBmps, MapView mapView, FrameLayout imageFrame) {
+		super(cluster, markerIconBmps);
 		activityHndl_ = activityHndl;
+		context_ = (Context)activityHndl_;
 		cluster_ = cluster;
 		mapView_ = mapView;
-		context_ = context;
 		imageFrame_ = imageFrame;
-		center_ = cluster_.getLocation();
-		photoItems_ = cluster_.getItems();
-		for(int i=0; i< photoItems_.size();i++)
-			bitmaps_.add(null);
-		selItem_ = 0;
-		paint_ = new Paint();
-		paint_.setStyle(Paint.Style.STROKE);
-		paint_.setColor(Color.WHITE);
-		paint_.setTextSize(15);
-		paint_.setTypeface(Typeface.DEFAULT_BOLD);
+		imageAdapter_ = null;
 		onGalleryGesture_ = false;
-		/* check if we have selected item in cluster */
-		for(int i=0; i<photoItems_.size(); i++) {
-			if(photoItems_.get(i).isSelected()) {
-				selItem_ = i;
-				isSelected_ = true;
-			}
-		}
-		loadMarkerBitmap();
+		tapCheckTime_ = SystemClock.uptimeMillis();
 	}
 	
-	/* load&change bitmap for cluster marker */
-	private void loadMarkerBitmap(){
-		if(photoItems_.size()>sizeThresh_){
-			if( isSelected_ ){
-				bmp_ = BitmapFactory.decodeResource(context_.getResources(), R.drawable.balloon_l_s);
-			}else{
-				bmp_ = BitmapFactory.decodeResource(context_.getResources(), R.drawable.balloon_l);
-			}
-			bmpSize_ = new Point(56,56);
-			balloonGrid_ = new Point(28,28);
-			paint_.setTextSize(16);
-		}else{
-			if( isSelected_ ){
-				bmp_ = BitmapFactory.decodeResource(context_.getResources(), R.drawable.balloon_s_s);
-			}else{
-				bmp_ = BitmapFactory.decodeResource(context_.getResources(), R.drawable.balloon_s);
-			}
-			bmpSize_ = new Point(40,40);
-			balloonGrid_ = new Point(20,20);
-			paint_.setTextSize(14);
-		}
-	}
-
-	/* draw marker icon */
-	public void draw(Canvas canvas, MapView mapView, boolean shadow) {
-		cluster_.onNotifyDraw();
-		Projection proj = mapView.getProjection();
-		Point p = proj.toPixels(center_, null);
-		if( p.x < 0 || p.x > mapView.getWidth() || p.y < 0 || p.y > mapView.getHeight() )
-			return;
-		canvas.drawBitmap(bmp_, p.x-balloonGrid_.x, p.y-balloonGrid_.y, null);
-		String caption = String.valueOf(photoItems_.size());
-		int x = p.x-caption.length()*4;
-		int y = p.y+5;
-		canvas.drawText(caption,x,y,paint_);
-	}
-	
-	/* onTouchEvent */
+	/**
+	 * Touch Event
+	 * @param p					touched point.
+	 * @param mapView			MapView object
+	 * @return true if touch within marker icon.
+	 */
 	@Override
     public boolean onTap(GeoPoint p, MapView mapView){
 		Projection pro = mapView.getProjection();
 		Point ct = pro.toPixels(center_, null);
 		Point pt = pro.toPixels(p, null);
 		/* check if this marker was tapped */
-		if( pt.x > ct.x-balloonGrid_.x && pt.x < ct.x+(bmpSize_.x-balloonGrid_.x) && pt.y > ct.y-balloonGrid_.y && pt.y < ct.y+(bmpSize_.y-balloonGrid_.y) ){
+		MarkerBitmap bmp = markerIconBmps_.get(markerTypes);
+		Point grid = bmp.getGrid();
+		Point bmpSize = bmp.getSize();
+		if( pt.x > ct.x-grid.x && pt.x < ct.x+(bmpSize.x-grid.x) && pt.y > ct.y-grid.y && pt.y < ct.y+(bmpSize.y-grid.y) ){
 			if(isSelected_){ 
 				/* double tap */
 				long curTime = SystemClock.uptimeMillis();
@@ -178,25 +158,34 @@ public class ClusterMarker extends Overlay {
 				return false;
 			}
 			isSelected_ = true;
-			loadMarkerBitmap();
-			cluster_.onTap(true);
+			setMarkerBitmap();
+			cluster_.onTapCalledFromMarker(true);
 			showGallery();
 			tapCheckTime_ = SystemClock.uptimeMillis();
 			return true;
 		}
-		cluster_.onTap(false);
+		cluster_.onTapCalledFromMarker(false);
 		return false;
 	}
 	
-	/* show Gallery View */
+	/**
+	 * Show Gallery View.
+	 */
 	public void showGallery(){
-		imageAdapter_ = new ImageListAdapter(context_, photoItems_, bitmaps_);
+		if(imageAdapter_ == null){
+			for(int i=0; i< GeoItems_.size();i++){
+				PhotoItem item = (PhotoItem)GeoItems_.get(i);
+				photoItems_.add(item);
+				bitmaps_.add(null);
+			}
+			imageAdapter_ = new ImageListAdapter(context_, photoItems_, bitmaps_);
+		}
 		Gallery gallery = (Gallery)imageFrame_.findViewById(R.id.gallery);
 		gallery.setAdapter(imageAdapter_);
 		gallery.setCallbackDuringFling(true);
 		TextView txtView = (TextView)imageFrame_.findViewById(R.id.imgdesc);
 		txtView.setText(imageAdapter_.getDescription(selItem_));
-		photoItems_.get(selItem_).setSelect();
+		GeoItems_.get(selItem_).setSelect(true);
 		gallery.setSelection(selItem_);
 		gallery.setOnTouchListener(new OnTouchListener() {
 			public boolean onTouch(View v, MotionEvent event) {
@@ -222,7 +211,7 @@ public class ClusterMarker extends Overlay {
 					/* if swipe to the edge then hide the gallery */
 					if(posY<0){
 						hideImageFrame();
-						clearSelect();
+						cluster_.onNotifyClearSelectFromMarker();
 						showZoomButtons();
 						return true;
 					}
@@ -276,12 +265,12 @@ public class ClusterMarker extends Overlay {
 		showImageFrame();
 		gallery.setOnItemSelectedListener(new OnItemSelectedListener() {
 			public void onItemSelected (AdapterView<?> parent, View view, int position, long id){
-				PhotoItem prev = photoItems_.get(selItem_);
-				PhotoItem curr = photoItems_.get(position);
+				GeoItem prev = GeoItems_.get(selItem_);
+				GeoItem curr = GeoItems_.get(position);
 				TextView txtView = (TextView)imageFrame_.findViewById(R.id.imgdesc);
 				txtView.setText(imageAdapter_.getDescription(position));
-				prev.clearSelect();
-				curr.setSelect();
+				prev.setSelect(false);
+				curr.setSelect(true);
 				selItem_ = position;
 			}
 			public void onNothingSelected (AdapterView<?> parent){
@@ -308,18 +297,21 @@ public class ClusterMarker extends Overlay {
 		});
 	}
 	
-	/* option tasks for long pressing thumbnail */
+	/**
+	 * Extra Actions.
+	 * @param cmd command for extra action
+	 */
 	public void onItemAction(int cmd){
 		switch(cmd){
 			case EXT_ACTION_OPENBROWSER:{
 				clearSelect();
-				String url = photoItems_.get(selItem_).getPhotoUrl();
+				String url = ((PhotoItem)GeoItems_.get(selItem_)).getPhotoUrl();
 				Intent i = new Intent(Intent.ACTION_VIEW,Uri.parse(url));
 				context_.startActivity(i);
 				break;
 			}
 			case EXT_ACTION_WHATS_HERE:{
-				GeoPoint location = photoItems_.get(selItem_).getLocation();
+				GeoPoint location = ((PhotoItem)GeoItems_.get(selItem_)).getLocation();
 				double lat = location.getLatitudeE6()/1E6;
 				double lng = location.getLongitudeE6()/1E6;
 				String uri = "http://photspotcloud.appspot.com/photspotcloud?q=localsearch&latlng="+lat+","+lng;
@@ -346,7 +338,7 @@ public class ClusterMarker extends Overlay {
 						break;
 					}
 				}
-				GeoPoint location = photoItems_.get(selItem_).getLocation();
+				GeoPoint location = ((PhotoItem)GeoItems_.get(selItem_)).getLocation();
 				double lat = location.getLatitudeE6()/1E6;
 				double lng = location.getLongitudeE6()/1E6;
 				String url = "http://maps.google.com/maps?daddr="+lat+","+lng;
@@ -360,7 +352,7 @@ public class ClusterMarker extends Overlay {
 				break;
 			}
 			case EXT_ACTION_ADD_FAVORITES:{
-				PhotoItem item = photoItems_.get(selItem_);
+				PhotoItem item = ((PhotoItem)GeoItems_.get(selItem_));
 				/* Database for favorite */
 				PhotSpotDBHelper dbHelper = new PhotSpotDBHelper(context_);
 				if(dbHelper==null)
@@ -378,27 +370,26 @@ public class ClusterMarker extends Overlay {
 		}
 	}
 
-	/* showImageFrame */
+	/**
+	 * Show Image Frame.
+	 */
 	public void showImageFrame(){
 		if(imageFrame_.getVisibility() != View.VISIBLE){
 			imageFrame_.setVisibility(View.VISIBLE);
 		}
 	}
 
-	/* hideImageFrame */
+	/**
+	 * Hide Image Frame.
+	 */
 	public void hideImageFrame(){
 		imageFrame_.setVisibility(View.GONE);
 	}
 
-	/* hideZoomButtons */
-	public void hideZoomButtons(){
-		Button zoBtn = (Button)activityHndl_.findViewById(R.id.zoominbtn);
-		zoBtn.setVisibility(View.GONE);
-		Button ziBtn = (Button)activityHndl_.findViewById(R.id.zoomoutbtn);
-		ziBtn.setVisibility(View.GONE);
-	}
-
-	/* showZoomButtons */
+	/**
+	 * Show Zoom Button.
+	 * called if the gallery view exits from full screen.
+	 */
 	public void showZoomButtons(){
 		Button zoBtn = (Button)activityHndl_.findViewById(R.id.zoominbtn);
 		zoBtn.setVisibility(View.VISIBLE);
@@ -406,44 +397,48 @@ public class ClusterMarker extends Overlay {
 		ziBtn.setVisibility(View.VISIBLE);
 	}
 
-	/* isSelected */
-	public boolean isSelected(){
-		return isSelected_;
-	}
-	
-	/* clearSelect */
-	public void clearSelect(){
-		isSelected_ = false;
-		photoItems_.get(selItem_).clearSelect();
-		loadMarkerBitmap();
-	}
-
-	/* getLocation */
-	public GeoPoint getLocation(){
-		return center_;
+	/**
+	 * Hide Zoom Button.
+	 * called if the gallery view is in full screen.
+	 */
+	public void hideZoomButtons(){
+		Button zoBtn = (Button)activityHndl_.findViewById(R.id.zoominbtn);
+		zoBtn.setVisibility(View.GONE);
+		Button ziBtn = (Button)activityHndl_.findViewById(R.id.zoomoutbtn);
+		ziBtn.setVisibility(View.GONE);
 	}
 
-	/* getSelectedItemLocation */
-	public GeoPoint getSelectedItemLocation(){
-		return photoItems_.get(selItem_).getLocation();
-	}
 
-	/* GetPhotoFeedTask - AsyncTask */
+	/**
+	 * Local Search Task. Retrieve JSON local search and display it.
+	 */
 	private class LocalSearchTask extends AsyncTask<String, Integer, Integer> {
+		/** Json Utility object */
 		JsonFeedGetter getter_;
+		/** Context */
 		Context context_;
-		/* constructor */
+
+		/**
+		 * @param c Context object
+		 */
 		public LocalSearchTask(Context c) {
 			context_ = c;
 			getter_ = new JsonFeedGetter(JsonFeedGetter.MODE_LOCALSEARCH,context_);
 		}
-		/* doInBackground */
+
+		/**
+		 * execute AsyncTask to retrieve LocalSearch
+		 * @param uris uri for retrieving feed.
+		 */
 		@Override
 		protected Integer doInBackground(String... uris) {
 			return getter_.getFeed(uris[0]);
 		}
 
-		/* onPostExecute */
+		/**
+		 * callback from AsyncTask upon completion.
+		 * @param code errorcode.
+		 */
 		@Override
 		protected void onPostExecute(Integer code) {
 			if(code!=JsonFeedGetter.CODE_HTTPERROR){
@@ -480,7 +475,9 @@ public class ClusterMarker extends Overlay {
 			}
 		}
 	
-		/* onCancelled */
+		/**
+		 * onCancel handler.
+		 */
 		@Override
 		protected void onCancelled() {
 		}

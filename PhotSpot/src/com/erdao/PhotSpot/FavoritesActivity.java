@@ -52,30 +52,51 @@ import android.widget.Toast;
 import com.google.android.maps.GeoPoint;
 
 /**
- * Activity which displays the list of images.
+ * Activity Class for Displaying Favorites.
+ * @author Huan Erdao
  */
 public class FavoritesActivity extends ExpandableListActivity {
 	
+	/** PhotSpotDBHelper object */
 	private PhotSpotDBHelper dbHelper_ = null;
+	/** label list */
 	private List<String> groups_ = new ArrayList<String>();
+	/** PhotoItem full list */
     private List<PhotoItem> photoItems_ = new ArrayList<PhotoItem>();
+	/** Bitmap full list */
     private List<Bitmap> bitmaps_ = new ArrayList<Bitmap>();
+	/** Double-Array of PhotoItem for ExpandableList*/
     private List<List<PhotoItem>> photoItemNodes_ = new ArrayList<List<PhotoItem>>();
+	/** Double-Array of Bitmap for ExpandableList*/
     private List<List<Bitmap>> bitmapNodes_ = new ArrayList<List<Bitmap>>();
+	/** Context object */
 	private Context context_;
+	/** selected GroupPos */
 	private int groupPos_;
+	/** selected ChildPos */
 	private int childPos_;
+	/** Image Adapter */
 	private ImageExpandableListAdapter imageAdapter_ = null;
-	ArrayAdapter<String> adapter_;
-    AutoCompleteTextView edit_;
+	/** Adapter for Auto Complete Text */
+	ArrayAdapter<String> autoCompleteAdapter_;
+	/** Auto Complete TextView */
+    AutoCompleteTextView autoCompleteTextView_;
 	
+	/** Extra Action - Show on Map */
 	private static final int EXT_ACTION_SHOWONMAP			= 0;
+	/** Extra Action - Navigate to Place */
 	private static final int EXT_ACTION_NAVTOPLACE			= 1;
+	/** Extra Action - Edit Label */
 	private static final int EXT_ACTION_EDITLABEL			= 2;
+	/** Extra Action - Remove from favorites */
 	private static final int EXT_ACTION_REMOVE_FAVORITES	= 3;
+	/** Extra Action - Open with browser */
 	private static final int EXT_ACTION_OPENBROWSER			= 4;
 
 
+	/**
+	 * onCreate handler
+	 */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -97,7 +118,11 @@ public class FavoritesActivity extends ExpandableListActivity {
 		}
 	}
 	
-	/* removeItem */
+	/**
+	 * remove Item from ExpandableList
+	 * @param groupPos	ExpandableList group position
+	 * @param childPos	ExpandableList child position
+	 */
 	private void removeItem(int groupPos, int childPos) {
 		photoItems_.remove(photoItemNodes_.get(groupPos).get(childPos));
 		photoItemNodes_.get(groupPos).remove(childPos);
@@ -110,6 +135,9 @@ public class FavoritesActivity extends ExpandableListActivity {
 		}
 	}
 
+	/**
+	 * remove All Item from ExpandableList
+	 */
 	private void removeAll() {
 		while(!photoItemNodes_.isEmpty()) {
 			photoItemNodes_.get(0).removeAll(photoItemNodes_.get(0));
@@ -124,6 +152,9 @@ public class FavoritesActivity extends ExpandableListActivity {
 		bitmaps_.removeAll(bitmaps_);
 	}
 
+	/**
+	 * remove All Node lists
+	 */
 	private void removeAllNodes() {
 		while(!photoItemNodes_.isEmpty()) {
 			photoItemNodes_.get(0).removeAll(photoItemNodes_.get(0));
@@ -136,6 +167,9 @@ public class FavoritesActivity extends ExpandableListActivity {
 		groups_.removeAll(groups_);
 	}
 
+	/**
+	 * Update Group List and reflect to ExpandableList
+	 */
 	private void updateGroupList(){
 		removeAllNodes();
 		final SQLiteDatabase db = dbHelper_.getReadableDatabase();
@@ -162,13 +196,13 @@ public class FavoritesActivity extends ExpandableListActivity {
 	            long id = c.getLong(PhotSpotDBHelper.Spots.IDX_ID);
 				String title = c.getString(PhotSpotDBHelper.Spots.IDX_TITLE);
 				String author = c.getString(PhotSpotDBHelper.Spots.IDX_AUTHOR);
-				String thumbUurl = c.getString(PhotSpotDBHelper.Spots.IDX_THUMB_URL);
+				String thumbUrl = c.getString(PhotSpotDBHelper.Spots.IDX_THUMB_URL);
 				String photoUrl = c.getString(PhotSpotDBHelper.Spots.IDX_PHOTO_URL);
 				double lat = c.getDouble(PhotSpotDBHelper.Spots.IDX_LATITUDE);
 				double lng = c.getDouble(PhotSpotDBHelper.Spots.IDX_LONGITUDE);
 				long labelId = c.getLong(PhotSpotDBHelper.Spots.IDX_LABEL);
 				PhotoItem item =
-					new PhotoItem(id,thumbUurl,(int)(lat*1E6),(int)(lng*1E6),title,photoUrl,author);
+					new PhotoItem(id,(int)(lat*1E6),(int)(lng*1E6),title,author,thumbUrl,photoUrl);
 				item.setLabelId(labelId);
 				int pos = labelMap.get(labelId);
 				photoItems_.add(item);
@@ -199,6 +233,9 @@ public class FavoritesActivity extends ExpandableListActivity {
 		db.close();
 	}
 
+	/**
+	 * onCreateOptionsMenu handler
+	 */
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
@@ -211,6 +248,9 @@ public class FavoritesActivity extends ExpandableListActivity {
 		return true;
 	}
 
+	/**
+	 * onOptionsItemSelected handler
+	 */
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
@@ -248,6 +288,9 @@ public class FavoritesActivity extends ExpandableListActivity {
 		return true;
 	}
 	
+	/**
+	 * onChildClick handler
+	 */
 	@Override
 	public boolean onChildClick(ExpandableListView parent, View v, int groupPos, int childPos, long id){
 		groupPos_ = groupPos;
@@ -270,12 +313,21 @@ public class FavoritesActivity extends ExpandableListActivity {
 		return true;
     }
 	
-	/* Toast Message */
+	/**
+	 * Toast Message
+	 * @param messageId message resource id
+	 * @param duration Toast duration
+	 */
 	public void ToastMessage(int messageId, int duration){
 		Toast.makeText(this, messageId, duration).show();
 	}
 
-	/* option tasks for long pressing item */
+	/**
+	 * Extra Action Handler
+	 * @param cmd action command
+	 * @param groupPos	ExpandableList group position
+	 * @param childPos	ExpandableList child position
+	 */
 	public void onItemAction(int cmd, int groupPos, int childPos){
 		switch(cmd){
 			case EXT_ACTION_SHOWONMAP:{
@@ -307,22 +359,22 @@ public class FavoritesActivity extends ExpandableListActivity {
 			}
 			case EXT_ACTION_EDITLABEL:{
 		        setTheme(android.R.style.Theme_Black);
-				adapter_ = new ArrayAdapter<String>(this,
+		        autoCompleteAdapter_ = new ArrayAdapter<String>(this,
 		                 android.R.layout.simple_dropdown_item_1line, groups_);
-		        edit_ = new AutoCompleteTextView(this);
-		        edit_.setSingleLine();
-		        edit_.setWidth(50);
-		        edit_.setAdapter(adapter_);
+		        autoCompleteTextView_ = new AutoCompleteTextView(this);
+		        autoCompleteTextView_.setSingleLine();
+		        autoCompleteTextView_.setWidth(50);
+		        autoCompleteTextView_.setAdapter(autoCompleteAdapter_);
 				String label = dbHelper_.queryLabel(photoItemNodes_.get(groupPos).get(childPos));
 				if(label!=null){
-					edit_.setText(label);
+					autoCompleteTextView_.setText(label);
 				}
 				new AlertDialog.Builder(this)
 				.setTitle(R.string.EditLabel)
-				.setView(edit_)
+				.setView(autoCompleteTextView_)
 				.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int whichButton) {
-						String label = edit_.getText().toString();
+						String label = autoCompleteTextView_.getText().toString();
 						if(label != null){
 							PhotoItem item = photoItemNodes_.get(groupPos_).get(childPos_);
 							long newLabelId = dbHelper_.updateLabel(item,label);
@@ -376,13 +428,18 @@ public class FavoritesActivity extends ExpandableListActivity {
 		}
 	}
 
-	/* Image Adapter class for FavoriteActivity */
+	/**
+	 * Image Adapter class for ExpandableList
+	 * @author Huan Erdao
+	 */
 	private class ImageExpandableListAdapter extends BaseExpandableListAdapter {
 		/* variables */
 		private final Context context_;
 		int galleryItemBackground_;
 
-		/* constructor */
+		/**
+		 * @param c Context object
+		 */
 		public ImageExpandableListAdapter(Context c) {
 			context_ = c;
 			TypedArray a = context_.obtainStyledAttributes(R.styleable.ThumbGallery);
@@ -391,39 +448,63 @@ public class FavoritesActivity extends ExpandableListActivity {
 			a.recycle();
 		}
 
+		/**
+		 * hasStableIds
+		 */
         public boolean hasStableIds() {
             return true;
         }
         
+		/**
+		 * getChild
+		 */
         public Object getChild(int groupPos, int childPos) {
             return photoItemNodes_.get(groupPos).get(childPos);
         }
         
+		/**
+		 * getChildId
+		 */
 		@Override
 		public long getChildId(int groupPos, int childPos) {
 			return photoItemNodes_.get(groupPos).get(childPos).getId();
 		}
 
+		/**
+		 * getChildrenCount
+		 */
 		@Override
 		public int getChildrenCount(int groupPos) {
 			return photoItemNodes_.get(groupPos).size();
 		}
 
+		/**
+		 * getGroup
+		 */
 		@Override
 		public Object getGroup(int groupPos) {
 			return photoItemNodes_.get(groupPos);
 		}
 
+		/**
+		 * getGroupCount
+		 */
 		@Override
 		public int getGroupCount() {
 			return photoItemNodes_.size();
 		}
 
+		/**
+		 * getGroupId
+		 */
 		@Override
 		public long getGroupId(int groupPos) {
 			return groupPos;
 		}
 
+		/**
+		 * getChildView
+		 */
 		@Override
 		public View getChildView(int groupPos, int childPos, boolean isLastChild, View convertView, ViewGroup parent) {
 			View view;
@@ -459,7 +540,10 @@ public class FavoritesActivity extends ExpandableListActivity {
 			return view;
 		}
 
-        public TextView getGenericView() {
+		/**
+		 * getGenericView
+		 */
+		public TextView getGenericView() {
             // Layout parameters for the ExpandableListView
             AbsListView.LayoutParams lp = new AbsListView.LayoutParams(
                     ViewGroup.LayoutParams.FILL_PARENT, 64);
@@ -471,7 +555,10 @@ public class FavoritesActivity extends ExpandableListActivity {
             textView.setPadding(36, 0, 0, 0);
             return textView;
         }
-        
+
+		/**
+		 * getGroupView
+		 */        
         @Override
 		public View getGroupView(int groupPos, boolean isExpanded, View convertView, ViewGroup parent) {
             TextView textView = getGenericView();
@@ -479,23 +566,42 @@ public class FavoritesActivity extends ExpandableListActivity {
             return textView;
 		}
 
+		/**
+		 * isChildSelectable
+		 */        
 		@Override
 		public boolean isChildSelectable(int groupPos, int childPos) {
 			return true;
 		}
 
-		/* Thread Class to load Bitmap */
+		/**
+		 * Thread Class to load Bitmap
+		 * @author Huan Erdao
+		 */
 		private class BitmapLoadThread extends Thread {
+			/** ExpandableList group position */
 			private int groupPos_;
+			/** ExpandableList child position */
 			private int childPos_;
+			/** url of bitmap */
 			private String url_;
+			/** Handler object for UI refresh posting */
 			private Handler handler_;
+			/**
+			 * @param handler	Handler for UI refresh posting
+			 * @param groupPos	ExpandableList group position
+			 * @param childPos	ExpandableList child position
+			 * @param url		url for bitmap
+			 */
 			public BitmapLoadThread(Handler handler, int groupPos, int childPos, String url ){
 				groupPos_ = groupPos;
 				childPos_ = childPos;
 				url_ = url;
 				handler_ = handler;
 			}
+			/**
+			 * thread main routine
+			 */
 			@Override
 			public void run() {
 				Bitmap bmp = BitmapUtils.loadBitmap(url_);
