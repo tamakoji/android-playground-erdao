@@ -29,11 +29,11 @@ import com.google.android.maps.GeoPoint;
 public class GeoItem implements Parcelable {
 	
 	/** id of item. */
-	private long id_;
+	protected long id_;
 	/** item location in GeoPoint. */
-	private GeoPoint location_;
+	protected GeoPoint location_;
 	/** selection state flag. true if selected.*/
-	private boolean isSelected_;
+	protected boolean isSelected_;
 	
 	/**
 	 * @param id item id.

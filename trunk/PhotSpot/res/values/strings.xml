@@ -16,7 +16,7 @@
 <resources>
 	<string name="gmap_key_dbg">YOUR-GOOGLEMAP-KEY</string>
 	<string name="gmap_key_rel">YOUR-GOOGLEMAP-KEY</string>
-		
+			
 	<string name="app_name">PhotSpot</string>
 	<string name="app_ver">1.4.2</string>
 	<string name="help_title">PhotSpot Help</string>

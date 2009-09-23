@@ -18,7 +18,6 @@ package com.erdao.PhotSpot;
 
 import java.util.List;
 
-import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
@@ -79,7 +78,6 @@ public class PhotSpotClusterer extends GeoClusterer {
 	@Override
 	public PhotSpotGeoCluster resetViewport() {
 		PhotSpotGeoCluster cluster = (PhotSpotGeoCluster)super.resetViewport();
-		Log.i("DEBUG","resetViewPort:"+cluster);
 		if(cluster == null){
 			imageFrame_.setVisibility(View.GONE);
 			TextView txtView = (TextView)imageFrame_.findViewById(R.id.copyright);

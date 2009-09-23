@@ -18,6 +18,7 @@ package com.erdao.maps.markerclusterer;
 
 import java.util.List;
 
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -48,7 +49,7 @@ public class ClusterMarker extends Overlay {
 	/** Bitmap objects for icons */
 	protected final List<MarkerBitmap> markerIconBmps_;
 	/** icon marker type */
-	protected int markerTypes = MarkerBitmap.MarkerIconTypes.ICON_SMALL_NORMAL;
+	protected int markerTypes = 0;
 	/** select state for cluster */
 	protected boolean isSelected_ = false;
 	/** selected item number in GeoItem List */
@@ -83,21 +84,16 @@ public class ClusterMarker extends Overlay {
 	 * change icon bitmaps according to the state.
 	 */
 	protected void setMarkerBitmap(){
-		if(GeoItems_.size()>MarkerBitmap.MarkerIconTypes.ICONSIZE_THRESH){
-			if( isSelected_ ){
-				markerTypes = MarkerBitmap.MarkerIconTypes.ICON_LARGE_SELECTED;
-			}else{
-				markerTypes = MarkerBitmap.MarkerIconTypes.ICON_LARGE_NORMAL;
+		markerTypes = -1;
+		for(int i = 0; i < markerIconBmps_.size(); i++ ){
+			if( GeoItems_.size() < markerIconBmps_.get(i).getItemMax() ){
+				markerTypes = i;
+				paint_.setTextSize(markerIconBmps_.get(markerTypes).getTextSize());
+				break;
 			}
-			paint_.setTextSize(16);
-		}else{
-			if( isSelected_ ){
-				markerTypes = MarkerBitmap.MarkerIconTypes.ICON_SMALL_SELECTED;
-			}else{
-				markerTypes = MarkerBitmap.MarkerIconTypes.ICON_SMALL_NORMAL;
-			}
-			paint_.setTextSize(14);
 		}
+		if(markerTypes<0)
+			markerTypes = markerIconBmps_.size()-1;
 	}
 
 	/**
@@ -112,9 +108,10 @@ public class ClusterMarker extends Overlay {
 		Point p = proj.toPixels(center_, null);
 		if( p.x < 0 || p.x > mapView.getWidth() || p.y < 0 || p.y > mapView.getHeight() )
 			return;
-		MarkerBitmap bmp = markerIconBmps_.get(markerTypes);
-		Point grid = bmp.getGrid();
-		canvas.drawBitmap(bmp.getBitmap(), p.x-grid.x, p.y-grid.y, null);
+		MarkerBitmap mkrBmp = markerIconBmps_.get(markerTypes);
+		Point grid = mkrBmp.getGrid();
+		Bitmap bmp = isSelected_ ? mkrBmp.getBitmapSelect() : mkrBmp.getBitmapNormal();
+		canvas.drawBitmap(bmp, p.x-grid.x, p.y-grid.y, null);
 		String caption = String.valueOf(GeoItems_.size());
 		int x = p.x-caption.length()*4;
 		int y = p.y+5;
