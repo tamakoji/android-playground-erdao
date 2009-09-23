@@ -39,7 +39,7 @@ import com.google.android.maps.Projection;
 public class ClusterMarker extends Overlay {
 
 	/** cluster object */
-	private final GeoCluster cluster_;
+	protected final GeoCluster cluster_;
 	/** Paint object for drawing icon */
 	protected final Paint paint_;
 	/** List of GeoItems within */
@@ -102,6 +102,7 @@ public class ClusterMarker extends Overlay {
 	 * @param mapView MapView object.
 	 * @param shadow shadow flag.
 	 */
+	@Override
 	public void draw(Canvas canvas, MapView mapView, boolean shadow) {
 		cluster_.onNotifyDrawFromMarker();
 		Projection proj = mapView.getProjection();
