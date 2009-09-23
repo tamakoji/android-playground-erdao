@@ -58,6 +58,8 @@ public class PhotSpotClusterer extends GeoClusterer {
 		markerIconBmps_ = markerIconBmps;
 		mapView_ = mapView;
 		imageFrame_ = imageFrame;
+		// override GRIDSIZE
+		GRIDSIZE = 74;
 	}
 
 	/**
