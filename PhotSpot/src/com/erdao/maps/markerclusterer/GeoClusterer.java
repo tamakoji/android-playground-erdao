@@ -23,8 +23,6 @@ import java.util.TimerTask;
 
 import android.graphics.Point;
 import android.os.Handler;
-import android.os.SystemClock;
-import android.util.Log;
 
 import com.erdao.maps.GeoBounds;
 import com.erdao.maps.GeoItem;
@@ -41,17 +39,17 @@ import com.google.android.maps.Projection;
  * this is android ported version with modification to fit to the application
  * @author Huan Erdao
  */
-public abstract class GeoClusterer {
+public class GeoClusterer {
 	
 	/** grid size for clustering. */
-	public final int GRIDSIZE = 74;
+	public final int GRIDSIZE = 56;
 
 	/** MapView object. */
-	private final MapView mapView_;
+	protected final MapView mapView_;
 	/** GeoItem ArrayList object to be shown. */
-	private List<GeoItem> items_ = new ArrayList<GeoItem>();
+	protected List<GeoItem> items_ = new ArrayList<GeoItem>();
 	/** GeoItem ArrayList object that are out of viewport to be clustered. */
-	private List<GeoItem> leftItems_ = new ArrayList<GeoItem>();
+	protected List<GeoItem> leftItems_ = new ArrayList<GeoItem>();
 	/** Clustered object list. */
 	protected List<GeoCluster> clusters_ = new ArrayList<GeoCluster>();
 	/** MarkerBitmap object for marker icons. */
@@ -59,13 +57,13 @@ public abstract class GeoClusterer {
 	/** selected cluster object. */
 	protected GeoCluster selcluster_ = null;
 	/** check counter for tapping all cluster object. */
-	private int tapCheckCount_ = 0;
+	protected int tapCheckCount_ = 0;
 	/** GeoBound to check moves of the map view. */
-	private GeoBounds savedBounds_;
+	protected GeoBounds savedBounds_;
 	/** flag for detecting map moves. true if map is moving or zooming. */
-	private boolean isMoving_;
+	protected boolean isMoving_;
 	/** handler to initiate moveend/zoomend event and reset view. */
-	private Handler handler_;
+	protected Handler handler_;
 	
 	/**
 	 * @param mapView MapView object.
@@ -231,7 +229,6 @@ public abstract class GeoClusterer {
 	 * @return current selected cluster object, if null it means no cluster is selected.
 	 */
 	public GeoCluster resetViewport() {
-		long start = SystemClock.uptimeMillis();
 		List<GeoCluster> clusters = getClustersInViewport();
 		List<GeoItem> tmpItems = new ArrayList<GeoItem>();
 		int removed = 0;
@@ -253,7 +250,6 @@ public abstract class GeoClusterer {
 		}
 		reAddItems(tmpItems);
 		redraw();
-		Log.i("DEBUG","reset View main:"+(SystemClock.uptimeMillis()-start));
 		// Add the markers collected into marker cluster to reset
 		if(removed>0){
 			GeoCluster cluster = null;

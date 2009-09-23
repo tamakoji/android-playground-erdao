@@ -139,6 +139,7 @@ public class PhotSpotActivity extends MapActivity {
 	/**
 	 * isRouteDisplayed
 	 */
+	@Override
 	protected boolean isRouteDisplayed() {
 		return false;
 	}
@@ -308,7 +309,6 @@ public class PhotSpotActivity extends MapActivity {
 		// create marker bitmaps
 		markerIconBmps_.clear();
 		Bitmap bmp_s_n,bmp_s_s,bmp_l_n,bmp_l_s;
-		Point grid = new Point(20,20);
 		switch( serviceProvider_ ){
 			case TypesService.PANORAMIO:
 			default:{
@@ -333,14 +333,9 @@ public class PhotSpotActivity extends MapActivity {
 				break;
 			}
 		}
-		MarkerBitmap markerBitmap = new MarkerBitmap(bmp_s_n,grid);
+		MarkerBitmap markerBitmap = new MarkerBitmap(bmp_s_n,bmp_s_s,new Point(20,20),14,10);
 		markerIconBmps_.add(markerBitmap);
-		markerBitmap = new MarkerBitmap(bmp_s_s,grid);
-		markerIconBmps_.add(markerBitmap);
-		grid = new Point(28,28);
-		markerBitmap = new MarkerBitmap(bmp_l_n,grid);
-		markerIconBmps_.add(markerBitmap);
-		markerBitmap = new MarkerBitmap(bmp_l_s,grid);
+		markerBitmap = new MarkerBitmap(bmp_l_n,bmp_l_s,new Point(28,28),16,100);
 		markerIconBmps_.add(markerBitmap);
 	}
 	/**
