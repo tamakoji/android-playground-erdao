@@ -2,10 +2,11 @@
 [PhotSpot back to PhotSpot]
 = Clustering Code and Samples =
 Clustering Modules are now available.
+== Module Source ==
 http://android-playground-erdao.googlecode.com/svn/trunk/mapsutility_android
-Javadoc:
+== Javadoc ==
 http://android-playground-erdao.googlecode.com/svn/trunk/mapsutility_android/doc/index.html
-SampleCodes:
+== Sample Codes ==
 http://android-playground-erdao.googlecode.com/svn/trunk/SampleClusterMap
 
 = Implementation Notes =
