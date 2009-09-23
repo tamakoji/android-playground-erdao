@@ -27,7 +27,6 @@ import android.os.Handler;
 import com.erdao.maps.GeoBounds;
 import com.erdao.maps.GeoItem;
 import com.google.android.maps.GeoPoint;
-import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
 import com.google.android.maps.Overlay;
 import com.google.android.maps.Projection;
@@ -42,7 +41,7 @@ import com.google.android.maps.Projection;
 public class GeoClusterer {
 	
 	/** grid size for clustering. */
-	public final int GRIDSIZE = 56;
+	protected int GRIDSIZE = 56;
 
 	/** MapView object. */
 	protected final MapView mapView_;
@@ -73,6 +72,7 @@ public class GeoClusterer {
 		mapView_ = mapView;
 		markerIconBmps_ = markerIconBmps;
 		handler_ = new Handler();
+		isMoving_ = false;
 	}
 
 	/**
@@ -148,17 +148,14 @@ public class GeoClusterer {
 			if(getCurBounds().isInBounds(gpt)){
 				Projection pro = mapView_.getProjection();
 				Point ppt = pro.toPixels(gpt, null);
-				MapController mapCtrl = mapView_.getController();
-				mapCtrl.zoomInFixing(ppt.x, ppt.y);
+				mapView_.getController().zoomInFixing(ppt.x, ppt.y);
 			}
 			else{
-				MapController mapCtrl = mapView_.getController();
-				mapCtrl.zoomIn();
+				mapView_.getController().zoomIn();
 			}
 		}
 		else{
-			MapController mapCtrl = mapView_.getController();
-			mapCtrl.zoomIn();
+			mapView_.getController().zoomIn();
 		}
 	}
 	
@@ -168,7 +165,6 @@ public class GeoClusterer {
 	 */
 	private final boolean isItemInViewport(GeoItem item){
 		savedBounds_ = getCurBounds();
-		isMoving_ = false;
 		return savedBounds_.isInBounds(item.getLocation());
 	}
 
@@ -272,30 +268,33 @@ public class GeoClusterer {
 	 * javascriptin the future....
 	 */
 	public void onNotifyDrawFromCluster(){
-		if(!isMoving_){
-			GeoBounds curBnd = getCurBounds();
-			if( !savedBounds_.isEqual(curBnd) ){
-				isMoving_ = true;
-				savedBounds_ = curBnd;
-				Timer timer = new Timer(true);
-				timer.schedule(
-					new TimerTask() {
-						public void run() {
-							GeoBounds curBnd = getCurBounds();
-							if( savedBounds_.isEqual(curBnd) ){
-								isMoving_ = false;
-								this.cancel();
-								handler_.post( new Runnable() {
-									public void run() {
-										resetViewport();
-									}
-								});
-							}
-							savedBounds_ = curBnd;
+		// ignore if it is already recognized as moving state
+		if(isMoving_)
+			return;
+		GeoBounds curBnd = getCurBounds();
+		// checking bounds if it is moving or not.
+		if( !savedBounds_.isEqual(curBnd) ){
+			isMoving_ = true;
+			savedBounds_ = curBnd;
+			Timer timer = new Timer(true);
+			timer.schedule(
+				new TimerTask() {
+					public void run() {
+						GeoBounds curBnd = getCurBounds();
+						// if there is no more moving, reset the viewport
+						if( savedBounds_.isEqual(curBnd) ){
+							isMoving_ = false;
+							this.cancel();
+							handler_.post( new Runnable() {
+								public void run() {
+									resetViewport();
+								}
+							});
 						}
-					}, 500, 500
-				);
-			}
+						savedBounds_ = curBnd;
+					}
+				}, 500, 500
+			);
 		}
 	}
 
