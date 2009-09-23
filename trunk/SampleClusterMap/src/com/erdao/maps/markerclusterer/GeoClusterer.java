@@ -114,7 +114,7 @@ public class GeoClusterer {
 	/**
 	 * Create Cluster Object.
 	 * override this method, if you want to use custom GeoCluster class.
-	 * @param GeoItem to be set to cluster.
+	 * @param item GeoItem to be set to cluster.
 	 */
 	 public void CreateCluster(GeoItem item){
 		 GeoCluster cluster = new GeoCluster(this);
