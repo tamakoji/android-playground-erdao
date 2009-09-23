@@ -52,7 +52,7 @@ public class GeoClusterer {
 	/** Clustered object list. */
 	protected List<GeoCluster> clusters_ = new ArrayList<GeoCluster>();
 	/** MarkerBitmap object for marker icons. */
-	private final List<MarkerBitmap> markerIconBmps_;
+	protected final List<MarkerBitmap> markerIconBmps_;
 	/** selected cluster object. */
 	protected GeoCluster selcluster_ = null;
 	/** check counter for tapping all cluster object. */
@@ -163,7 +163,7 @@ public class GeoClusterer {
 	 * check if the item is within current viewport.
 	 * @return true if item is within viewport.
 	 */
-	private final boolean isItemInViewport(GeoItem item){
+	protected final boolean isItemInViewport(GeoItem item){
 		savedBounds_ = getCurBounds();
 		return savedBounds_.isInBounds(item.getLocation());
 	}
@@ -196,7 +196,7 @@ public class GeoClusterer {
 	/**
 	 * add items that were not clustered in last clustering.
 	 */
-	private void addLeftItems() {
+	protected void addLeftItems() {
 		if(leftItems_.size()==0){
 			return;
 		}
@@ -212,7 +212,7 @@ public class GeoClusterer {
 	 * re-add items for clustering.
 	 * @param items GeoItem list to be clustered.
 	 */
-	private void reAddItems(List<GeoItem> items) {
+	protected void reAddItems(List<GeoItem> items) {
 		int len = items.size();
 		for(int i=len-1; i>=0; i--) {
 			addItem(items.get(i));
