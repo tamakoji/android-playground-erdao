@@ -9,6 +9,9 @@ http://android-playground-erdao.googlecode.com/svn/trunk/mapsutility_android/doc
 == Sample Codes ==
 http://android-playground-erdao.googlecode.com/svn/trunk/SampleClusterMap
 
+*<font color="red">NOTICE:You need to obtain YOUR API KEYs to run the application</font>*
+
+
 = Implementation Notes =
 == Client (android) ==
 For clustering, ported javascript version of [http://code.google.com/p/gmaps-utility-library/ markerclusterer] to java code.
