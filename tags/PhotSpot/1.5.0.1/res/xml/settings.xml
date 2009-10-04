@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) 2009 Huan Erdao
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+  
+          http://www.apache.org/licenses/LICENSE-2.0
+  
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+-->
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:title="@string/settings_title">
+	<ListPreference
+		android:key="@string/prefkey_svcproc"
+		android:defaultValue="0"
+		android:title="@string/setting_svcprov"
+		android:summary="@string/setting_svcprov_summary"
+		android:dialogTitle="@string/setting_svcprov_summary"
+		android:entries="@array/select_service"
+		android:entryValues="@array/select_service_val"
+	/>
+	<PreferenceScreen
+		android:title="@string/setting_clearhistory"
+		android:summary="@string/setting_clearhistory_summary"
+	/>
+	<PreferenceCategory android:title="@string/setting_category_account">
+		<EditTextPreference
+			android:key="@string/prefkey_picasauser"
+			android:title="@string/setting_picasauser"
+			android:summary="@string/setting_picasauser_summary"
+			android:dialogTitle="@string/PicasaUserDlgTitle"
+		/>
+		<EditTextPreference
+			android:key="@string/prefkey_flickruser"
+			android:title="@string/setting_flickruser"
+			android:summary="@string/setting_flickruser_summary"
+			android:dialogTitle="@string/FlickrUserDlgTitle"
+		/>
+	</PreferenceCategory>
+	<PreferenceCategory android:title="@string/setting_category_other">
+		<PreferenceScreen
+			android:title="@string/setting_help">
+			<intent
+				android:action="android.intent.action.MAIN"
+				android:targetPackage="com.erdao.PhotSpot"
+				android:targetClass="com.erdao.PhotSpot.HelpActivity"
+			/>
+		</PreferenceScreen>
+		<PreferenceScreen
+			android:title="@string/setting_about"
+		/>
+	</PreferenceCategory>
+</PreferenceScreen>
