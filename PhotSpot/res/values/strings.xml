@@ -14,39 +14,43 @@
 	 limitations under the License.
 -->
 <resources>
-	<string name="gmap_key_dbg">YOUR-GOOGLEMAP-KEY</string>
-	<string name="gmap_key_rel">YOUR-GOOGLEMAP-KEY</string>
-			
+	<!-- COMMON api keys -->
+	<string name="gmap_apikey_dbg">YOUR-GOOGLEMAP-API-KEY</string>
+	<string name="gmap_apikey_rel">YOUR-GOOGLEMAP-API-KEY</string>
+	<string name="flickr_apikey">YOUR-FLICKR-API-KEY</string>
+					
+	<!-- COMMON strings -->
+	<string name="app_ver">1.5.0</string>
+	<string name="legal_ver">1.0.0</string>
+	<string name="no_title">NO TITLE</string>
+	<string name="search_invoke">App/Search/Invoke Search</string>
+
+	<!-- activity titles -->
 	<string name="app_name">PhotSpot</string>
-	<string name="app_ver">1.4.2</string>
 	<string name="help_title">PhotSpot Help</string>
 	<string name="favorite_title">Favorites</string>
+	<string name="settings_title">PhotSpot Settings</string>
 
-	<string name="menu_SearchPhotSpot">Search Spots</string>
+	<!-- menu strings -->
+	<string name="menu_SearchSpots">Search Spots</string>
+	<string name="menu_SearchMySpots">Search MySpots</string>
 	<string name="menu_RefreshPhotSpot">Refresh Spots</string>
 	<string name="menu_SearchPlace">Search Place</string>
 	<string name="menu_MyLocation">My Location</string>
 	<string name="menu_Favorites">View Favorites</string>
-	<string name="menu_Preferences">Select Provider</string>
+	<string name="menu_Preferences">Settings</string>
 	<string name="menu_MapMode">Map Mode</string>
-	<string name="menu_ClearSuggest">Clear Search History</string>
-	<string name="menu_Help">Help</string>
-	<string name="menu_About">About</string>
 	<string name="menu_Revert">Return</string>
 	<string name="menu_GalleryView">Gallery View</string>
 	<string name="menu_DeleteAll">Delete all items</string>
 
-	<string name="PhotSpotPreference">PhotSpotPreference</string>
-	<string name="PrefContentProvider">ContentProvider</string>
-	<string name="PrefMapMode">MapMode</string>
-	<string name="PrefVersionInfo">VersionInfo</string>
-	<string name="no_title">NO TITLE</string>
-	<string name="search_invoke">App/Search/Invoke Search</string>
-
+	<!-- message strings -->
 	<string name="QuerySearching">Searching ...</string>
+	<string name="QueryConfirm">Confirming...</string>
 	<string name="httpErrorMsg">there is problem in connection. please check your connection.</string>
 	<string name="noResultErrorMsg">No Spots were found.</string>
 	<string name="jsonErrorMsg">there was problem in search. please try again.</string>
+	<string name="jsonErrorMsgConfirmUser">can't find the user. please check uesrname.</string>
 	<string name="search_label">Search Place</string>
 	<string name="search_hint">Enter Place Name</string>
 	<string name="ReverseGeoResult">Did you mean</string>
@@ -58,6 +62,7 @@
 	<string name="ToastRemovedFavorites">Item removed from Favorites</string>
 	<string name="ToastAlreadyExistFavorites">Already exists in Favorites</string>
 	<string name="ToastFavoritesFull">Favorites is full</string>
+	<string name="ToastUserConfirmSuccess">User confirmed.</string>
 	<string name="noFavorites">No Favorites found.</string>
 	<string name="Distance">Approx Dist</string>
 	<string name="FavFooter">The location of spots may not be accurate.\nPhotos are under the copyright of their owners.\n</string>
@@ -65,43 +70,79 @@
 	<string name="EditLabel">Edit Label</string>
 	<string name="UndefinedFavLabel">Undefined</string>
 	<string name="Delete">Delete</string>
-	<string name="DeleteConfirm">This item will be deleted.</string>
+	<string name="DeleteFavoriteConfirm">This item will be deleted.</string>
+	<string name="ClearHistoryConfirm">Search History will be cleared.</string>
 
-	<string name="ExtActionDlg">Select Action</string>
-	<string name="LocalSearchDlg">Select to google search</string>
+	<!-- Dialog Title&Messages strings -->
+	<string name="ExtActionDlgTitle">Select Action</string>
+	<string name="LocalSearchDlgTitle">Select to Google search</string>
 	<string name="MapModeDlgTitle">Select Map Mode</string>
-	<string name="PreferencesDlgTitle">Select Contents Provider</string>
-	<string name="Dlg_OK">OK</string>
+	<string name="PicasaUserDlgTitle">Input PicasaWebAlbums username</string>
+	<string name="FlickrUserDlgTitle">Input Flickr username</string>
+	<string name="PrivacyAgreementDlgTitle">Privacy Policy Agreement</string>
 	<string name="Dlg_Close">Close</string>
+	<string name="Dlg_Agree">I Agree</string>
+	<string name="Dlg_Disagree">Disagree</string>
 
+	<!-- COMMON preference keys -->
+	<string name="prefkey_svcproc">ServiceProvider</string>
+	<string name="prefkey_mapmode">MapMode</string>
+	<string name="prefkey_verlegal">VersionLegal</string>
+	<string name="prefkey_verinfo">VersionInfo</string>
+	<string name="prefkey_picasauser">PicasaUser</string>
+	<string name="prefkey_flickruser">FlickrUser</string>
+	<string name="prefkey_flickruserid">FlickrUserId</string>
+
+	<!-- strings for Settings -->
+	<string name="setting_svcprov">Set Service Provider</string>
+	<string name="setting_svcprov_summary">Select provider from Panoramio,Picasa,Flickr</string>
+	<string name="setting_clearhistory">Clear History</string>
+	<string name="setting_clearhistory_summary">Clears PlaceSearch History</string>
+	<string name="setting_category_account">Account Settings</string>
+	<string name="setting_picasauser">Picasa Account</string>
+	<string name="setting_picasauser_summary">Picasa username setting</string>
+	<string name="setting_flickruser">Flickr Account</string>
+	<string name="setting_flickruser_summary">Flickr username setting</string>
+	<string name="setting_category_other">Others</string>
+	<string name="setting_help">View Help</string>
+	<string name="setting_about">About</string>
+
+	<!-- strings for AboutDialog -->
 	<string name="AboutDlgTitle">About PhotSpot</string>
+	<string name="PrivacyAgreement">
+ 	</string>
 	<string name="InitialMessage">
+		PhotSpot by Huan Erdao\n\n
+		Updates:\n
+		v1.5.0:\n
+		- new: MySpots search function. Enables search your content within current view.\n
+		- Only Picasa/Flickr is supported. All photos need to be set to \"public\".\n
+		- \"Search MySpots\" menu appears if you enter username from settings.\n
+		v1.4.2:\n
+		- code refactoring. stabilizes more.\n
+		- balloon icon changes according to the service.\n
+		\n
+		For more instructions, please see help from\n
+		[menu]->[Settings]->[View Help]\n\n
+	</string>
+	<string name="AboutDlgContent">
 		PhotSpot by Huan Erdao\n\n
 		PhotSpot will let you easily find out the popular spot at location of your choice.\n
 		It will retrieve public geotagged contents on the map screen and show them in clustered balloons.\n
 		the each number on the balloon shows the number of contents within the cluster, so that
 		the more the number it has, the more people take photos around that area.\n\n
-		Updates:\n
-		v1.4.2:\n
-		- code refactoring. stabilizes more.\n
-		- balloon icon changes according to the service.\n
-		v1.4.1:\n
-		- bugfix:favorite gallery view title sync error\n
-		\n
-		For more instructions, please see help from\n
-		[menu]->[more]->[help]\n\n
-	</string>
-	<string name="AboutDlgContent">
-		PhotSpot by Huan Erdao\n\n
 		Panoramio and Picasa Web Albums are trademarks of Google Inc.\n
 		Flickr is a trademark of Yahoo! Inc.\n\n
 		All other company and product names may be trademarks of the respective companies with which they are associate.\n
 		This product uses the APIs of above services but is not endorsed by above companies.\n\n
 		Photos provided by above services are under the copyright of their owners.\n
-		The location of photos may not be accurate.\n
+		The location of photos may not be accurate.\n\n
 	</string>
+
+	<!-- strings for Copyright -->
 	<string name="copyrightLabel">Photos are under the copyright of their owners.</string>
 
+	<!-- strings for Help -->
 	<string name="helpcontent">
 		&lt;h2&gt;What is PhotSpot?&lt;/h2&gt;
 			PhotSpot will let you easily find out the popular spot at location of your choice.
@@ -110,23 +151,30 @@
 			the more the number it has, the more people take photos around that area.
 		&lt;hr&gt;
 		&lt;h2&gt;Instruction&lt;/h2&gt;
-			&lt;h4&gt;Initial Screen&lt;/h4&gt;
+			&lt;h3&gt;Initial Screen&lt;/h3&gt;
 				Initial map screen will display the map of current location. Press "menu" button to proceed.
-			&lt;h4&gt;Search Spot&lt;/h4&gt;
-				Selecting \"Search Spot\" will retrieve public content and result will be shown on the map.
-			&lt;h4&gt;Search Place&lt;/h4&gt;
+			&lt;h3&gt;Search Spot&lt;/h3&gt;
+				Selecting \"Search Spots\" will retrieve public content and result will be shown on the map.
+				Maximum 100 spots will be retrieved per query.
+			&lt;h3&gt;Search MySpots&lt;/h3&gt;
+				Selecting \"Search MySpots\" will retrieve user\'s public content and result will be shown on the map.
+				To enable this function, you need to set username of service at \"Account Settings\" and select supported service provider.
+				Maximum 200 spots will be retrieved per query.
+				Panoramio is not supported.
+			&lt;h3&gt;Search Place&lt;/h3&gt;
 				Selecting \"Search Place\" or pressing search button on your device will start search for certain place.
-			&lt;h4&gt;My Location&lt;/h4&gt;
+			&lt;h3&gt;My Location&lt;/h3&gt;
 				On initial screen it is turned on, if you wish to set map location to current location, select this.
 				It will require GPS to find your current location.
-			&lt;h4&gt;Favorites&lt;/h4&gt;
+			&lt;h3&gt;Favorites&lt;/h3&gt;
 				You can save favorite spots and browse them afterwards. You can browse favorites even if you are in offline mode.&lt;br&gt;
 				To Add spots to favorites, tap the thumbnail on gallery view and select \"Add to Favorites\" on the pop-up menu.&lt;br&gt;
 				You can save up to 256 favorite items. Favorite items also can be labeled.
 				After saving spots to favorites, select item and select \"Edit Label\" action.&lt;br&gt;
-			&lt;h4&gt;Map Mode&lt;/h4&gt;
+			&lt;h3&gt;Map Mode&lt;/h3&gt;
 				You can either select \"map\" mode or \"satellite\" mode (default:map mode)
-			&lt;h4&gt;Select Provider&lt;/h4&gt;
+			&lt;h3&gt;Settings&lt;/h3&gt;
+				&lt;h4&gt;- Set Service Provider&lt;/h4&gt;
 				You can select content provider for retrieving the geotagged content.(default:Panoramio)
 				Currently supported providers are:
 				&lt;ul&gt;
@@ -134,34 +182,49 @@
 					&lt;li&gt;&lt;b&gt;Picasa Web Album&lt;/b&gt;&lt;/li&gt;
 					&lt;li&gt;&lt;b&gt;Flickr&lt;/b&gt;&lt;/li&gt;
 				&lt;/ul&gt;
-			&lt;h4&gt;Help&lt;/h4&gt;
-				Opens this content
+				&lt;h4&gt;- Clear History&lt;/h4&gt;
+				This will clear your history of \"Search Place\" function.
+				&lt;h4&gt;- Account Settings&lt;/h4&gt;
+				At this version, \"Search MySpots\" only search photos set to \"public\",
+				password is NOT needed.
+				\"Search MySpots\" will not be effective unless username is validated.&lt;br&gt;
+				For validation, network connection is needed.
+				&lt;ul&gt;
+				&lt;li&gt;&lt;b&gt;Picasa Account&lt;/b&gt;&lt;/li&gt;
+					Set Picasa username for MySpots search. After input,
+					application will confirm username to Picasa.
+				&lt;li&gt;&lt;b&gt;Flickr Account&lt;/b&gt;&lt;/li&gt;
+					Set Flickr username for MySpots search. After input,
+					application will confirm username to Flickr.
+				&lt;/ul&gt;
+				&lt;h4&gt;- View Help&lt;/h4&gt;
+					View this help.
 		&lt;hr&gt;
 		&lt;h2&gt;Viewing the result&lt;/h2&gt;
-			&lt;h4&gt;Opening gallery view&lt;/h4&gt;
+			&lt;h3&gt;Opening gallery view&lt;/h3&gt;
 				By tapping the balloon, Gallery View will show up. You can browse what is in there.
-			&lt;h4&gt;Double-Tap to zoom in the map&lt;/h4&gt;
+			&lt;h3&gt;Double-Tap to zoom in the map&lt;/h3&gt;
 				You can zoom in/out using zoom control, also you can zoom in by double-tapping the balloon.
 				It will zoom into the detail location of the content you are currently looking at.
-			&lt;h4&gt;Zoom in/out to discover more&lt;/h4&gt;
+			&lt;h3&gt;Zoom in/out to discover more&lt;/h3&gt;
 				Zooming in/out the map will merge/divide clusters according to the zoom level.
 				But content itself are based on result you get by \"Search Spot\" command.
 				If you need to refresh result, select \"Refresh Spot\" from the menu.
-			&lt;h4&gt;tapping the thumbnail&lt;/h4&gt;
+			&lt;h3&gt;tapping the thumbnail&lt;/h3&gt;
 				By tapping the thumbnail, extra actions will pop-up&lt;br&gt;
-			&lt;h4&gt;Changing image size of the Gallery View&lt;/h4&gt;
+			&lt;h3&gt;Changing image size of the Gallery View&lt;/h3&gt;
 				By swiping gesture, you can change the thumbnail size. Swipe up to shrink, swipe down to enlarge.&lt;br&gt;
 				By swiping up to the frame limit, hides out the Gallery View. 
 		&lt;hr&gt;
 		&lt;h2&gt;Tips&lt;/h2&gt;
-			&lt;h4&gt;Selecting the content provider&lt;/h4&gt;
+			&lt;h3&gt;Selecting the content provider&lt;/h3&gt;
 				Contents you can get differs by providers, Panoramio will provide beautiful scenery photo content
 				so it is useful to find landmarks and historical places.&lt;br&gt;
 				Picasa Web Album and Flickr can get more casual content, but it can retrieve more up-to-date content
 				compared to using Panoramio.
 		&lt;hr&gt;
 		&lt;h2&gt;Furthermore&lt;/h2&gt;
-			&lt;h4&gt;Contribute the PhotSpot&lt;/h4&gt;
+			&lt;h3&gt;Contribute the PhotSpot&lt;/h3&gt;
 				If you want to contribute this app, it is easy.
 				Just upload photo with geotag to any of the services PhotSpot supports,
 				make sure you set them to public, so that photos are available in their feeds.

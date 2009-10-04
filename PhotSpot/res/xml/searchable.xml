@@ -22,6 +22,6 @@
     android:voiceLanguageModel="free_form"
     android:voicePromptText="@string/search_invoke"
 
-    android:searchSuggestAuthority="com.erdao.PhotSpot.PhotSpotSearchSuggestionsProvider"
+    android:searchSuggestAuthority="com.erdao.PhotSpot.PhotSpotSearchSuggestProvider"
     android:searchSuggestSelection=" ? "
 />

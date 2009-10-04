@@ -279,7 +279,7 @@ public class PhotSpotClusterMarker extends ClusterMarker {
 		gallery.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				new AlertDialog.Builder(context_)
-				.setTitle(R.string.ExtActionDlg)
+				.setTitle(R.string.ExtActionDlgTitle)
 				.setPositiveButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int whichButton) {
 						dialog.dismiss();
@@ -414,16 +414,16 @@ public class PhotSpotClusterMarker extends ClusterMarker {
 	 */
 	private class LocalSearchTask extends AsyncTask<String, Integer, Integer> {
 		/** Json Utility object */
-		JsonFeedGetter getter_;
+		private JsonFeedGetter getter_;
 		/** Context */
-		Context context_;
+		private Context context_;
 
 		/**
 		 * @param c Context object
 		 */
 		public LocalSearchTask(Context c) {
 			context_ = c;
-			getter_ = new JsonFeedGetter(JsonFeedGetter.MODE_LOCALSEARCH,context_);
+			getter_ = new JsonFeedGetter(context_,JsonFeedGetter.MODE_LOCALSEARCH);
 		}
 
 		/**
@@ -448,7 +448,7 @@ public class PhotSpotClusterMarker extends ClusterMarker {
 				else{
 					CharSequence[] arry = (CharSequence[])localSpots_.toArray(new CharSequence[0]);
 					new AlertDialog.Builder(context_)
-					.setTitle(R.string.LocalSearchDlg)
+					.setTitle(R.string.LocalSearchDlgTitle)
 					.setPositiveButton(R.string.Dlg_Close, new DialogInterface.OnClickListener() {
 						public void onClick(DialogInterface dialog, int whichButton) {
 							dialog.dismiss();

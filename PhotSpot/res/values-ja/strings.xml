@@ -14,28 +14,32 @@
 	 limitations under the License.
 -->
 <resources>
+	<!-- activity titles -->
 	<string name="app_name">フォットスポット</string>
 	<string name="help_title">フォットスポット ヘルプ</string>
 	<string name="favorite_title">フォットスポットのお気に入り</string>
+	<string name="settings_title">フォットスポットの設定</string>
 
-	<string name="menu_SearchPhotSpot">スポットを探す</string>
-	<string name="menu_RefreshPhotSpot">スポットを更新</string>
+	<!-- menu strings -->
+	<string name="menu_SearchSpots">スポットの検索</string>
+	<string name="menu_SearchMySpots">マイスポット</string>
+	<string name="menu_RefreshPhotSpot">スポットの更新</string>
 	<string name="menu_SearchPlace">場所を検索</string>
 	<string name="menu_MyLocation">現在位置</string>
 	<string name="menu_Favorites">お気に入り</string>
-	<string name="menu_Preferences">サービスの選択</string>
+	<string name="menu_Preferences">設定</string>
 	<string name="menu_MapMode">地図モード</string>
-	<string name="menu_ClearSuggest">検索履歴の消去</string>
-	<string name="menu_Help">ヘルプ</string>
-	<string name="menu_About">フォットスポットについて</string>
 	<string name="menu_Revert">戻る</string>
 	<string name="menu_GalleryView">ギャラリー表示</string>
 	<string name="menu_DeleteAll">すべて削除</string>
 
+	<!-- message strings -->
 	<string name="QuerySearching">検索中 ...</string>
+	<string name="QueryConfirm">確認中...</string>
 	<string name="httpErrorMsg">接続中に問題が発生しました。接続を確認してください。</string>
 	<string name="noResultErrorMsg">スポットが見つかりませんでした</string>
 	<string name="jsonErrorMsg">検索中に問題が発生しました。リトライしてみてください。</string>
+	<string name="jsonErrorMsgConfirmUser">ユーザが確認できません。ユーザ名を確認してください。</string>
 	<string name="search_label">場所の検索</string>
 	<string name="search_hint">場所を入力してください</string>
 	<string name="ReverseGeoResult">もしかして</string>
@@ -47,6 +51,7 @@
 	<string name="ToastRemovedFavorites">お気に入りから削除しました</string>
 	<string name="ToastAlreadyExistFavorites">既にお気に入りに項目があります</string>
 	<string name="ToastFavoritesFull">これ以上登録できません</string>
+	<string name="ToastUserConfirmSuccess">ユーザ名を確認しました</string>
 	<string name="noFavorites">お気に入りが登録されていません</string>
 	<string name="Distance">おおよその距離</string>
 	<string name="FavFooter">スポットの位置は必ずしも正確な位置とは限りません。 \nこれら写真の著作権はそれぞれの所有者にあります。\n</string>
@@ -54,43 +59,76 @@
 	<string name="EditLabel">ラベルの編集</string>
 	<string name="UndefinedFavLabel">未分類</string>
 	<string name="Delete">削除</string>
-	<string name="DeleteConfirm">お気に入りを削除しますか？</string>
+	<string name="DeleteFavoriteConfirm">お気に入りを削除しますか？</string>
+	<string name="ClearHistoryConfirm">検索履歴を削除します</string>
 
-	<string name="ExtActionDlg">アクションを選択</string>
-	<string name="LocalSearchDlg">選択してGoogle検索します</string>
+	<!-- Dialog Title&Messages strings -->
+	<string name="ExtActionDlgTitle">アクションを選択</string>
+	<string name="LocalSearchDlgTitle">選択してGoogle検索します</string>
 	<string name="MapModeDlgTitle">地図モードの選択</string>
-	<string name="PreferencesDlgTitle">サービスの選択</string>
-	<string name="Dlg_OK">OK</string>
+	<string name="PicasaUserDlgTitle">PicasaWebAlbumsのユーザ名を入力してください</string>
+	<string name="FlickrUserDlgTitle">Flickrのユーザ名を入力してください</string>
 	<string name="Dlg_Close">閉じる</string>
+	<string name="Dlg_Agree">同意する</string>
+	<string name="Dlg_Disagree">同意しない</string>
 
-	<string name="AboutDlgTitle">フォットスポット</string>
+	<!-- strings for Settings -->
+	<string name="setting_svcprov">写真共有サービスの設定</string>
+	<string name="setting_svcprov_summary">Picasa,Panoramio,Flickr等サービスの設定</string>
+	<string name="setting_clearhistory">履歴の消去</string>
+	<string name="setting_clearhistory_summary">場所検索の履歴を消去します</string>
+	<string name="setting_category_account">アカウントの設定</string>
+	<string name="setting_picasauser">Picasaアカウント設定</string>
+	<string name="setting_picasauser_summary">Picasaユーザ名の設定</string>
+	<string name="setting_flickruser">Flickrアカウント設定</string>
+	<string name="setting_flickruser_summary">Flickrユーザ名の設定</string>
+	<string name="setting_category_other">その他</string>
+	<string name="setting_help">ヘルプ</string>
+	<string name="setting_about">About</string>
+
+	<!-- strings for AboutDialog -->
+	<string name="PrivacyAgreementDlgTitle">プライバシーポリシー</string>
+	<string name="PrivacyAgreement">
+		 プライバシーポリシー:\n\n
+		当ソフトウェアの検索機能を使うことで、ユーザは現在表示している地図の場所情報をサーバに送信します。\n
+		サーバはユーザの現在位置を知ることは出来ません。\n
+		また、「マイスポット」を行う際、ユーザはサーバに該当するサービスのユーザ名を送信します。\n
+		サーバは冗長なフィード情報を最適化し、アプリケーションの待機時間を短縮するために用いております。\n
+		サーバで集められた情報はデバッグ以外には利用いたしません。\n\n
+	</string>
 	<string name="InitialMessage">
+		フォットスポット by Huan Erdao\n\n
+		アップデート:\n
+		v1.5.0:\n
+		- new: マイスポット検索機能の追加。現在のビューにおいて自分の写真を検索することが出来ます。\n
+		- Picasa/Flickrのみサポートしています。また、現在「公開」設定した写真のみしか検索できません。\n
+		- 「マイスポット」メニューは設定でアカウント情報を設定の上、サービスを設定した際にのみ現れます。\n
+		v1.4.2:\n
+		- コードリファクタリング。エラーチェック強化\n
+		- バルーンアイコンのデザインをサービスによって切り替え\n
+		\n
+		詳細の使い方に関してはヘルプをご覧ください:\n
+		[menu]->[設定]->[ヘルプ]\n\n
+	</string>
+	<string name="AboutDlgTitle">フォットスポット</string>
+	<string name="AboutDlgContent">
 		フォットスポット by Huan Erdao\n\n
 		フォットスポットは人気写真撮影スポットを簡単に捜すアプリケーションです。\n
 		一般公開されている位置情報付きの写真を取得し、地図上にグループ化されたバルーンとして表示します。\n
 		バルーンに表示される数字は、そのスポットにある写真コンテンツの数を意味しています。よって数が大きければ大きいほど
 		その場所で写真が撮られていることを意味しています。\n\n
-		アップデート:\n
-		v1.4.2:\n
-		- コードリファクタリング。エラーチェック強化\n
-		- バルーンアイコンのデザインをサービスによって切り替え\n
-		v1.4.1:\n
-		- 「お気に入り」のギャラリービューでタイトルの同期が取れないバグの修正\n
-		\n
-		詳細の使い方に関してはヘルプをご覧ください:\n
-		[menu]->[more]->[help]\n\n
-	</string>
-	<string name="AboutDlgContent">
-		フォットスポット by Huan Erdao\n\n
 		Panoramio および Picasa Web Albums は Google Inc.の商標です\n
 		Flickr は Yahoo! Inc.の商標です\n\n
 		その他の商品名、製品名、会社名などは、一般に各社の. 商標または登録商標です\n
 		当ソフトウェアは上記サービスのAPIを利用しておりますが、上記いずれの企業も保証責任を負いません。\n\n
 		上記のサービスが提供する写真の著作権はそれぞれの所有者にあります。\n
-		スポットの位置は必ずしも正確な位置とは限りません。
+		スポットの位置は必ずしも正確な位置とは限りません。\n\n
 	</string>
+
+	<!-- strings for Copyright -->
 	<string name="copyrightLabel">これら写真の著作権はそれぞれの所有者にあります。</string>
 
+	<!-- strings for Help -->
 	<string name="helpcontent">
 		&lt;h2&gt;フォットスポットとは?&lt;/h2&gt;
 			フォットスポットは人気写真撮影スポットを簡単に捜すアプリケーションです。
@@ -99,22 +137,31 @@
 			その場所で写真が撮られていることを意味しています。
 		&lt;hr&gt;
 		&lt;h2&gt;操作方法&lt;/h2&gt;
-			&lt;h4&gt;初期画面&lt;/h4&gt;
+			&lt;h3&gt;初期画面&lt;/h3&gt;
 				初期の画面では現在位置の地図が表示されます。 "menu" ボタンを押して開始してください。
-			&lt;h4&gt;スポットの検索&lt;/h4&gt;
+			&lt;h3&gt;スポットの検索&lt;/h3&gt;
 				一般公開写真の検索を開始します。完了後、地図上に表示します。
-			&lt;h4&gt;場所を検索&lt;/h4&gt;
+				また、１回の検索で得られるスポット数は最大100個までとなります。
+			&lt;h3&gt;マイスポット&lt;/h3&gt;
+				設定されたユーザの公開写真を検索し、完了後地図上に表示します。&lt;br&gt;
+				この機能を使うには、「設定」の「アカウントの設定」において該当サービスのユーザ名を設定し、
+				「写真共有サービスの設定」においてサポートしているサービスに設定する必要があります。&lt;br&gt;
+				設定が完了していればメニューキーを押すことでこの機能表示されます。&lt;br&gt;
+				また、１回の検索で得られるスポット数は最大200個までとなります。&lt;br&gt;
+				Panoramioはこの機能をサポートしていません。
+			&lt;h3&gt;場所を検索&lt;/h3&gt;
 				このメニュー、もしくは検索キーを押すことで任意の場所の検索を開始します。
-			&lt;h4&gt;現在位置&lt;/h4&gt;
+			&lt;h3&gt;現在位置&lt;/h3&gt;
 				地図を移動したりなどした後、現在位置に戻りたい場合などにご利用ください。
-			&lt;h4&gt;お気に入り&lt;/h4&gt;
+			&lt;h3&gt;お気に入り&lt;/h3&gt;
 				お気に入りに登録することであとからそのスポットを見たり、その場所へのルート検索等をすることが出来ます。&lt;br&gt;
 				お気に入りはオフライン状態でも閲覧可能です。登録するには、ギャラリー表示される写真サムネールをタップして「お気に入りに保存」アクションを選択してください。&lt;br&gt;
 				お気に入りは任意のラベルを登録して分類することが出来ます。&lt;br&gt;
 				お気に入りは最大256個まで保存可能です。
-			&lt;h4&gt;地図モード&lt;/h4&gt;
-				モードは「地図」もしくは「航空写真」が選択可能です
-			&lt;h4&gt;サービスの選択&lt;/h4&gt;
+			&lt;h3&gt;地図モード&lt;/h3&gt;
+				「地図」もしくは「航空写真」が選択可能です
+			&lt;h3&gt;設定&lt;/h3&gt;
+				&lt;h4&gt;- 写真共有サービスの設定&lt;/h4&gt;
 				サービスの選択をします。デフォルトはPanoramioになっています。
 				現在サポートしているサービスは以下になります:
 				&lt;ul&gt;
@@ -122,32 +169,46 @@
 					&lt;li&gt;&lt;b&gt;Picasa Web Album&lt;/b&gt;&lt;/li&gt;
 					&lt;li&gt;&lt;b&gt;Flickr&lt;/b&gt;&lt;/li&gt;
 				&lt;/ul&gt;
-			&lt;h4&gt;ヘルプ&lt;/h4&gt;
-				このページを開きます。
+				&lt;h4&gt;- 履歴の消去&lt;/h4&gt;
+				「場所を検索」で入力した履歴を消去します。
+				&lt;h4&gt;- アカウントの設定&lt;/h4&gt;
+				現在「マイスポット検索」は一般公開された写真のみを対象としておりますので、パスワードは不要です。&lt;br&gt;
+				「マイスポット検索」はユーザ名が確認されないと有効になりません。&lt;br&gt;
+				ユーザ名確認にはネット接続が必要です。ネットに接続の上設定してください。&lt;br&gt;
+				&lt;ul&gt;
+				&lt;li&gt;&lt;b&gt;Picasaアカウント設定&lt;/b&gt;&lt;/li&gt;
+					PicasaWebAlbumのユーザ名を設定します。&lt;br&gt;
+					入力後、ユーザ名が正しいかをPicasaに確認します。	
+				&lt;li&gt;&lt;b&gt;Flickrアカウント設定&lt;/b&gt;&lt;/li&gt;
+					Flickrのユーザ名を設定します。&lt;br&gt;
+					入力後、ユーザ名が正しいかをFlickrに確認します。	
+				&lt;/ul&gt;
+				&lt;h4&gt;- ヘルプ&lt;/h4&gt;
+					このヘルプを開きます。
 		&lt;hr&gt;
 		&lt;h2&gt;スポットの閲覧&lt;/h2&gt;
-			&lt;h4&gt;写真の表示&lt;/h4&gt;
+			&lt;h3&gt;写真の表示&lt;/h3&gt;
 				バルーンをタップすることにより、バルーンに含まれる写真をギャラリー表示します。
-			&lt;h4&gt;ズームイン・ズームアウト&lt;/h4&gt;
+			&lt;h3&gt;ズームイン・ズームアウト&lt;/h3&gt;
 				バルーンをダブルタップすることで地図をズームインすることが可能です。画面右下に表示されているズームボタンでも同様のことが出来ます。
 				ズームレベルを変更することでバルーンに含まれるコンテンツは結合・分離され、現在のズームレベルに応じた表示になります。
 				ただしコンテンツ自体は変更されませんので、ズームアウトした際などは「スポットを更新」を行うことで、そのズームレベルに応じた
 				コンテンツを再度取得することが可能です。
-			&lt;h4&gt;写真をブラウザで表示&lt;/h4&gt;
+			&lt;h3&gt;写真をブラウザで表示&lt;/h3&gt;
 				ギャラリー表示されているサムネールをタップすることで、写真をブラウザで開いたり、ズームインをしたりといった追加アクションが実行可能です&lt;br&gt;
-			&lt;h4&gt;ギャラリーの縮小拡大、非表示&lt;/h4&gt;
+			&lt;h3&gt;ギャラリーの縮小拡大、非表示&lt;/h3&gt;
 				ギャラリー上でスワイプを行うことで画像の拡大縮小が出来ます。上にスワイプすると縮小、下にスワイプすると拡大になります。&lt;br&gt;
 				アプリフレームの上限までスワイプするとギャラリーは非表示になります&lt;br&gt;
 		&lt;hr&gt;
 		&lt;h2&gt;便利な使い方&lt;/h2&gt;
-			&lt;h4&gt;サービスの選択&lt;/h4&gt;
+			&lt;h3&gt;サービスの選択&lt;/h3&gt;
 				得られる写真はサービスによって微妙に変わります。Panoramioは美しい風景写真を取得することが出来ます。
 				Picasa Web Album や Flickr では、よりユーザ本位な写真が取得できます。
 				さらにこれら2つのサービスはユーザが公開後すぐに取得可能なため、より最新の情報が取得可能です。
 				(お台場ガンダムなどのスポットは2009年8月11日現在Panoramioでは取得できません)
 		&lt;hr&gt;
 		&lt;h2&gt;さらに&lt;/h2&gt;
-			&lt;h4&gt;コンテンツ拡充に協力しませんか？&lt;/h4&gt;
+			&lt;h3&gt;コンテンツ拡充に協力しませんか？&lt;/h3&gt;
 				フォットスポットのコンテンツ拡充に協力するには、対応するサービスに位置情報付きの写真を
 				アップロードするだけです。アップロードする際は「一般公開」にして各種サービスがフィードに反映
 				出来るようにすればOKです。

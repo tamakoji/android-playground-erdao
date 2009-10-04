@@ -51,13 +51,15 @@ import android.content.Context;
  */
 public class JsonFeedGetter {
 	/* constant */
-	public static final int MODE_SPOTSEARCH = 0;
-	public static final int MODE_LOCALSEARCH = 1;
+	public static final int MODE_SPOTSEARCH		= 0;
+	public static final int MODE_LOCALSEARCH	= 1;
+	public static final int MODE_FLICKR_ID		= 2;
+	public static final int MODE_PICASA_ID		= 3;
 
-	public final static int CODE_HTTPERROR	= -2;
-	public final static int CODE_JSONERROR	= -1;
-	public final static int CODE_NORESULT	= 0;
-	public final static int CODE_OK			= 1;
+	public final static int CODE_HTTPERROR		= -2;
+	public final static int CODE_JSONERROR		= -1;
+	public final static int CODE_NORESULT		= 0;
+	public final static int CODE_OK				= 1;
 	/* variables */
 	private HttpClient httpClient_;
 	private final int connection_Timeout = 10000;
@@ -65,11 +67,12 @@ public class JsonFeedGetter {
 	int mode_;
 	private List<PhotoItem> photoItems_ = new ArrayList<PhotoItem>();
 	private List<CharSequence> localSpots_ = new ArrayList<CharSequence>();
+	private String userid_ = "";
 
 	/* constructor */
-	public JsonFeedGetter(int mode, Context context){
+	public JsonFeedGetter(Context c, int mode){
 		mode_ = mode;
-		context_ = context;
+		context_ = c;
 		final HttpParams httpParams = new BasicHttpParams();
 		HttpProtocolParams.setVersion(httpParams, HttpVersion.HTTP_1_1);
 		HttpProtocolParams.setContentCharset(httpParams, "UTF-8");
@@ -90,6 +93,7 @@ public class JsonFeedGetter {
 		HttpResponse response;
 		StringBuilder strbuilder = null;
 		InputStream is = null;
+		boolean isSuccess = false;
 		try {
 			response = httpClient_.execute(get);
 			if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
@@ -102,6 +106,7 @@ public class JsonFeedGetter {
 				while ((line = reader.readLine()) != null) {
 					strbuilder.append(line + "\n");
 				}
+				isSuccess = true;
 			}
 		} catch (ClientProtocolException e) {
 			// TODO Auto-generated catch block
@@ -117,21 +122,42 @@ public class JsonFeedGetter {
 				e.printStackTrace();
 			}
 		}
-		if( strbuilder == null )
+		if( strbuilder == null ){
+			if(mode_==MODE_PICASA_ID&&!isSuccess)
+				return CODE_JSONERROR;
 			return CODE_HTTPERROR;
+		}
 
 		String result = strbuilder.toString();
-		JSONObject jsonobj;
+		JSONObject jsonobj = null;
 		try {
 			JSONArray array = null;
-			jsonobj = new JSONObject(result);
+			switch(mode_){
+				default:
+				case MODE_SPOTSEARCH:{
+					jsonobj = new JSONObject(result);
+					array = jsonobj.getJSONArray("photo");
+					break;
+				}
+				case MODE_LOCALSEARCH:{
+					jsonobj = new JSONObject(result);
+					array = jsonobj.getJSONArray("result");
+					break;
+				}
+				case MODE_FLICKR_ID:{
+					result = result.substring(14, result.length());
+					jsonobj = new JSONObject(result);
+					jsonobj = jsonobj.getJSONObject("user");
+					userid_ = jsonobj.getString("nsid");
+					return CODE_OK; 
+				}
+				case MODE_PICASA_ID:{
+					return CODE_OK; 
+				}
+			}
 			long feedcount = jsonobj.getLong("count");
 			if(feedcount==0)
 				return CODE_NORESULT;
-			if(mode_==MODE_SPOTSEARCH)
-				array = jsonobj.getJSONArray("photo");
-			else
-				array = jsonobj.getJSONArray("result");
 			int count = array.length();
 			for (int i = 0; i < count; i++) {
 				JSONObject obj = array.getJSONObject(i);
@@ -175,4 +201,10 @@ public class JsonFeedGetter {
 	public List<CharSequence> getLocalSpotsList(){
 		return localSpots_;
 	}
+
+	/* getUserId */
+	public final String getUserId(){
+		return userid_;
+	}
+
 }

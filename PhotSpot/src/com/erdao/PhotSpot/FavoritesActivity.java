@@ -296,7 +296,7 @@ public class FavoritesActivity extends ExpandableListActivity {
 		groupPos_ = groupPos;
 		childPos_ = childPos;
 		new AlertDialog.Builder(context_)
-		.setTitle(R.string.ExtActionDlg)
+		.setTitle(R.string.ExtActionDlgTitle)
 		.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int whichButton) {
 				dialog.dismiss();
@@ -400,7 +400,7 @@ public class FavoritesActivity extends ExpandableListActivity {
 			case EXT_ACTION_REMOVE_FAVORITES:{
 				new AlertDialog.Builder(context_)
 				.setTitle(R.string.Delete)
-				.setMessage(R.string.DeleteConfirm)
+				.setMessage(R.string.DeleteFavoriteConfirm)
 				.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int whichButton) {
 						if( dbHelper_.deleteItem(photoItemNodes_.get(groupPos_).get(childPos_)) == PhotSpotDBHelper.DB_SUCCESS ){

@@ -15,8 +15,8 @@
 -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
       package="com.erdao.PhotSpot"
-      android:versionCode="12"
-      android:versionName="1.4.2">
+      android:versionCode="13"
+      android:versionName="1.5.0">
 	<uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -40,6 +40,11 @@
                        android:resource="@xml/searchable" />
         </activity>
         <activity
+        			android:name=".PhotSpotPreferenceActivity"
+        			android:label="@string/settings_title"
+        			android:theme="@style/android:Theme.Light"
+        />
+        <activity
         			android:name=".HelpActivity"
         			android:label="@string/help_title"
         />
@@ -53,8 +58,8 @@
         			android:label="@string/favorite_title"
         			android:theme="@style/android:Theme.Light"
  		/>
-        <provider android:name=".PhotSpotSearchSuggestionsProvider"
-                  android:authorities="com.erdao.PhotSpot.PhotSpotSearchSuggestionsProvider" />
+        <provider android:name=".PhotSpotSearchSuggestProvider"
+                  android:authorities="com.erdao.PhotSpot.PhotSpotSearchSuggestProvider" />
 	</application>
     <uses-sdk android:minSdkVersion="3" />
 </manifest> 
