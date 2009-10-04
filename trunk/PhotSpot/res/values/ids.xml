@@ -14,19 +14,16 @@
      limitations under the License.
 -->
 <resources>
-<item type="id" name="menu_FindSpots"/>
+<item type="id" name="menu_SearchSpots"/>
+<item type="id" name="menu_SearchMySpots"/>
 <item type="id" name="menu_SearchPlace"/>
 <item type="id" name="menu_MyLocation" />
 <item type="id" name="menu_Favorites" />
-<item type="id" name="menu_Preferences" />
 <item type="id" name="menu_MapMode" />
-<item type="id" name="menu_ClearSuggest" />
-<item type="id" name="menu_Help" />
-<item type="id" name="menu_About" />
+<item type="id" name="menu_Preferences" />
 
 <item type="id" name="QuerySearchDlg" />
 <item type="id" name="MapModeDlg" />
-<item type="id" name="PreferencesDlg" />
 <item type="id" name="AboutDlg" />
 
 <item type="id" name="menu_Revert" />

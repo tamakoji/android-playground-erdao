@@ -25,6 +25,12 @@
         <item>Flickr</item>
     </string-array>
 
+	<string-array name="select_service_val">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+
 	<string-array name="gallery_extaction">
         <item>Add to Favorites</item>
         <item>What's here?</item>

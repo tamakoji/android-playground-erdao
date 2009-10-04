@@ -22,12 +22,12 @@ import android.content.SearchRecentSuggestionsProvider;
  * Custom SearchRecentSuggestionsProvider to store suggestion
  * @author Huan Erdao
  */
-public class PhotSpotSearchSuggestionsProvider extends SearchRecentSuggestionsProvider {
+public class PhotSpotSearchSuggestProvider extends SearchRecentSuggestionsProvider {
 	/** AUTHORITY */
-	final static String AUTHORITY = "com.erdao.PhotSpot.PhotSpotSearchSuggestionsProvider";
+	final static String AUTHORITY = "com.erdao.PhotSpot.PhotSpotSearchSuggestProvider";
 	/** MODE */
 	final static int MODE = DATABASE_MODE_QUERIES;
-	public PhotSpotSearchSuggestionsProvider() {
+	public PhotSpotSearchSuggestProvider() {
 		super();
 		setupSuggestions(AUTHORITY, MODE);
 	}

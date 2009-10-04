@@ -134,7 +134,7 @@ public class FavoritesGalleryActivity extends Activity {
 			gallery.setOnItemClickListener(new OnItemClickListener() {
 				public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 					new AlertDialog.Builder(context_)
-					.setTitle(R.string.ExtActionDlg)
+					.setTitle(R.string.ExtActionDlgTitle)
 					.setPositiveButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
 						public void onClick(DialogInterface dialog, int whichButton) {
 							dialog.dismiss();

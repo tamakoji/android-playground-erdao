@@ -14,28 +14,32 @@
 	 limitations under the License.
 -->
 <resources>
-	<string name="app_name">热门拍照点</string>
+	<!-- activity titles -->
+	<string name="app_name">热门拍照景点</string>
 	<string name="help_title">帮助</string>
 	<string name="favorite_title">收藏夹</string>
+	<string name="settings_title">设置热门拍照景点</string>
 
-	<string name="menu_SearchPhotSpot">搜索热门拍照点</string>
-	<string name="menu_RefreshPhotSpot">刷新热门拍照点</string>
+	<!-- menu strings -->
+	<string name="menu_SearchSpots">搜索热门景点</string>
+	<string name="menu_SearchMySpots">搜索我的景点</string>
+	<string name="menu_RefreshPhotSpot">刷新热门景点</string>
 	<string name="menu_SearchPlace">搜索地方</string>
 	<string name="menu_MyLocation">当前位置</string>
 	<string name="menu_Favorites">收藏夹</string>
 	<string name="menu_Preferences">设置</string>
 	<string name="menu_MapMode">地图模式</string>
-	<string name="menu_ClearSuggest">清除搜索历史记录</string>
-	<string name="menu_Help">帮助</string>
-	<string name="menu_About">关于</string>
 	<string name="menu_Revert">返回</string>
 	<string name="menu_GalleryView">图片画廊</string>
 	<string name="menu_DeleteAll">全部刪除</string>
 
+	<!-- message strings -->
 	<string name="QuerySearching">正在搜索中 ...</string>
+	<string name="QueryConfirm">正在确认中...</string>
 	<string name="httpErrorMsg">互联网连接有问题。请检查连接。</string>
-	<string name="noResultErrorMsg">这里没有热门拍照点</string>
+	<string name="noResultErrorMsg">这里没有热门拍照景点</string>
 	<string name="jsonErrorMsg">搜索功能有问题。请再搜索</string>
+	<string name="jsonErrorMsgConfirmUser">无法找到该用戶。请确认用戶名。</string>
 	<string name="search_label">搜索地方</string>
 	<string name="search_hint">请输入地方</string>
 	<string name="ReverseGeoResult">您是不是要找</string>
@@ -47,6 +51,7 @@
 	<string name="ToastRemovedFavorites">刪除了该项目</string>
 	<string name="ToastAlreadyExistFavorites">该项目已经在既收藏夹</string>
 	<string name="ToastFavoritesFull">收藏夹是满的</string>
+	<string name="ToastUserConfirmSuccess">用戶名确认成功</string>
 	<string name="noFavorites">没有项目</string>
 	<string name="Distance">大约距离</string>
 	<string name="FavFooter">照片的位置也许不精确。\n提供的照片和版权属于他们各自的所有者\n</string>
@@ -54,65 +59,104 @@
 	<string name="EditLabel">分类</string>
 	<string name="UndefinedFavLabel">未分类</string>
 	<string name="Delete">刪除</string>
-	<string name="DeleteConfirm">可以刪除该项目？</string>
+	<string name="DeleteFavoriteConfirm">可以刪除该项目？</string>
+	<string name="ClearHistoryConfirm">清除搜索地方历史记录</string>
 
+	<!-- Dialog Title&Messages strings -->
+	<string name="ExtActionDlgTitle">选择动作</string>
+	<string name="LocalSearchDlgTitle">选择将开谷歌搜索</string>
+	<string name="PicasaUserDlgTitle">输入您的Picasa用户名</string>
+	<string name="FlickrUserDlgTitle">输入您的Flickr用户名</string>
 	<string name="MapModeDlgTitle">选择地图模式</string>
-	<string name="PreferencesDlgTitle">选择服务</string>
-	<string name="ExtActionDlg">选择动作</string>
-	<string name="LocalSearchDlg">选择将开谷歌搜索</string>
-	<string name="Dlg_OK">OK</string>
-	<string name="Dlg_Close">关</string>
+	<string name="PrivacyAgreementDlgTitle">隐私协议条款</string>
+	<string name="Dlg_Close">关闭</string>
+	<string name="Dlg_Agree">同意</string>
+	<string name="Dlg_Disagree">不同意</string>
 
-	<string name="AboutDlgTitle">热门拍照点</string>
+	<!-- strings for Settings -->
+	<string name="setting_svcprov">选择照片提供商</string>
+	<string name="setting_svcprov_summary">选择照片提供商(Panoramio/Picasa/Flicr)</string>
+	<string name="setting_clearhistory">清除历史记录</string>
+	<string name="setting_clearhistory_summary">清除搜索地方历史记录</string>
+	<string name="setting_category_account">设置帐户</string>
+	<string name="setting_picasauser">Picasa帐户</string>
+	<string name="setting_picasauser_summary">设置Picasa用户名</string>
+	<string name="setting_flickruser">Flickr帐户</string>
+	<string name="setting_flickruser_summary">设置Flickr用户名</string>
+	<string name="setting_category_other">其他</string>
+	<string name="setting_help">帮助</string>
+	<string name="setting_about">关于</string>
+	
+	<!-- strings for AboutDialog -->
+	<string name="AboutDlgTitle">热门拍照景点</string>
+	<string name="PrivacyAgreement">
+		热门拍照景点 隐私协议条款\n\n
+		当使用此应用程序，您将提交当前的位置信息到我们的服务器。\n
+		服务器不知道你现在的位置。\n
+		此外，使用『搜索我的景点』功能，您将提交服务器用户名到我们的服务器。\n
+		服务器正在过滤冗余信息为了提高此应用程序的工作速度。\n
+		我们不会收集您提供的信息用于误差分析之外的用途。\n\n
+	</string>
 	<string name="InitialMessage">
-		热门拍照点 by Huan Erdao\n\n
-		”热门拍照点”让您搜索任何地方的热门拍照点。 \n
-		软件将搜索公开照片和全球定位系统数据,然后显示“群集气球”在地图上。每个气球的数字显示了照片数量。\n
-		所以气球的数字越大，该位置越热门。\n\n
+		热门拍照景点 by Huan Erdao\n\n
 		更新内容:\n
+		v1.5.0:\n
+		- 新功能:搜索我的景点。可以在当前的画面中搜索您的照片。\n
+		- 只有Picasa/Flickr支持该功能。所有照片需要设置可见度为『公开』。\n
+		- 『搜索我的景点』菜单只有在您从设置输入用户名的时候才出现。\n
 		v1.4.2:\n
 		- 软件重构。加了错误检查\n
-		- 群集气球图标更改\n
-		v1.4.1:\n
-		- 缺陷修复：图片画廊标题在收藏夹不同步\n
+		- 更改群集气球图标\n
 		\n
 		欲了解更多信息，请看帮助:\n
-		[菜单]->[更多]->[帮助]\n\n
+		[菜单]->[设置]->[帮助]\n\n
 	</string>
 	<string name="AboutDlgContent">
-		热门拍照点 by Huan Erdao\n\n
+		热门拍照景点 by Huan Erdao\n\n
+		”热门拍照景点”让您搜索任何地方的热门拍照景点。 \n
+		软件将搜索公开照片和全球定位系统数据,然后显示“群集气球”在地图上。每个气球的数字显示了照片数量。\n
+		所以气球的数字越大，该位置越热门。\n\n
 		Panoramio和Picasa Web Albums是Google Inc.的商标\n
 		Flickr是Yahoo Inc.的商标\n\n
 		该软件采用上述服务的API，但是上述公司不保证该软件功能。\n
 		所有其它品牌和产品名称都是各自公司的商标、注册商标或者服务标志。\n\n
 		此服务提供的照片和版权属于他们各自的所有者。\n
-		照片的位置也许不精确。
+		照片的位置也许不精确。\n\n
 	</string>
+
+	<!-- strings for Copyright -->
 	<string name="copyrightLabel">提供的照片和版权属于他们各自的所有者</string>
 
+	<!-- strings for Help -->
 	<string name="helpcontent">
-		&lt;h2&gt;”热门拍照点”是什么?&lt;/h2&gt;
-			”热门拍照点”让您搜索任何地方的热门拍照点。 
+		&lt;h2&gt;”热门拍照景点”是什么?&lt;/h2&gt;
+			”热门拍照景点”让您搜索任何地方的热门拍照景点。 
 			软件将搜索公开照片和全球定位系统数据,然后显示“群集气球”在地图上。每个气球的数字显示了照片数量。
 			所以气球的数字越大，该位置越热门。
 		&lt;hr&gt;
 		&lt;h2&gt;操作方法&lt;/h2&gt;
-			&lt;h4&gt;初始画面&lt;/h4&gt;
+			&lt;h3&gt;初始画面&lt;/h3&gt;
 				最初屏幕显示当前位置地图。请按菜单按钮。
-			&lt;h4&gt;搜索热门拍照点&lt;/h4&gt;
-				将开始搜索公开照片。完成后，显示在地图上。
-			&lt;h4&gt;搜索地方&lt;/h4&gt;
+			&lt;h3&gt;搜索热门景点&lt;/h3&gt;
+				将开始搜索公开照片。完成后，显示在地图上。&lt;br&gt;
+				每次搜索最多能找到100景点。
+			&lt;h3&gt;搜索我的景点&lt;/h3&gt;
+				将开始搜索用户名的公开照片。完成后，显示在地图上。&lt;br&gt;
+				为了开启该功能，您需要在『设置账户』设置服务的用户名,然后选择支持『搜索我的景点』的照片提供商。&lt;br&gt;
+				每次搜索最多能找到200景点。&lt;br&gt;
+			&lt;h3&gt;搜索地方&lt;/h3&gt;
 				选择此菜单或按下搜索键将开始寻找任何地点。
-			&lt;h4&gt;現在位置&lt;/h4&gt;
+			&lt;h3&gt;現在位置&lt;/h3&gt;
 				将返回到您当前的位置。
-			&lt;h4&gt;收藏夹&lt;/h4&gt;
+			&lt;h3&gt;收藏夹&lt;/h3&gt;
 				您能保存喜欢的景点，然后您能看收藏夹即使离线的时候。&lt;br&gt;
 				如果您想保存景点,点击缩略图，然后从菜单选择 \"加入收藏夹\"。&lt;br&gt;
 				您能保存最大256项目。此外项目能分类。
 				您想分类的时候，选择项目，然后从菜单选择 \"分类\"。&lt;br&gt;
-			&lt;h4&gt;地图模式&lt;/h4&gt;
+			&lt;h3&gt;地图模式&lt;/h3&gt;
 				选择地图模式“地图”或“卫星”
-			&lt;h4&gt;设置&lt;/h4&gt;
+			&lt;h3&gt;设置&lt;/h3&gt;
+				&lt;h4&gt;- 设置提供商&lt;/h4&gt;
 				您可以选择照片提供商 （默认： Panoramio ）&lt;br&gt; 
 				目前支持的供应商是： 
 				&lt;ul&gt;
@@ -120,31 +164,43 @@
 					&lt;li&gt;&lt;b&gt;Picasa Web Album&lt;/b&gt;&lt;/li&gt;
 					&lt;li&gt;&lt;b&gt;Flickr&lt;/b&gt;&lt;/li&gt;
 				&lt;/ul&gt;
-			&lt;h4&gt;帮助&lt;/h4&gt;
-				打开这个网页
+				&lt;h4&gt;- 清除历史记录&lt;/h4&gt;
+				清除您的『搜索地方』历史记录。
+				&lt;h4&gt;- 帐户设置&lt;/h4&gt;
+				此版本的『搜索我的景点』将搜索可见度为『公开』的照片，不需要密码。
+				用户名验证成功后，『搜索我的景点』功能将启用。
+				用户名验证需要连接互联网。
+				&lt;ul&gt;
+				&lt;li&gt;&lt;b&gt;Picasa帐户&lt;/b&gt;&lt;/li&gt;
+					设置Picasa用户名
+				&lt;li&gt;&lt;b&gt;Flickr帐户&lt;/b&gt;&lt;/li&gt;
+					设置Flickr用户名
+				&lt;/ul&gt;
+				&lt;h4&gt;- 帮助&lt;/h4&gt;
+					打开这个网页
 		&lt;hr&gt;
 		&lt;h2&gt;查看结果&lt;/h2&gt;
-			&lt;h4&gt;点击气球看到内容&lt;/h4&gt;
+			&lt;h3&gt;点击气球看到内容&lt;/h3&gt;
 				点击气球，显示图片画廊。您可以浏览该处的照片。
-			&lt;h4&gt;双击缩小地图&lt;/h4&gt;
+			&lt;h3&gt;双击缩小地图&lt;/h3&gt;
 				双击气球您可以缩放地图。您也可以用屏幕右下角的按钮。
-			&lt;h4&gt;放大,缩小&lt;/h4&gt;
+			&lt;h3&gt;放大,缩小&lt;/h3&gt;
 				放大/缩小地图将根据缩放级别合并/分离 “群集气球”。 
 				但是，照片不刷新。	如果您需要刷新照片，
-				从菜单选择 “刷新热门拍照点”。&lt;br&gt;
-			&lt;h4&gt;点击缩略图&lt;/h4&gt;
+				从菜单选择 “刷新热门拍照景点”。&lt;br&gt;
+			&lt;h3&gt;点击缩略图&lt;/h3&gt;
 				点击缩略图，将弹出操作菜单&lt;br&gt;
-			&lt;h4&gt;放大,缩小,关闭画廊&lt;/h4&gt;
+			&lt;h3&gt;放大,缩小,关闭画廊&lt;/h3&gt;
 				 向上滑动将缩小，向下滑动放大图片。&lt;br&gt;
 				滑动到上限将关闭图片画廊。&lt;br&gt;
 		&lt;hr&gt;
 		&lt;h2&gt;秘诀&lt;/h2&gt;
-			&lt;h4&gt;选择服务&lt;/h4&gt;
+			&lt;h3&gt;选择服务&lt;/h3&gt;
 				各服务提供的照片类型不一样， Panoramio提供优美的风景照片，以便找到名胜历史的地方。 
 				Picasa Web Album和Flickr包含更多类型的内容，相比Panoramio，它可以检索到更多更新的内容 。
 		&lt;hr&gt;
 		&lt;h2&gt;更多&lt;/h2&gt;
-			&lt;h4&gt;您想协助这个软件？&lt;/h4&gt;
+			&lt;h3&gt;您想协助这个软件？&lt;/h3&gt;
 			如果您想协助这个软件的话，方法很简单。&lt;br&gt;
 			上传含有GPS经纬度资料的照片到软件支持的服务。请不忘设置可见度为『公开』。&lt;br&gt;
 			大家上传照片越多，给这个软件越多机会搜索热门景点。&lt;br&gt;

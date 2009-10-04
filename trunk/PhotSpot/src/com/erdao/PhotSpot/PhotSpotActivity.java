@@ -35,6 +35,7 @@ import android.content.DialogInterface.OnCancelListener;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
@@ -51,6 +52,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
+import android.preference.PreferenceManager;
 import android.provider.SearchRecentSuggestions;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -80,7 +82,7 @@ import com.google.android.maps.Projection;
  * @author Huan Erdao
  */
 public class PhotSpotActivity extends MapActivity {
-
+	
 	/** self object */
 	private PhotSpotActivity me_;
 	/** Context object */
@@ -113,6 +115,10 @@ public class PhotSpotActivity extends MapActivity {
 	private ScrollView msgFrame_;
 	/** message body update notification */
 	private TextView msgTxtView_;
+	/** flickr userid for retrieving user's content */
+	private String userIdFlickr_;
+	/** picasa userid for retrieving user's content */
+	private String userIdPicasa_;
 
 	/* for mylocation thread */
 	/** Handler object to refresh UI from thread */
@@ -158,19 +164,62 @@ public class PhotSpotActivity extends MapActivity {
 		handler_ = new Handler();
 
 		/* Read preferences */
-		settings_ = getSharedPreferences(getString(R.string.PhotSpotPreference), 0);
+		settings_ = PreferenceManager.getDefaultSharedPreferences(this);
+		//getSharedPreferences(getString(R.string.PhotSpotPreference), 0);
 
 		onCreateMain();
 
-		String version = settings_.getString(getString(R.string.PrefVersionInfo), "");
-		boolean initialBoot = !version.equals(getString(R.string.app_ver));
-		SharedPreferences.Editor editor = settings_.edit();
-		editor.putString(getString(R.string.PrefVersionInfo),getString(R.string.app_ver));
-		editor.commit();
-		if(initialBoot){
+		String ver_legal = settings_.getString(getString(R.string.prefkey_verlegal), "");
+		boolean legalCheck = !ver_legal.equals(getString(R.string.legal_ver));
+		if(legalCheck){
 			msgTxtView_ = new TextView(this);
-			msgTxtView_.setTextSize(14);
+			msgTxtView_.setTextSize(13);
+			msgTxtView_.setText(R.string.PrivacyAgreement);
+			msgTxtView_.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
+			msgTxtView_.setTextColor(Color.WHITE);
+			msgTxtView_.setBackgroundColor(Color.DKGRAY);
+			msgFrame_ = new ScrollView(this);
+			msgFrame_.addView(msgTxtView_);
+			new AlertDialog.Builder(this)
+			.setTitle(R.string.PrivacyAgreementDlgTitle)
+			.setIcon(R.drawable.icon)
+			.setView(msgFrame_)
+			.setPositiveButton(R.string.Dlg_Agree, new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int whichButton) {
+					SharedPreferences.Editor editor = settings_.edit();
+					editor.putString(getString(R.string.prefkey_verlegal),getString(R.string.legal_ver));
+					editor.commit();
+					dialog.dismiss();
+					InitialMessage();
+				}
+			})
+			.setNegativeButton(R.string.Dlg_Disagree, new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int whichButton) {
+					finish();
+				}
+			})
+		   .create()
+		   .show();
+		}
+		else
+			InitialMessage();
+	}
+	
+	/**
+	 * setup initial objects main routine
+	 */
+	private void InitialMessage(){	
+		String version = settings_.getString(getString(R.string.prefkey_verinfo), "");
+		boolean versionCheck = !version.equals(getString(R.string.app_ver));
+		SharedPreferences.Editor editor = settings_.edit();
+		editor.putString(getString(R.string.prefkey_verinfo),getString(R.string.app_ver));
+		editor.commit();
+		if(versionCheck){
+			msgTxtView_ = new TextView(this);
+			msgTxtView_.setTextSize(13);
 			msgTxtView_.setText(R.string.InitialMessage);
+			msgTxtView_.setTextColor(Color.WHITE);
+			msgTxtView_.setBackgroundColor(Color.DKGRAY);
 			msgTxtView_.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
 			msgFrame_ = new ScrollView(this);
 			msgFrame_.addView(msgTxtView_);
@@ -184,7 +233,7 @@ public class PhotSpotActivity extends MapActivity {
 					ToastMessage(R.string.ToastInstructionNav, Toast.LENGTH_LONG);
 				}
 			})
-			.setNegativeButton(R.string.menu_Help, new DialogInterface.OnClickListener() {
+			.setNegativeButton(R.string.setting_help, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int whichButton) {
 					dialog.dismiss();
 					Intent i = new Intent(context_, HelpActivity.class);
@@ -195,7 +244,7 @@ public class PhotSpotActivity extends MapActivity {
 		   .show();
 		}
 	}
-	
+
 	/**
 	 * setup initial objects main routine
 	 */
@@ -248,11 +297,6 @@ public class PhotSpotActivity extends MapActivity {
 		criteria_.setCostAllowed(true);
 		criteria_.setPowerRequirement(Criteria.POWER_LOW);
 		setDefaultKeyMode(DEFAULT_KEYS_SEARCH_LOCAL);
-
-		/* Restore preferences */
-		boolean mapmode = settings_.getBoolean(getString(R.string.PrefMapMode), false);
-		mapView_.setSatellite(mapmode);
-		serviceProvider_ = settings_.getInt(getString(R.string.PrefContentProvider), 0);
 
 		/* get and process search query here */
 		final Intent intent = getIntent();
@@ -371,6 +415,15 @@ public class PhotSpotActivity extends MapActivity {
 	@Override
 	public void onStart() {
 		super.onStart();
+
+		/* Restore preferences */
+		boolean mapmode = settings_.getBoolean(getString(R.string.prefkey_mapmode), false);
+		mapView_.setSatellite(mapmode);
+		String svcmode = settings_.getString(getString(R.string.prefkey_svcproc), "0");
+		serviceProvider_ = Integer.valueOf(svcmode);
+		userIdFlickr_ = settings_.getString(getString(R.string.prefkey_flickruserid),"");
+		userIdPicasa_ = settings_.getString(getString(R.string.prefkey_picasauser),"");
+
 		if(clusterer_ == null && mylocationEnabled_){
 			String provider = locationMgr_.getBestProvider(criteria_, true);
 			if(provider != null){
@@ -444,11 +497,23 @@ public class PhotSpotActivity extends MapActivity {
 		super.onPrepareOptionsMenu(menu);
 		menu.clear();
 		if(clusterer_==null){
-				MenuItem menu_SearchPhotSpot = menu.add(0,R.id.menu_FindSpots,0,R.string.menu_SearchPhotSpot);
-			menu_SearchPhotSpot.setIcon(R.drawable.ic_menu_searchspot);
+				MenuItem menu_SearchPhotSpot = menu.add(0,R.id.menu_SearchSpots,0,R.string.menu_SearchSpots);
+			menu_SearchPhotSpot.setIcon(R.drawable.ic_menu_searchspots);
 		}else{
-			MenuItem menu_SearchPhotSpot = menu.add(0,R.id.menu_FindSpots,0,R.string.menu_RefreshPhotSpot);
-			menu_SearchPhotSpot.setIcon(R.drawable.ic_menu_searchspot);
+			MenuItem menu_SearchPhotSpot = menu.add(0,R.id.menu_SearchSpots,0,R.string.menu_RefreshPhotSpot);
+			menu_SearchPhotSpot.setIcon(R.drawable.ic_menu_searchspots);
+		}
+		if(serviceProvider_==TypesService.FLICKR){
+			if(!userIdFlickr_.equals("")){
+				MenuItem menu_SearchMySpot = menu.add(0,R.id.menu_SearchMySpots,0,R.string.menu_SearchMySpots);
+				menu_SearchMySpot.setIcon(R.drawable.ic_menu_searchmyspots);
+			}
+		}
+		else if(serviceProvider_==TypesService.PICASAWEB){
+			if(!userIdPicasa_.equals("")){
+				MenuItem menu_SearchMySpot = menu.add(0,R.id.menu_SearchMySpots,0,R.string.menu_SearchMySpots);
+				menu_SearchMySpot.setIcon(R.drawable.ic_menu_searchmyspots);
+			}
 		}
 		MenuItem menu_SearchPlace = menu.add(0,R.id.menu_SearchPlace,0,R.string.menu_SearchPlace);
 		menu_SearchPlace.setIcon(R.drawable.ic_menu_searchplace);
@@ -456,16 +521,10 @@ public class PhotSpotActivity extends MapActivity {
 		menu_MyLocation.setIcon(R.drawable.ic_menu_mylocation);
 		MenuItem menu_Favorites = menu.add(0,R.id.menu_Favorites,0,R.string.menu_Favorites);
 		menu_Favorites.setIcon(android.R.drawable.star_big_on);
-		MenuItem menu_Preferences = menu.add(0,R.id.menu_Preferences,0,R.string.menu_Preferences);
-		menu_Preferences.setIcon(android.R.drawable.ic_menu_preferences);
 		MenuItem menu_MapMode = menu.add(0,R.id.menu_MapMode,0,R.string.menu_MapMode);
 		menu_MapMode.setIcon(android.R.drawable.ic_menu_mapmode);
-		MenuItem menu_ClearSuggest = menu.add(0,R.id.menu_ClearSuggest,0,R.string.menu_ClearSuggest);
-		menu_ClearSuggest.setIcon(android.R.drawable.ic_menu_close_clear_cancel);
-		MenuItem menu_Help = menu.add(0,R.id.menu_Help,0,R.string.menu_Help);
-		menu_Help.setIcon(android.R.drawable.ic_menu_help);
-		MenuItem menu_About = menu.add(0,R.id.menu_About,0,R.string.menu_About);
-		menu_About.setIcon(android.R.drawable.ic_menu_info_details);
+		MenuItem menu_Preferences = menu.add(0,R.id.menu_Preferences,0,R.string.menu_Preferences);
+		menu_Preferences.setIcon(android.R.drawable.ic_menu_preferences);
 		return true;
 	}
 
@@ -474,46 +533,13 @@ public class PhotSpotActivity extends MapActivity {
 	 */
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		String uri = "";
-		Projection proj = mapView_.getProjection();
-		GeoPoint nw = proj.fromPixels(0,0);
-		GeoPoint se = proj.fromPixels(mapView_.getWidth(),mapView_.getHeight());
-		Double nwlat = nw.getLatitudeE6()/1E6;
-		Double nwlng = nw.getLongitudeE6()/1E6;
-		Double selat = se.getLatitudeE6()/1E6;
-		Double selng = se.getLongitudeE6()/1E6;
 		switch (item.getItemId()) {
-			case R.id.menu_FindSpots: {
-				showDialog(R.id.QuerySearchDlg);
-				uri = "http://photspotcloud.appspot.com/photspotcloud?q=searchspot&nwlng="+nwlng+"&selat="+selat+"&nwlat="+nwlat+"&selng="+selng;
-				uri += "&appver="+context_.getString(R.string.app_ver);
-				String debugstr = Locale.getDefault().getDisplayName()+","+Build.MODEL+","+Build.VERSION.RELEASE;
-				try {
-					debugstr = URLEncoder.encode(debugstr,"UTF-8");
-				} catch (UnsupportedEncodingException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				switch( serviceProvider_ ){
-					case TypesService.PANORAMIO:
-					default:{
-							uri += "&svc=panoramio";
-						break;
-					}
-					case TypesService.PICASAWEB:{
-						uri += "&svc=picasa";
-						break;
-					}
-					case TypesService.FLICKR:{
-						uri += "&svc=flickr";
-						break;
-					}
-				}
-				uri += "&dbg="+debugstr+",android";
-//				Log.i("DEBUG",uri);
-				favUpdateTimer_.removeCallbacks(favOverlayUpdateTask_);
-				getPhotoFeedTask_ = new GetPhotoFeedTask(this);
-				getPhotoFeedTask_.execute(uri);
+			case R.id.menu_SearchSpots: {
+				SearchSpot(false);
+				break;
+			}
+			case R.id.menu_SearchMySpots: {
+				SearchSpot(true);
 				break;
 			}
 			case R.id.menu_SearchPlace:{
@@ -533,29 +559,68 @@ public class PhotSpotActivity extends MapActivity {
 				break;
 			}
 			case R.id.menu_Preferences:{
-				showDialog(R.id.PreferencesDlg);
+				favUpdateTimer_.removeCallbacks(favOverlayUpdateTask_);
+				Intent i = new Intent(this, PhotSpotPreferenceActivity.class);
+				startActivity(i);
+//				showDialog(R.id.PreferencesDlg);
 				break;
 			}
 			case R.id.menu_MapMode:{
 				showDialog(R.id.MapModeDlg);
 				break;
 			}
-			case R.id.menu_ClearSuggest:{
-				clearSearchHistory();
+		}
+		return true;
+	}
+
+	/**
+	 * SearchSpot
+	 */
+	protected void SearchSpot(boolean mySpot){
+		String uri = "";
+		Projection proj = mapView_.getProjection();
+		GeoPoint nw = proj.fromPixels(0,0);
+		GeoPoint se = proj.fromPixels(mapView_.getWidth(),mapView_.getHeight());
+		Double nwlat = nw.getLatitudeE6()/1E6;
+		Double nwlng = nw.getLongitudeE6()/1E6;
+		Double selat = se.getLatitudeE6()/1E6;
+		Double selng = se.getLongitudeE6()/1E6;
+		showDialog(R.id.QuerySearchDlg);
+		uri = "http://photspotcloud.appspot.com/photspotcloud?q=searchspot&nwlng="+nwlng+"&selat="+selat+"&nwlat="+nwlat+"&selng="+selng;
+		uri += "&appver="+context_.getString(R.string.app_ver);
+		String debugstr = Locale.getDefault().getDisplayName()+","+Build.MODEL+","+Build.VERSION.RELEASE+",android";
+		try {
+			debugstr = URLEncoder.encode(debugstr,"UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		switch( serviceProvider_ ){
+			case TypesService.PANORAMIO:
+			default:{
+					uri += "&svc=panoramio";
 				break;
 			}
-			case R.id.menu_Help:{
-				favUpdateTimer_.removeCallbacks(favOverlayUpdateTask_);
-				Intent i = new Intent(this, HelpActivity.class);
-				startActivity(i);
+			case TypesService.PICASAWEB:{
+				uri += "&svc=picasa";
+				if(mySpot){
+					uri += ("&userid="+userIdPicasa_);
+				}
 				break;
 			}
-			case R.id.menu_About:{
-				showDialog(R.id.AboutDlg);
+			case TypesService.FLICKR:{
+				uri += "&svc=flickr";
+				if(mySpot){
+					uri += ("&userid="+userIdFlickr_);
+				}
 				break;
 			}
 		}
-		return true;
+		uri += "&dbg="+debugstr;
+		favUpdateTimer_.removeCallbacks(favOverlayUpdateTask_);
+		getPhotoFeedTask_ = new GetPhotoFeedTask(this);
+		getPhotoFeedTask_.execute(uri);
+		
 	}
 
 	/**
@@ -587,41 +652,14 @@ public class PhotSpotActivity extends MapActivity {
 						boolean isSatelite = whichButton == 0 ? false : true;
 						mapView_.setSatellite(isSatelite);
 						SharedPreferences.Editor editor = settings_.edit();
-						editor.putBoolean(getString(R.string.PrefMapMode), isSatelite);
+						editor.putBoolean(getString(R.string.prefkey_mapmode), isSatelite);
 						editor.commit();
 						dismissDialog(R.id.MapModeDlg);
 					}
 				})
-				.create();
-			}
-			// create map selection dialog and change modes
-			case R.id.PreferencesDlg: {
-				return new AlertDialog.Builder(this)
-				.setTitle(R.string.PreferencesDlgTitle)
-				.setSingleChoiceItems(R.array.select_service, serviceProvider_, new DialogInterface.OnClickListener() {
+				.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int whichButton) {
-						serviceProvider_ = whichButton;
-						SharedPreferences.Editor editor = settings_.edit();
-						editor.putInt(getString(R.string.PrefContentProvider),serviceProvider_);
-						editor.commit();
-						dismissDialog(R.id.PreferencesDlg);
-					}
-				})
-				.create();
-			}
-			case R.id.AboutDlg:{
-				msgTxtView_ = new TextView(this);
-				msgTxtView_.setTextSize(14);
-				msgTxtView_.setText(R.string.AboutDlgContent);
-				msgTxtView_.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
-				msgFrame_ = new ScrollView(this);
-				msgFrame_.addView(msgTxtView_);
-				return new AlertDialog.Builder(this)
-				.setIcon(R.drawable.icon)
-				.setTitle(R.string.AboutDlgTitle)
-				.setView(msgFrame_)
-				.setPositiveButton(R.string.Dlg_OK, new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int whichButton) {
+						dialog.dismiss();
 					}
 				})
 				.create();
@@ -639,15 +677,6 @@ public class PhotSpotActivity extends MapActivity {
 		Toast.makeText(this, messageId, duration).show();
 	}
 
-	/**
-	 * Clears SearchHistory
-	 */
-	private void clearSearchHistory() {
-		SearchRecentSuggestions suggestions = new SearchRecentSuggestions(this, 
-				PhotSpotSearchSuggestionsProvider.AUTHORITY, PhotSpotSearchSuggestionsProvider.MODE);
-		suggestions.clearHistory();
-	}
-	
 	/**
 	 * Callback for AsyncTask completion.
 	 * @param code return code from AsyncTask
@@ -699,7 +728,7 @@ public class PhotSpotActivity extends MapActivity {
 	private void doSearchQuery(final Intent queryIntent) {
 		final String queryString = queryIntent.getStringExtra(SearchManager.QUERY);
 		SearchRecentSuggestions suggestions = new SearchRecentSuggestions(this, 
-				PhotSpotSearchSuggestionsProvider.AUTHORITY, PhotSpotSearchSuggestionsProvider.MODE);
+				PhotSpotSearchSuggestProvider.AUTHORITY, PhotSpotSearchSuggestProvider.MODE);
 		suggestions.saveRecentQuery(queryString, null);
 		Geocoder geoCoder = new Geocoder(this);	
 		try {
@@ -774,7 +803,7 @@ public class PhotSpotActivity extends MapActivity {
 		 */
 		public GetPhotoFeedTask(Context c) {
 			context_ = c;
-			getter_ = new JsonFeedGetter(JsonFeedGetter.MODE_SPOTSEARCH,context_);
+			getter_ = new JsonFeedGetter(context_,JsonFeedGetter.MODE_SPOTSEARCH);
 		}
 
 		/**
@@ -893,7 +922,7 @@ public class PhotSpotActivity extends MapActivity {
 			/* check if this marker was tapped */
 			if( pt.x > ct.x-frmRect_.width()/2 && pt.x < ct.x+frmRect_.width()/2 && pt.y > ct.y-frmRect_.height()/2 && pt.y < ct.y+frmRect_.height()/2 ){
 				new AlertDialog.Builder(context_)
-				.setTitle(R.string.ExtActionDlg)
+				.setTitle(R.string.ExtActionDlgTitle)
 				.setPositiveButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int whichButton) {
 						dialog.dismiss();
