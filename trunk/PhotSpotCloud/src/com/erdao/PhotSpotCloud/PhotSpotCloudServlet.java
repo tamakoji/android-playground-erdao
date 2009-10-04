@@ -36,13 +36,17 @@ import org.json.JSONObject;
 
 @SuppressWarnings("serial")
 public class PhotSpotCloudServlet extends HttpServlet {
-	private static final int MODE_PANORAMIO = 0;
-	private static final int MODE_PICASA = 1;
-	private static final int MODE_FLICKR = 2;
-	private static final int MODE_LOCALSEARCH = 3;
+	private static final int MODE_PANORAMIO		= 0;
+	private static final int MODE_PICASA		= 1;
+	private static final int MODE_FLICKR		= 2;
+	private static final int MODE_PICASA_WUSER	= 3;
+	private static final int MODE_FLICKR_WUSER	= 4;
+	private static final int MODE_LOCALSEARCH	= 5;
 	private int feedCount_ = 0;
 	private static final Logger log = Logger.getLogger(PhotSpotCloudServlet.class.getName());
-	
+	private static final int MAX_FEED_PUB_SPOTS = 100;
+	private static final int MAX_FEED_MY_SPOTS = 200;
+
 	public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 		URL requestUrl = null;
 		String compactJson = "";
@@ -55,6 +59,7 @@ public class PhotSpotCloudServlet extends HttpServlet {
 		String nwlng = null;
 		String selat = null;
 		String selng = null;
+		String userid = null;
 
 		// common params
 		String qMode = req.getParameter("q");
@@ -74,15 +79,24 @@ public class PhotSpotCloudServlet extends HttpServlet {
 			selat = req.getParameter("selat");
 			selng = req.getParameter("selng");
 			service = req.getParameter("svc");
+			userid = req.getParameter("userid");
 			if(nwlat==null||nwlng==null||selat==null||selng==null||service==null)
 				return;
-			if(service.equals("picasa"))
-				svcMode = MODE_PICASA;
+			if(service.equals("picasa")){
+				if(userid!=null)
+					svcMode = MODE_PICASA_WUSER;
+				else
+					svcMode = MODE_PICASA;
+			}
 			else if(service.equals("panoramio"))
 				svcMode = MODE_PANORAMIO;
-			else
-				svcMode = MODE_FLICKR;
-			requestUrl = new URL(createPhotoFeedUrl(svcMode,nwlat,nwlng,selat,selng));
+			else{
+				if(userid!=null)
+					svcMode = MODE_FLICKR_WUSER;
+				else
+					svcMode = MODE_FLICKR;
+			}
+			requestUrl = new URL(createPhotoFeedUrl(svcMode,nwlat,nwlng,selat,selng,userid));
 		}
 		else if(qMode.equals("localsearch")){
 			String latlng = req.getParameter("latlng");
@@ -111,7 +125,7 @@ public class PhotSpotCloudServlet extends HttpServlet {
 			}
 		}
 		if( strbuilder != null ){
-			compactJson = compactJsonFeed(svcMode,strbuilder.toString());
+			compactJson = compactJsonFeed(svcMode,strbuilder.toString(),userid);
 			if(compactJson!=null){
 				if(jsoncb!=null)
 					resp.getWriter().println(jsoncb+"("+compactJson+")");
@@ -131,7 +145,9 @@ public class PhotSpotCloudServlet extends HttpServlet {
 		BufferedReader reader;
 		try {
 			connection = (HttpURLConnection) url.openConnection();
-			connection.setDoOutput(false);
+			connection.setUseCaches(false);
+			connection.setDoInput(true);
+			connection.setRequestProperty("Content-type","text/plain");
 			connection.setRequestMethod("GET");
 			if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
 				InputStream is = connection.getInputStream();
@@ -151,7 +167,7 @@ public class PhotSpotCloudServlet extends HttpServlet {
 		return strbuilder;
 	}
 	
-	private String createPhotoFeedUrl(int svcMode, String nwlat, String nwlng, String selat, String selng) {
+	private String createPhotoFeedUrl(int svcMode, String nwlat, String nwlng, String selat, String selng, String userid) {
 		String url = "";
 		switch(svcMode){
 			default:
@@ -163,18 +179,27 @@ public class PhotSpotCloudServlet extends HttpServlet {
 				url = "http://picasaweb.google.com/data/feed/api/all?alt=jsonc&kind=photo&bbox="+nwlng+","+selat+","+selng+","+nwlat+"&max-results=400";
 				break;
 			}
+			case MODE_PICASA_WUSER:{
+				url = "http://picasaweb.google.com/data/feed/api/user/"+userid+"/?alt=jsonc&kind=photo&bbox="+nwlng+","+selat+","+selng+","+nwlat+"&max-results=400";
+				break;
+			}
 			case MODE_FLICKR:{
 				url = "http://api.flickr.com/services/rest/?method=flickr.photos.search&format=json&api_key="+APIKeys.flickr_key+"&per_page=400&extras=geo&min_taken_date=2005-1-1+00%3A00%3A00&bbox="+nwlng+","+selat+","+selng+","+nwlat;
 				break;
 			}
+			case MODE_FLICKR_WUSER:{
+				url = "http://api.flickr.com/services/rest/?method=flickr.photos.search&format=json&api_key="+APIKeys.flickr_key+"&per_page=400&extras=geo&user_id="+userid+"&min_taken_date=1980-1-1+00%3A00%3A00&bbox="+nwlng+","+selat+","+selng+","+nwlat;
+				break;
+			}
 		}
+		log.info("spotsearch raw="+url);
 		return url;
 	}
 
 	
 	/* compactJsonFeed - compact json feed
 	 */
-	private String compactJsonFeed(int svcMode, String fullJson){
+	private String compactJsonFeed(int svcMode, String fullJson, String userid){
 		String compactJson = "";
 		JSONObject jsonobj = null;
 		JSONArray compactArray = new JSONArray();
@@ -187,12 +212,14 @@ public class PhotSpotCloudServlet extends HttpServlet {
 					array = jsonobj.getJSONArray("photos");
 					break;
 				}
-				case MODE_PICASA: {
+				case MODE_PICASA:
+				case MODE_PICASA_WUSER:{
 					jsonobj = new JSONObject(fullJson);
 					array = jsonobj.getJSONArray("photos");
 					break;
 				}
-				case MODE_FLICKR: {
+				case MODE_FLICKR:
+				case MODE_FLICKR_WUSER:{
 					fullJson = fullJson.substring(14, fullJson.length());
 					jsonobj = new JSONObject(fullJson);
 					array = jsonobj.getJSONObject("photos").getJSONArray("photo");
@@ -226,7 +253,8 @@ public class PhotSpotCloudServlet extends HttpServlet {
 						author = obj.getString("owner_name");
 						break;
 					}
-					case MODE_PICASA:{
+					case MODE_PICASA:
+					case MODE_PICASA_WUSER:{
 						id = obj.getLong("id");
 						title = obj.getString("title");
 						JSONObject mediaobj = obj.getJSONObject("media");
@@ -237,7 +265,10 @@ public class PhotSpotCloudServlet extends HttpServlet {
 						String token[] = latlng.split(" ");
 						lat = Double.valueOf(token[0]);
 						lng = Double.valueOf(token[1]);
-						author = obj.getString("author");
+						if(svcMode==MODE_PICASA_WUSER)
+							author = userid;
+						else
+							author = obj.getString("author");
 						break;
 					}
 					case MODE_FLICKR: {
@@ -265,9 +296,11 @@ public class PhotSpotCloudServlet extends HttpServlet {
 				else{
 					// eliminate same author with same location.
 					// TODO: do more intelligent filtering.
-					if(author.contentEquals(author_p)){
-						if((lat>(lat_p-0.0001))&&(lat<(lat_p+0.001))||(lng>(lng_p-0.001))&&(lng<(lng_p+0.001))){
-							continue;
+					if(userid==null){
+						if(author.contentEquals(author_p)){
+							if((lat>(lat_p-0.0001))&&(lat<(lat_p+0.001))||(lng>(lng_p-0.001))&&(lng<(lng_p+0.001))){
+								continue;
+							}
 						}
 					}
 					JSONObject comactObj = new JSONObject();
@@ -279,8 +312,13 @@ public class PhotSpotCloudServlet extends HttpServlet {
 					comactObj.put("lat", lat);
 					comactObj.put("lng", lng);
 					compactArray.put(comactObj);
-					if(++compactArrayCount>100)
-						break;
+					if(userid==null){
+						if(++compactArrayCount>MAX_FEED_PUB_SPOTS)
+							break;
+					}else{
+						if(++compactArrayCount>MAX_FEED_MY_SPOTS)
+							break;
+					}
 					author_p = author;
 					lat_p = lat;
 					lng_p = lng;
