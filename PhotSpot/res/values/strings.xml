@@ -110,6 +110,13 @@
 	<!-- strings for AboutDialog -->
 	<string name="AboutDlgTitle">About PhotSpot</string>
 	<string name="PrivacyAgreement">
+		PhotSpot Privacy Policy:\n\n
+		Upon using this software, you will submit your current viewing location to our server.\n
+		Your current location will not be submitted.\n
+		Also, upon using \"MySpot\" Search function, you will submit username information
+		to our server.\n
+		Server runs as proxy for optimizing the size of the feed, also filtering the redundant feed.\n
+		Information submitted to server will never be used other than for this application.\n
  	</string>
 	<string name="InitialMessage">
 		PhotSpot by Huan Erdao\n\n
