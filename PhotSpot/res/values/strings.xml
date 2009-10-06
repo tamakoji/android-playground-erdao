@@ -18,7 +18,7 @@
 	<string name="gmap_apikey_dbg">YOUR-GOOGLEMAP-API-KEY</string>
 	<string name="gmap_apikey_rel">YOUR-GOOGLEMAP-API-KEY</string>
 	<string name="flickr_apikey">YOUR-FLICKR-API-KEY</string>
-						
+					
 	<!-- COMMON strings -->
 	<string name="app_ver">1.5.1</string>
 	<string name="legal_ver">1.0.0</string>
