@@ -66,7 +66,7 @@ public class PhotSpotClusterer extends GeoClusterer {
 	 * @param item			GeoItem to be set.
 	 */
 	@Override
-	public void CreateCluster(GeoItem item){
+	public void createCluster(GeoItem item){
 		PhotSpotGeoCluster cluster = new PhotSpotGeoCluster(this);
 		cluster.addItem(item);
 		clusters_.add(cluster);
