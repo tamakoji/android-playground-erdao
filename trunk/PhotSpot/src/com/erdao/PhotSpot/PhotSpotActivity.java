@@ -554,12 +554,16 @@ public class PhotSpotActivity extends MapActivity {
 			}
 			case R.id.menu_Favorites:{
 				favUpdateTimer_.removeCallbacks(favOverlayUpdateTask_);
+				if(clusterer_!=null)
+					clusterer_.ClearGallery();
 				Intent i = new Intent(this, FavoritesActivity.class);
 				startActivity(i);
 				break;
 			}
 			case R.id.menu_Preferences:{
 				favUpdateTimer_.removeCallbacks(favOverlayUpdateTask_);
+				if(clusterer_!=null)
+					clusterer_.ClearGallery();
 				Intent i = new Intent(this, PhotSpotPreferenceActivity.class);
 				startActivity(i);
 //				showDialog(R.id.PreferencesDlg);

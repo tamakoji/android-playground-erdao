@@ -21,12 +21,17 @@ import java.util.List;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Handler;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Gallery;
 import android.widget.ImageView;
+
+import com.erdao.utils.BitmapUtilily;
+import com.erdao.utils.LazyLoadBitmap;
+import com.erdao.utils.LazyLoadBitmap.LoadState;
 
 /**
  * ImageListAdapter Class for Gallery View in list.
@@ -40,7 +45,9 @@ public class ImageListAdapter extends BaseAdapter {
 	/** PhotoItem list */
 	private final List<PhotoItem> photoItems_;
 	/** Bitmap list */
-	private final List<Bitmap> bitmaps_;
+	private final List<LazyLoadBitmap> bitmaps_;
+	/** Current position */
+	private int curPos_;
 	/** image width */
 	private int width_ = 160;
 	/** image height */
@@ -51,10 +58,11 @@ public class ImageListAdapter extends BaseAdapter {
 	 * @param photoItems 	PhotoItem list object
 	 * @param bitmaps		Bitmap list object
 	 */
-	public ImageListAdapter(Context c, List<PhotoItem> photoItems, List<Bitmap> bitmaps) {
+	public ImageListAdapter(Context c, List<PhotoItem> photoItems, List<LazyLoadBitmap> bitmaps) {
 		context_ = c;
 		photoItems_ = photoItems;
 		bitmaps_ = bitmaps;
+		curPos_ = 0;
 		TypedArray a = context_.obtainStyledAttributes(R.styleable.ThumbGallery);
 		galleryItemBackground_ = a.getResourceId(
 				R.styleable.ThumbGallery_android_galleryItemBackground, 0);
@@ -93,7 +101,7 @@ public class ImageListAdapter extends BaseAdapter {
 	public Bitmap getBitmap(int pos) {
 		if(pos>bitmaps_.size())
 			return null;
-		return bitmaps_.get(pos);
+		return bitmaps_.get(pos).getBitmap();
 	}
 
 	/**
@@ -101,6 +109,7 @@ public class ImageListAdapter extends BaseAdapter {
 	 * @return	Formatted description string.
 	 */
 	public String getDescription(int pos) {
+		curPos_ = pos;
 		if(pos>photoItems_.size())
 			return null;
 		PhotoItem item = photoItems_.get(pos);
@@ -126,12 +135,27 @@ public class ImageListAdapter extends BaseAdapter {
 	 */
 	public View getView(int pos, View convertView, ViewGroup parent) {
 		ImageView imgView = new ImageView(context_);
-		Bitmap bmp = bitmaps_.get(pos);
-		if( bmp == null ){
+		LazyLoadBitmap lzybmp = bitmaps_.get(pos);
+		Bitmap bmp = lzybmp.getBitmap();
+		int loadState = lzybmp.getState();
+		if( loadState < LoadState.BITMAP_STATE_PRE_LOADING ){
+			lzybmp.setState(LoadState.BITMAP_STATE_PRE_LOADING);
+			bitmaps_.set(pos,lzybmp);
 			imgView.setImageResource(R.drawable.imgloading);
 			Handler handler = new Handler();
 			PhotoItem item = photoItems_.get(pos);
-			new BitmapLoadThread(handler,pos,item.getThumbUrl()).start();
+			new BitmapLoadThread(handler,pos,item.getThumbUrl(),true).start();
+		}
+		else if( loadState == LoadState.BITMAP_STATE_PRE_LOADING ){
+			imgView.setImageResource(R.drawable.imgloading);
+		}
+		else if( loadState >= LoadState.BITMAP_STATE_PRE_LOADED && loadState < LoadState.BITMAP_STATE_FULL_LOADING ){
+			lzybmp.setState(LoadState.BITMAP_STATE_FULL_LOADING);
+			bitmaps_.set(pos,lzybmp);
+			imgView.setImageBitmap(bmp);
+			Handler handler = new Handler();
+			PhotoItem item = photoItems_.get(pos);
+			new BitmapLoadThread(handler,pos,item.getThumbUrl(),false).start();
 		}
 		else{
 			imgView.setImageBitmap(bmp);
@@ -153,23 +177,63 @@ public class ImageListAdapter extends BaseAdapter {
 		private String url_;
 		/** Handler object for UI refresh posting */
 		private Handler handler_;
+		/** Preload state */
+		private boolean isPreLoad_;
+
 		/**
 		 * @param handler	Handler for UI refresh posting
 		 * @param pos		list position
 		 * @param url		url for bitmap
+		 * @param preLoad	true if want to preload, false will load full image.
 		 */
-		public BitmapLoadThread(Handler handler, int pos, String url ){
+		public BitmapLoadThread(Handler handler, int pos, String url, boolean preLoad ){
 			pos_ = pos;
 			url_ = url;
 			handler_ = handler;
+			isPreLoad_ = preLoad;
 		}
 		/**
 		 * Thread main routine
 		 */
 		@Override
-		public void run() {
-			Bitmap bmp = BitmapUtils.loadBitmap(url_);
-			bitmaps_.set(pos_,bmp);
+		public synchronized void run() {
+			Bitmap bmp = null;
+			int loadState = LoadState.BITMAP_STATE_NULL;
+			if(isPreLoad_){
+				BitmapFactory.Options opt = new BitmapFactory.Options();
+				opt.inSampleSize = 8;
+				// flickr stream cannot decode from InputStream...
+				if(url_.contains("flickr")){
+					url_.replace("_m.jpg", "_t.jpg");
+					bmp = BitmapUtilily.loadBitmap(url_,opt);
+				}
+				else
+					bmp = BitmapUtilily.loadBitmapDirectStream(url_,opt);
+				loadState = LoadState.BITMAP_STATE_PRE_LOADED;
+			}else{
+				bmp = BitmapUtilily.loadBitmap(url_);
+				loadState = LoadState.BITMAP_STATE_FULL_LOADED;
+			}
+			if(bmp == null){
+				loadState = LoadState.BITMAP_STATE_NULL;
+				// try to dispose bitmap far away from current point.
+				if( bitmaps_.size()-curPos_ > curPos_ ){
+					for(int i = bitmaps_.size()-1; i > curPos_+3; i-- ){
+						if( bitmaps_.get(i).recycle() )
+							break;
+					}
+				}
+				else{
+					for(int i = 0; i < curPos_-3; i++ ){
+						if( bitmaps_.get(i).recycle() )
+							break;
+					}
+				}
+			}
+			LazyLoadBitmap lzybmp = bitmaps_.get(pos_);
+			lzybmp.setBitmap(bmp);
+			lzybmp.setState(loadState);
+			bitmaps_.set(pos_,lzybmp);
 			handler_.post(new Runnable() {
 				public void run() {
 					notifyDataSetChanged();

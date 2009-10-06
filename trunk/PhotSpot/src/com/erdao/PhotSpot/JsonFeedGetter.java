@@ -60,6 +60,10 @@ public class JsonFeedGetter {
 	public final static int CODE_JSONERROR		= -1;
 	public final static int CODE_NORESULT		= 0;
 	public final static int CODE_OK				= 1;
+
+	/** IO BUFFER SIZE = 2M */
+	private final static int IO_BUFFER_SIZE = 2 * 1024;
+
 	/* variables */
 	private HttpClient httpClient_;
 	private final int connection_Timeout = 10000;
@@ -100,7 +104,7 @@ public class JsonFeedGetter {
 				entity = response.getEntity();
 				is = entity.getContent();
 				InputStreamReader isr = new InputStreamReader(is,"UTF-8");
-				BufferedReader reader = new BufferedReader(isr,1024);
+				BufferedReader reader = new BufferedReader(isr,IO_BUFFER_SIZE);
 				strbuilder = new StringBuilder();
 				String line = null;
 				while ((line = reader.readLine()) != null) {
