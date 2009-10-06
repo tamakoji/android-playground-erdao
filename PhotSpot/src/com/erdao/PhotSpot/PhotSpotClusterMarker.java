@@ -26,7 +26,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -51,6 +50,7 @@ import com.erdao.PhotSpot.PhotSpotClusterer.PhotSpotGeoCluster;
 import com.erdao.maps.GeoItem;
 import com.erdao.maps.markerclusterer.ClusterMarker;
 import com.erdao.maps.markerclusterer.MarkerBitmap;
+import com.erdao.utils.LazyLoadBitmap;
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
@@ -77,7 +77,7 @@ public class PhotSpotClusterMarker extends ClusterMarker {
 	/** PhotoItem list for gallery. */
 	private List<PhotoItem> photoItems_ = new ArrayList<PhotoItem>();
 	/** Bitmap list for gallery. */
-	private List<Bitmap> bitmaps_ = new ArrayList<Bitmap>();
+	private List<LazyLoadBitmap> bitmaps_ = new ArrayList<LazyLoadBitmap>();
 	/** check time object for tapping. */
 	private long tapCheckTime_;
 
@@ -131,6 +131,17 @@ public class PhotSpotClusterMarker extends ClusterMarker {
 	}
 	
 	/**
+	 * clears selected state.
+	 */
+	@Override
+	public void clearSelect(){
+		super.clearSelect();
+		for(int i = 0; i < bitmaps_.size(); i++){
+			bitmaps_.get(i).recycle();
+		}
+	}
+	
+	/**
 	 * Touch Event
 	 * @param p					touched point.
 	 * @param mapView			MapView object
@@ -176,7 +187,7 @@ public class PhotSpotClusterMarker extends ClusterMarker {
 			for(int i=0; i< GeoItems_.size();i++){
 				PhotoItem item = (PhotoItem)GeoItems_.get(i);
 				photoItems_.add(item);
-				bitmaps_.add(null);
+				bitmaps_.add(new LazyLoadBitmap());
 			}
 			imageAdapter_ = new ImageListAdapter(context_, photoItems_, bitmaps_);
 		}

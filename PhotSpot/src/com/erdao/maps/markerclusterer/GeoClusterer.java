@@ -263,6 +263,17 @@ public class GeoClusterer {
 	}
 
 	/**
+	 * clears selected state.
+	 */
+	public void clearSelect(){
+		for(int i=0; i<clusters_.size(); i++) {
+			if(selcluster_==clusters_.get(i)) {
+				clusters_.get(i).clearSelect();
+			}
+		}
+	}
+
+	/**
 	 * Hooking draw event from ClusterMarker to detect zoom/move event.
 	 * hope there will be event notification for android equivalent to
 	 * javascriptin the future....
@@ -310,11 +321,7 @@ public class GeoClusterer {
 		if(isTapped){
 			if(selcluster_ == caller)
 				return;
-			for(int i=0; i<clusters_.size(); i++) {
-				if(selcluster_==clusters_.get(i)) {
-					clusters_.get(i).clearSelect();
-				}
-			}
+			clearSelect();
 			selcluster_ = caller;
 		}
 		else{

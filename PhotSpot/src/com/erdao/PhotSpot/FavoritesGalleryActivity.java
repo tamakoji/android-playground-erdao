@@ -40,6 +40,8 @@ import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
 
+import com.erdao.utils.LazyLoadBitmap;
+import com.erdao.utils.LazyLoadBitmap.LoadState;
 import com.google.android.maps.GeoPoint;
 
 /**
@@ -53,7 +55,7 @@ public class FavoritesGalleryActivity extends Activity {
 	/** PhotoItem list */
     private List<PhotoItem> photoItems_ = new ArrayList<PhotoItem>();
 	/** Bitmap list */
-    private List<Bitmap> bitmaps_ = new ArrayList<Bitmap>();
+    private List<LazyLoadBitmap> bitmaps_ = new ArrayList<LazyLoadBitmap>();
 	/** Context object */
 	private Context context_;
 	/** ImageListAdapter for gallery */
@@ -98,10 +100,10 @@ public class FavoritesGalleryActivity extends Activity {
 			byte[] bmpStream = c.getBlob(PhotSpotDBHelper.Spots.IDX_THUMBDATA);
 			if(bmpStream!=null){
 				bitmap = BitmapFactory.decodeByteArray(bmpStream, 0, bmpStream.length);
-				bitmaps_.add(bitmap);
+				bitmaps_.add(new LazyLoadBitmap(bitmap,LoadState.BITMAP_STATE_FULL_LOADED));
 			}
 			else{
-				bitmaps_.add(null);
+				bitmaps_.add(new LazyLoadBitmap());
 			}
 			c.moveToNext();
 		}
@@ -164,7 +166,7 @@ public class FavoritesGalleryActivity extends Activity {
 				PhotoItem item = photoItems_.get(selItem_);
 	            Intent intent = new Intent(this, PhotSpotActivity.class);
 	            intent.setAction(Intent.ACTION_VIEW);
-	            item.setBitmap(bitmaps_.get(selItem_));
+	            item.setBitmap(bitmaps_.get(selItem_).getBitmap());
 	            intent.putExtra(PhotoItem.EXT_PHOTOITEM, item);
 	            startActivity(intent);
 //	            finish();

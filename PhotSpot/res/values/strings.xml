@@ -18,9 +18,9 @@
 	<string name="gmap_apikey_dbg">YOUR-GOOGLEMAP-API-KEY</string>
 	<string name="gmap_apikey_rel">YOUR-GOOGLEMAP-API-KEY</string>
 	<string name="flickr_apikey">YOUR-FLICKR-API-KEY</string>
-					
+						
 	<!-- COMMON strings -->
-	<string name="app_ver">1.5.0</string>
+	<string name="app_ver">1.5.1</string>
 	<string name="legal_ver">1.0.0</string>
 	<string name="no_title">NO TITLE</string>
 	<string name="search_invoke">App/Search/Invoke Search</string>
@@ -121,13 +121,13 @@
 	<string name="InitialMessage">
 		PhotSpot by Huan Erdao\n\n
 		Updates:\n
+		v1.5.1:\n
+		- bugfix: OutOfMemoey FC issue on loading many images.\n
+		- improvement on bitmap loading sequence.\n
 		v1.5.0:\n
 		- new: MySpots search function. Enables search your content within current view.\n
 		- Only Picasa/Flickr is supported. All photos need to be set to \"public\".\n
 		- \"Search MySpots\" menu appears if you enter username from settings.\n
-		v1.4.2:\n
-		- code refactoring. stabilizes more.\n
-		- balloon icon changes according to the service.\n
 		\n
 		For more instructions, please see help from\n
 		[menu]->[Settings]->[View Help]\n\n

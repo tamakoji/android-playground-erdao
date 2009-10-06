@@ -20,7 +20,6 @@ import java.util.List;
 
 import android.view.View;
 import android.widget.FrameLayout;
-import android.widget.TextView;
 
 import com.erdao.maps.GeoItem;
 import com.erdao.maps.markerclusterer.GeoClusterer;
@@ -74,6 +73,15 @@ public class PhotSpotClusterer extends GeoClusterer {
 	}
 
 	/**
+	 * Clears Gallery
+	 */
+	public void ClearGallery() {
+		super.clearSelect();
+		selcluster_ = null;
+		imageFrame_.setVisibility(View.GONE);
+	}
+	
+	/**
 	 * Custom resetViewport.
 	 * @return	current selected cluster.
 	 */
@@ -82,8 +90,8 @@ public class PhotSpotClusterer extends GeoClusterer {
 		PhotSpotGeoCluster cluster = (PhotSpotGeoCluster)super.resetViewport();
 		if(cluster == null){
 			imageFrame_.setVisibility(View.GONE);
-			TextView txtView = (TextView)imageFrame_.findViewById(R.id.copyright);
-			txtView.setVisibility(View.GONE);
+//			TextView txtView = (TextView)imageFrame_.findViewById(R.id.copyright);
+//			txtView.setVisibility(View.GONE);
 		}
 		else if( cluster != selcluster_ ){
 			selcluster_ = cluster;

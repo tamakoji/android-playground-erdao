@@ -49,6 +49,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.erdao.utils.BitmapUtilily;
 import com.google.android.maps.GeoPoint;
 
 /**
@@ -190,6 +191,8 @@ public class FavoritesActivity extends ExpandableListActivity {
 			c.moveToNext();
 		}
 		if(photoItems_.isEmpty()){
+			BitmapFactory.Options opt = new BitmapFactory.Options();
+			opt.inSampleSize = 6;
 			c = dbHelper_.queryAllItems(db);
 			c.moveToFirst();
 			for (int i = 0; i < c.getCount(); i++) {
@@ -210,7 +213,7 @@ public class FavoritesActivity extends ExpandableListActivity {
 	 			Bitmap bitmap = null;
 				byte[] bmpStream = c.getBlob(PhotSpotDBHelper.Spots.IDX_THUMBDATA);
 				if(bmpStream!=null){
-					bitmap = BitmapFactory.decodeByteArray(bmpStream, 0, bmpStream.length);
+					bitmap = BitmapFactory.decodeByteArray(bmpStream, 0, bmpStream.length, opt);
 					bitmapNodes_.get(pos).add(bitmap);
 					bitmaps_.add(bitmap);
 				}
@@ -604,7 +607,7 @@ public class FavoritesActivity extends ExpandableListActivity {
 			 */
 			@Override
 			public void run() {
-				Bitmap bmp = BitmapUtils.loadBitmap(url_);
+				Bitmap bmp = BitmapUtilily.loadBitmap(url_);
 				bitmapNodes_.get(groupPos_).set(childPos_,bmp);
 				handler_.post(new Runnable() {
 					public void run() {
