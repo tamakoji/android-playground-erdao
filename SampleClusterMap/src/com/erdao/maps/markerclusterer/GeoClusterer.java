@@ -108,7 +108,7 @@ public class GeoClusterer {
 			  }
 		}
 		// No cluster contain the marker, create a new cluster.
-		CreateCluster(item);
+		createCluster(item);
 	}
 
 	/**
@@ -116,7 +116,7 @@ public class GeoClusterer {
 	 * override this method, if you want to use custom GeoCluster class.
 	 * @param item GeoItem to be set to cluster.
 	 */
-	 public void CreateCluster(GeoItem item){
+	 public void createCluster(GeoItem item){
 		 GeoCluster cluster = new GeoCluster(this);
 		 cluster.addItem(item);
 		 clusters_.add(cluster);
