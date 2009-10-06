@@ -39,25 +39,17 @@ Clustering the marker is essential for application those want to manage many geo
 ----
 = TODO List =
 I am not sure if I would really implement below functions:
-=== DONE ===
-  * re-factoring the code. Made more modularized.
-
-=== Improvement Works ===
-  * Store Favorite db to SD?
-  * Enrich Gallery UI?
-
-=== New Functions ===
-  * use k-means for clustering
-    make k=10 to get top-10 spots?
-  * Route based search
-    Not only based on location, letting user find what is on their way
-  * Invoke Radar?
-  * Spots Sharing function(e-mail?)
   * Time based filtering of the photo content
   * Data filtering and/or categorization for the spots
     * food/people/buildings/pets/animals...?
-  * retrieve hi-resolution photograph for full-screen
-  * integrate navigation
+  * Route based search
+    Not only based on location, letting user find what is on their way
+  * use k-means for clustering
+    make k=10 to get top-10 spots?
+  * Invoke Radar?
+  * Spots Sharing function(e-mail?)
+  * Store Favorite db to SD?
+  * Enrich Gallery UI?
 
 ----
 = Developer Resource =
