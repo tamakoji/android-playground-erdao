@@ -47,6 +47,9 @@ public class PhotSpotCloudServlet extends HttpServlet {
 	private static final int MAX_FEED_PUB_SPOTS = 100;
 	private static final int MAX_FEED_MY_SPOTS = 200;
 
+	/** IO BUFFER SIZE = 2M */
+	private static final int IO_BUFFER_SIZE = 2 * 1024;
+
 	public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 		URL requestUrl = null;
 		String compactJson = "";
@@ -152,7 +155,7 @@ public class PhotSpotCloudServlet extends HttpServlet {
 			if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
 				InputStream is = connection.getInputStream();
 				InputStreamReader isr = new InputStreamReader(is,"UTF-8");
-				reader = new BufferedReader(isr,2048);
+				reader = new BufferedReader(isr,IO_BUFFER_SIZE);
 				strbuilder = new StringBuilder();
 				String line = null;
 				while ((line = reader.readLine()) != null) {
@@ -271,7 +274,8 @@ public class PhotSpotCloudServlet extends HttpServlet {
 							author = obj.getString("author");
 						break;
 					}
-					case MODE_FLICKR: {
+					case MODE_FLICKR:
+					case MODE_FLICKR_WUSER:{
 						String server = obj.getString("server");
 						String secret = obj.getString("secret");
 						id = obj.getLong("id");
