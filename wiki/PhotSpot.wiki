@@ -14,6 +14,11 @@ Clustering the marker is essential for application those want to manage many geo
 ----
 = Info =
 <font color="red">
+*2009/10/05 ver 1.6.1 beta downloadable from this site*
+ <a href="http://android-playground-erdao.googlecode.com/files/PhotSpot_1.6.1beta.zip">PhotSpot_1.6.1beta.zip</a>
+</font>
+
+<font color="red">
 *2009/10/05 ver 1.5.1 released*
   * Fixing some Out of Memory issue upon opening lots of images.
     try to recycle old bitmaps
