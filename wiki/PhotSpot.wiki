@@ -14,8 +14,8 @@ Clustering the marker is essential for application those want to manage many geo
 ----
 = Info =
 <font color="red">
-*2009/10/05 ver 1.6.1 beta downloadable from this site*
- <a href="http://android-playground-erdao.googlecode.com/files/PhotSpot_1.6.1beta.zip">PhotSpot_1.6.1beta.zip</a>
+*2009/10/05 ver 1.6.1 beta downloadable*
+ <a href="http://code.google.com/p/android-playground-erdao/downloads/list">goto download page</a>
 </font>
 
 <font color="red">
