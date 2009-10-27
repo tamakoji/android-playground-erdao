@@ -12,12 +12,15 @@ Clustering the marker is essential for application those want to manage many geo
 = Screen Shots Gallery =
 [ScreenShots Screen Shots Gallery]
 ----
-= Info =
-<font color="red">
-*2009/10/05 ver 1.6.1 beta downloadable*
- <a href="http://code.google.com/p/android-playground-erdao/downloads/list">goto download page</a>
-</font>
+= App Download =
+*from Android Market*
+ <a href="http://market.android.com/search?q=com.erdao.PhotSpot">click from android browser</a>
+*beta package (apk) download to PC(*
+ <a href="http://code.google.com/p/android-playground-erdao/downloads/list">goto download page</a><br>
+ after download, install using adb. "adb install PhotSpot_1.6.1beta.apk"
+----
 
+= Info =
 <font color="red">
 *2009/10/05 ver 1.5.1 released*
   * Fixing some Out of Memory issue upon opening lots of images.
