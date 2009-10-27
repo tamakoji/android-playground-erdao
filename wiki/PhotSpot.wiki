@@ -15,7 +15,7 @@ Clustering the marker is essential for application those want to manage many geo
 = App Download =
 *from Android Market*
  <a href="http://market.android.com/search?q=com.erdao.PhotSpot">click from android browser</a>
-*beta package (apk) download to PC(*
+*beta package (apk) download to PC*
  <a href="http://code.google.com/p/android-playground-erdao/downloads/list">goto download page</a><br>
  after download, install using adb. "adb install PhotSpot_1.6.1beta.apk"
 ----
