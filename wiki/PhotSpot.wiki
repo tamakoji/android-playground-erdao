@@ -5,6 +5,10 @@
 PhotSpot is a GoogleMaps and public geotagged photo content mashup app to discover popular places.
 It clusteres the geo information and show them on the map as balloon marker.
 Clustering the marker is essential for application those want to manage many geotagged content on the screen, though displaying all the markers makes UI slow and let user hard to see the information.
+
+----
+= Alternative Resource =
+If you'd like to see only app info, you can also get them <a href="http://erdao.info/blog/justmemo/?page_id=275">here</a>.
 ----
 = Screen Cast =
 <wiki:video url="http://www.youtube.com/watch?v=tcO6uoy80tg"/>
