@@ -199,13 +199,14 @@ public class FavoritesActivity extends ExpandableListActivity {
 	            long id = c.getLong(PhotSpotDBHelper.Spots.IDX_ID);
 				String title = c.getString(PhotSpotDBHelper.Spots.IDX_TITLE);
 				String author = c.getString(PhotSpotDBHelper.Spots.IDX_AUTHOR);
-				String thumbUrl = c.getString(PhotSpotDBHelper.Spots.IDX_THUMB_URL);
-				String photoUrl = c.getString(PhotSpotDBHelper.Spots.IDX_PHOTO_URL);
+				String fullThumbUrl = c.getString(PhotSpotDBHelper.Spots.IDX_THUMB_URL);
+				String cmpThumbUrl = fullThumbUrl;
+				String origUrl = c.getString(PhotSpotDBHelper.Spots.IDX_ORIGINAL_URL);
 				double lat = c.getDouble(PhotSpotDBHelper.Spots.IDX_LATITUDE);
 				double lng = c.getDouble(PhotSpotDBHelper.Spots.IDX_LONGITUDE);
 				long labelId = c.getLong(PhotSpotDBHelper.Spots.IDX_LABEL);
 				PhotoItem item =
-					new PhotoItem(id,(int)(lat*1E6),(int)(lng*1E6),title,author,thumbUrl,photoUrl);
+					new PhotoItem(id,(int)(lat*1E6),(int)(lng*1E6),title,author,fullThumbUrl,cmpThumbUrl,origUrl);
 				item.setLabelId(labelId);
 				int pos = labelMap.get(labelId);
 				photoItems_.add(item);
@@ -355,7 +356,7 @@ public class FavoritesActivity extends ExpandableListActivity {
 				break;
 			}
 			case EXT_ACTION_OPENBROWSER:{
-				String url = photoItemNodes_.get(groupPos).get(childPos).getPhotoUrl();
+				String url = photoItemNodes_.get(groupPos).get(childPos).getOriginalUrl();
 				Intent i = new Intent(Intent.ACTION_VIEW,Uri.parse(url));
 				context_.startActivity(i);
 				break;
@@ -525,7 +526,7 @@ public class FavoritesActivity extends ExpandableListActivity {
 			if( bmp == null ){
 				imgView.setImageResource(R.drawable.imgloading);
 				Handler handler = new Handler();
-				new BitmapLoadThread(handler,groupPos,childPos,item.getThumbUrl()).start();
+				new BitmapLoadThread(handler,groupPos,childPos,item.getFullThumbUrl()).start();
 			}
 			else{
 				imgView.setImageBitmap(bmp);
@@ -547,15 +548,17 @@ public class FavoritesActivity extends ExpandableListActivity {
 		 * getGenericView
 		 */
 		public TextView getGenericView() {
+			final int tabwidth = (int)(context_.getResources().getDisplayMetrics().density*64+0.5f);
+			final int paddingL = (int)(context_.getResources().getDisplayMetrics().density*36+0.5f);
             // Layout parameters for the ExpandableListView
             AbsListView.LayoutParams lp = new AbsListView.LayoutParams(
-                    ViewGroup.LayoutParams.FILL_PARENT, 64);
+                    ViewGroup.LayoutParams.FILL_PARENT, tabwidth);
             TextView textView = new TextView(context_);
             textView.setLayoutParams(lp);
             // Center the text vertically
             textView.setGravity(Gravity.CENTER_VERTICAL | Gravity.LEFT);
             // Set the text starting position
-            textView.setPadding(36, 0, 0, 0);
+            textView.setPadding(paddingL, 0, 0, 0);
             return textView;
         }
 

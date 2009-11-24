@@ -48,10 +48,16 @@ public class ImageListAdapter extends BaseAdapter {
 	private final List<LazyLoadBitmap> bitmaps_;
 	/** Current position */
 	private int curPos_;
+	/** default gallery width. */
+	private static final int GALLERY_DEFAULT_WIDTH = 160;
+	/** default gallery height. */
+	private static final int GALLERY_DEFAULT_HEIGHT = 120;
 	/** image width */
-	private int width_ = 160;
+	private int width_ = GALLERY_DEFAULT_WIDTH;
 	/** image height */
-	private int height_ = 120;
+	private int height_ = GALLERY_DEFAULT_HEIGHT;
+	/** screen density */
+	private float screenDensity_ = 1.0f;
 
 	/**
 	 * @param c				Context object
@@ -60,6 +66,9 @@ public class ImageListAdapter extends BaseAdapter {
 	 */
 	public ImageListAdapter(Context c, List<PhotoItem> photoItems, List<LazyLoadBitmap> bitmaps) {
 		context_ = c;
+		screenDensity_ = context_.getResources().getDisplayMetrics().density;
+		width_ = getDefaultWidth();
+		height_ = getDefaultHeight();
 		photoItems_ = photoItems;
 		bitmaps_ = bitmaps;
 		curPos_ = 0;
@@ -74,6 +83,20 @@ public class ImageListAdapter extends BaseAdapter {
 	 */
 	public int getCount() {
 		return photoItems_.size();
+	}
+
+	/**
+	 * @return	default gallery width
+	 */
+	public int getDefaultWidth(){
+		return (int)(screenDensity_*GALLERY_DEFAULT_WIDTH+0.5f);
+	}
+	
+	/**
+	 * @return	default gallery height
+	 */
+	public int getDefaultHeight(){
+		return (int)(screenDensity_*GALLERY_DEFAULT_HEIGHT+0.5f);
 	}
 
 	/**
@@ -144,7 +167,7 @@ public class ImageListAdapter extends BaseAdapter {
 			imgView.setImageResource(R.drawable.imgloading);
 			Handler handler = new Handler();
 			PhotoItem item = photoItems_.get(pos);
-			new BitmapLoadThread(handler,pos,item.getThumbUrl(),true).start();
+			new BitmapLoadThread(handler,pos,item.getCompactThumbUrl(),true).start();
 		}
 		else if( loadState == LoadState.BITMAP_STATE_PRE_LOADING ){
 			imgView.setImageResource(R.drawable.imgloading);
@@ -155,12 +178,14 @@ public class ImageListAdapter extends BaseAdapter {
 			imgView.setImageBitmap(bmp);
 			Handler handler = new Handler();
 			PhotoItem item = photoItems_.get(pos);
-			new BitmapLoadThread(handler,pos,item.getThumbUrl(),false).start();
+			new BitmapLoadThread(handler,pos,item.getFullThumbUrl(),false).start();
 		}
 		else{
 			imgView.setImageBitmap(bmp);
 		}
 		imgView.setScaleType(ImageView.ScaleType.FIT_CENTER);//.CENTER_INSIDE);
+//		float scale = context_.getResources().getDisplayMetrics().density;
+//		imgView.setLayoutParams(new Gallery.LayoutParams((int)(width_*scale+0.5f), (int)(height_*scale+0.5f)));
 		imgView.setLayoutParams(new Gallery.LayoutParams(width_, height_));
 		imgView.setBackgroundResource(galleryItemBackground_);		 
 		return imgView;
@@ -203,10 +228,8 @@ public class ImageListAdapter extends BaseAdapter {
 				BitmapFactory.Options opt = new BitmapFactory.Options();
 				opt.inSampleSize = 8;
 				// flickr stream cannot decode from InputStream...
-				if(url_.contains("flickr")){
-					url_.replace("_m.jpg", "_t.jpg");
+				if(url_.contains("flickr"))
 					bmp = BitmapUtilily.loadBitmap(url_,opt);
-				}
 				else
 					bmp = BitmapUtilily.loadBitmapDirectStream(url_,opt);
 				loadState = LoadState.BITMAP_STATE_PRE_LOADED;

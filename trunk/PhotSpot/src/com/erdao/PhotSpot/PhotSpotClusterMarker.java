@@ -96,10 +96,6 @@ public class PhotSpotClusterMarker extends ClusterMarker {
 	private int gallery_width_;
 	/** parameter for gallery height. */
 	private int gallery_height_;
-	/** default gallery width. */
-	private static final int GALLERY_DEFAULT_WIDTH = 160;
-	/** default gallery height. */
-	private static final int GALLERY_DEFAULT_HEIGHT = 120;
 
 	/** Extra Action constants. */
 	private static final int EXT_ACTION_ADD_FAVORITES	= 0;
@@ -118,8 +114,8 @@ public class PhotSpotClusterMarker extends ClusterMarker {
 	 * @param imageFrame		FrameLayout object for gallery
 	 */
 	public PhotSpotClusterMarker(PhotSpotActivity activityHndl, PhotSpotGeoCluster cluster,
-			List<MarkerBitmap> markerIconBmps, MapView mapView, FrameLayout imageFrame) {
-		super(cluster, markerIconBmps);
+			List<MarkerBitmap> markerIconBmps, float screenDensity, MapView mapView, FrameLayout imageFrame) {
+		super(cluster, markerIconBmps,screenDensity);
 		activityHndl_ = activityHndl;
 		context_ = (Context)activityHndl_;
 		cluster_ = cluster;
@@ -215,6 +211,10 @@ public class PhotSpotClusterMarker extends ClusterMarker {
 					int posX = (int)event.getX();
 					int posY = (int)event.getY();
 					RelativeLayout mainframe = (RelativeLayout)activityHndl_.findViewById(R.id.mainframe);
+					TextView imgdesc = (TextView)activityHndl_.findViewById(R.id.imgdesc);
+					int mainWidth = mainframe.getWidth();
+					int mainHeight = mainframe.getHeight();
+					int footerHeight = imgdesc.getHeight();
 					int diffX = posX-galleryActionPt_.x;
 					int diffY = posY-galleryActionPt_.y;
 					galleryActionPt_.x = posX;
@@ -226,26 +226,28 @@ public class PhotSpotClusterMarker extends ClusterMarker {
 						showZoomButtons();
 						return true;
 					}
+					int SWIPE_LR_THRESH = (int)(screenDensity_*25+0.5f);
+					int SWIPE_UD_THRESH = (int)(screenDensity_*10+0.5f);
 					/* if x move is large then assume swiping left or right */
-					if(diffX > 25 || diffX < -25)
+					if(Math.abs(diffX) > SWIPE_LR_THRESH )
 						return false;
 					/* if y move is small then assume as click */
-					if(diffY < 10 && diffY > -10)
+					if(Math.abs(diffY) < SWIPE_UD_THRESH)
 						return false;
 					onGalleryGesture_ = true;
 					gallery_height_ += (int)(diffY*1.0);
 					gallery_width_ = (int)(gallery_height_/3.0*4.0);
-					if( gallery_height_ > (mainframe.getHeight()-30) ){
-						gallery_height_ = (mainframe.getHeight()-30);
+					if( gallery_height_ > (mainHeight-footerHeight) ){
+						gallery_height_ = (mainHeight-footerHeight);
 						gallery_width_ = (int)(gallery_height_/3.0*4.0);
 					}
-					else if( gallery_width_ < GALLERY_DEFAULT_WIDTH ){
-						gallery_width_ = GALLERY_DEFAULT_WIDTH;
-						gallery_height_ = GALLERY_DEFAULT_HEIGHT;
+					else if( gallery_width_ < imageAdapter_.getDefaultWidth() ){
+						gallery_width_ = imageAdapter_.getDefaultWidth();
+						gallery_height_ = imageAdapter_.getDefaultHeight();
 					}
-					if( gallery_width_ > mainframe.getWidth() )
-						gallery_width_ = mainframe.getWidth();
-					if(gallery_height_ == (mainframe.getHeight()-30))
+					if( gallery_width_ > mainWidth )
+						gallery_width_ = mainWidth;
+					if(gallery_height_ == (mainHeight-footerHeight))
 						hideZoomButtons();
 					else
 						showZoomButtons();
@@ -316,7 +318,7 @@ public class PhotSpotClusterMarker extends ClusterMarker {
 		switch(cmd){
 			case EXT_ACTION_OPENBROWSER:{
 				clearSelect();
-				String url = ((PhotoItem)GeoItems_.get(selItem_)).getPhotoUrl();
+				String url = ((PhotoItem)GeoItems_.get(selItem_)).getOriginalUrl();
 				Intent i = new Intent(Intent.ACTION_VIEW,Uri.parse(url));
 				context_.startActivity(i);
 				break;
@@ -325,7 +327,7 @@ public class PhotSpotClusterMarker extends ClusterMarker {
 				GeoPoint location = ((PhotoItem)GeoItems_.get(selItem_)).getLocation();
 				double lat = location.getLatitudeE6()/1E6;
 				double lng = location.getLongitudeE6()/1E6;
-				String uri = "http://photspotcloud.appspot.com/photspotcloud?q=localsearch&latlng="+lat+","+lng;
+				String uri = context_.getString(R.string.photspotserver)+"/photspotcloud?q=localsearch&latlng="+lat+","+lng;
 				uri += "&appver="+context_.getString(R.string.app_ver);
 				String debugstr = Locale.getDefault().getDisplayName()+","+Build.MODEL+","+Build.VERSION.RELEASE+","+context_.getString(R.string.app_ver);
 				try {

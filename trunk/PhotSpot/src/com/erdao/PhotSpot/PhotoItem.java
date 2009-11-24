@@ -36,10 +36,12 @@ public class PhotoItem extends GeoItem {
 	private String title_;
 	/** author of the item */
 	private String author_;
-	/** thumbnail url of the item */
-	private String thumbUrl_;
+	/** full thumbnail url of the item */
+	private String fullThumbUrl_;
+	/** compact thumbnail url of the item - for lazyload */
+	private String cmpThumbUrl_;
 	/** orginal link of the item */
-	private String photoUrl_;
+	private String originalUrl_;
 	/** bitmap object of the item */
 	private Bitmap bitmap_;
 	/** label if of the item */
@@ -51,16 +53,18 @@ public class PhotoItem extends GeoItem {
 	 * @param longitudeE6	longitude of the item in microdegrees (degrees * 1E6).
 	 * @param title			title of item.
 	 * @param author		author of item.
-	 * @param photoUrl		original url of item.
-	 * @param thumbUrl		thumbnail url of item.
+	 * @param fullThumbUrl	full thumbnail url of item.
+	 * @param cmpThumbUrl	compact thumbnail url of item.
+	 * @param origUrl		original url of item.
 	 */
 	public PhotoItem(long id, int latitudeE6, int longitudeE6,
-			String title, String author, String thumbUrl, String photoUrl ) {
+			String title, String author, String fullThumbUrl, String cmpThumbUrl, String origUrl ) {
 		super(id,latitudeE6,longitudeE6);
 		title_ = title;
 		author_ = author;
-		thumbUrl_ = thumbUrl;
-		photoUrl_ = photoUrl;
+		fullThumbUrl_ = fullThumbUrl;
+		cmpThumbUrl_ = cmpThumbUrl;
+		originalUrl_ = origUrl;
 		bitmap_ = null;
 		labelId_ = 1;
 	}
@@ -71,8 +75,9 @@ public class PhotoItem extends GeoItem {
 	public PhotoItem(PhotoItem src) {
 		super(src);
 		title_ = src.title_;
-		thumbUrl_ = src.thumbUrl_;
-		photoUrl_ = src.photoUrl_;
+		fullThumbUrl_ = src.fullThumbUrl_;
+		cmpThumbUrl_ = src.cmpThumbUrl_;
+		originalUrl_ = src.originalUrl_;
 		author_ = src.author_;
 		bitmap_ = src.bitmap_;
 		labelId_ = src.labelId_;
@@ -85,8 +90,9 @@ public class PhotoItem extends GeoItem {
 		super(src);
 		title_ = src.readString();
 		author_ = src.readString();
-		thumbUrl_ = src.readString();
-		photoUrl_ = src.readString();
+		fullThumbUrl_ = src.readString();
+		cmpThumbUrl_ = src.readString();
+		originalUrl_ = src.readString();
 		bitmap_ = Bitmap.CREATOR.createFromParcel(src);
 		labelId_ = src.readLong();
 	}
@@ -115,19 +121,27 @@ public class PhotoItem extends GeoItem {
 	}
 
 	/**
-	 * get thumbnail url
-	 * @return thumbnail url of item.
+	 * get full thumbnail url
+	 * @return fullsize thumbnail url of item.
 	 */
-	public String getThumbUrl() {
-		return thumbUrl_;
+	public String getFullThumbUrl() {
+		return fullThumbUrl_;
 	}
 
+	/**
+	 * get compact thumbnail url
+	 * @return compact thumbnail url of item.
+	 */
+	public String getCompactThumbUrl() {
+		return cmpThumbUrl_;
+	}
+	
 	/**
 	 * get original url
 	 * @return original url of item.
 	 */
-	public String getPhotoUrl() {
-		return photoUrl_;
+	public String getOriginalUrl() {
+		return originalUrl_;
 	}
 
 	/**
@@ -182,8 +196,9 @@ public class PhotoItem extends GeoItem {
 		super.writeToParcel(parcel, flags);
 		parcel.writeString(title_);
 		parcel.writeString(author_);
-		parcel.writeString(thumbUrl_);
-		parcel.writeString(photoUrl_);
+		parcel.writeString(fullThumbUrl_);
+		parcel.writeString(cmpThumbUrl_);
+		parcel.writeString(originalUrl_);
 		bitmap_.writeToParcel(parcel, flags);
 		parcel.writeLong(labelId_);
    }

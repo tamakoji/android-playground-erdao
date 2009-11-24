@@ -51,8 +51,8 @@ public class PhotSpotClusterer extends GeoClusterer {
 	 * @param imageFrame		FrameLayout for gallery view.
 	 */
 	public PhotSpotClusterer(PhotSpotActivity activityHndl,
-			List<MarkerBitmap> markerIconBmps, MapView mapView, FrameLayout imageFrame){
-		super(mapView, markerIconBmps);
+			List<MarkerBitmap> markerIconBmps, float screenDensity, MapView mapView, FrameLayout imageFrame){
+		super(mapView, markerIconBmps, screenDensity);
 		activityHndl_ = activityHndl;
 		markerIconBmps_ = markerIconBmps;
 		mapView_ = mapView;
@@ -136,7 +136,7 @@ public class PhotSpotClusterer extends GeoClusterer {
 				return;
 			}
 			if(clusterMarker_ == null) {
-				clusterMarker_ = new PhotSpotClusterMarker(activityHndl_,this,markerIconBmps_,mapView_,imageFrame_);
+				clusterMarker_ = new PhotSpotClusterMarker(activityHndl_,this,markerIconBmps_,screenDensity_,mapView_,imageFrame_);
 				List<Overlay> mapOverlays = mapView_.getOverlays();
 				mapOverlays.add(clusterMarker_);
 			}

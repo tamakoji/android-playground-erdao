@@ -15,8 +15,8 @@
 -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
       package="com.erdao.PhotSpot"
-      android:versionCode="15"
-      android:versionName="1.5.1">
+      android:versionCode="17"
+      android:versionName="1.6.1">
 	<uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -61,5 +61,13 @@
         <provider android:name=".PhotSpotSearchSuggestProvider"
                   android:authorities="com.erdao.PhotSpot.PhotSpotSearchSuggestProvider" />
 	</application>
-    <uses-sdk android:minSdkVersion="3" />
-</manifest> 
+    <uses-sdk
+    	android:targetSdkVersion="4"
+    	android:minSdkVersion="3"
+    />
+ 	<supports-screens
+		android:largeScreens="true"
+		android:normalScreens="true"
+		android:smallScreens="true"
+		android:anyDensity="true" />
+ </manifest> 

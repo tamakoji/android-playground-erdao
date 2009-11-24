@@ -87,6 +87,9 @@ public class PhotSpotActivity extends MapActivity {
 	private PhotSpotActivity me_;
 	/** Context object */
 	private Context context_;
+	/** screen density for multi-resolution
+	 *	get from contenxt.getResources().getDisplayMetrics().density;  */
+	private float screenDensity_ = 1.0f;
 
 	/* google map variables */
 	/** MapView object */
@@ -158,6 +161,7 @@ public class PhotSpotActivity extends MapActivity {
 		super.onCreate(savedInstanceState);
 		me_ = this;
 		context_ = this;
+		screenDensity_ = this.getResources().getDisplayMetrics().density;
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.main);
 		resetViews();
@@ -166,6 +170,10 @@ public class PhotSpotActivity extends MapActivity {
 		/* Read preferences */
 		settings_ = PreferenceManager.getDefaultSharedPreferences(this);
 		//getSharedPreferences(getString(R.string.PhotSpotPreference), 0);
+
+//		final float scale = this.getResources().getDisplayMetrics().density;
+//		Log.i("DEBUG","scale = "+scale);
+		
 
 		onCreateMain();
 
@@ -329,7 +337,7 @@ public class PhotSpotActivity extends MapActivity {
         	final PhotoItem[] items = (PhotoItem[]) data;
 			FrameLayout imageFrame = (FrameLayout)findViewById(R.id.imageframe);
 			setupMarkerIcons();
-			clusterer_ = new PhotSpotClusterer(me_,markerIconBmps_, mapView_,imageFrame);
+			clusterer_ = new PhotSpotClusterer(me_,markerIconBmps_,screenDensity_,mapView_,imageFrame);
 			for(int i=0; i<items.length;i++) {
 				clusterer_.addItem(items[i]);
 			}
@@ -590,7 +598,7 @@ public class PhotSpotActivity extends MapActivity {
 		Double selat = se.getLatitudeE6()/1E6;
 		Double selng = se.getLongitudeE6()/1E6;
 		showDialog(R.id.QuerySearchDlg);
-		uri = "http://photspotcloud.appspot.com/photspotcloud?q=searchspot&nwlng="+nwlng+"&selat="+selat+"&nwlat="+nwlat+"&selng="+selng;
+		uri = context_.getString(R.string.photspotserver)+"/photspotcloud?q=searchspot&nwlng="+nwlng+"&selat="+selat+"&nwlat="+nwlat+"&selng="+selng;
 		uri += "&appver="+context_.getString(R.string.app_ver);
 		String debugstr = Locale.getDefault().getDisplayName()+","+Build.MODEL+","+Build.VERSION.RELEASE+",android";
 		try {
@@ -835,7 +843,7 @@ public class PhotSpotActivity extends MapActivity {
 				}
 				FrameLayout imageFrame = (FrameLayout)findViewById(R.id.imageframe);
 				setupMarkerIcons();
-				clusterer_ = new PhotSpotClusterer(me_,markerIconBmps_, mapView_,imageFrame);
+				clusterer_ = new PhotSpotClusterer(me_,markerIconBmps_,screenDensity_,mapView_,imageFrame);
 				for(int i=0; i<photoItems.size(); i++) {
 					PhotoItem item = photoItems.get(i);
 					clusterer_.addItem(item);
@@ -876,42 +884,51 @@ public class PhotSpotActivity extends MapActivity {
 		private String title_;
 		/** sub title string */
 		private String subtitle_;
+		/** screenDensity */
+		private float screenDensity_ = 1.0f;
 		
 		/** Extra Action - Navigate to Place */
 		private static final int EXT_ACTION_NAVTOPLACE		= 0;
 		/** Extra Action - Open with Browser */
 		private static final int EXT_ACTION_OPENBROWSER		= 1;
 
+		private static final int THUMBPADDING				= 6;
+		private static final int THUMBSIZE					= 57;
+		
 		/**
 		 * @param c		Context object
 		 * @param item	PhotoItem object
 		 */
 		public FavoriteOverlay(Context c, PhotoItem item) { 
 			context_ = c;
+			screenDensity_ = context_.getResources().getDisplayMetrics().density;
 			item_ = item;
 			frame_ = c.getResources().getDrawable(R.drawable.balloon_fv);
 			thumbnail_ = item.getBitmap();
-			final int frmWidth = frame_.getIntrinsicWidth();	// 75
-			final int frmHeight = frame_.getIntrinsicHeight();	// 75
+			final int frmWidth = frame_.getIntrinsicWidth();
+			final int frmHeight = frame_.getIntrinsicHeight();
 			frame_.setBounds(0, 0, frmWidth, frmHeight);
 			int ltx = -(frmWidth/2);
 			int lty = -frmHeight;
 			frmRect_ = new Rect(ltx,lty,ltx+frmWidth,lty+frmHeight);
-			int thmbWidth = 57;
-			int thmbHeight= 57;
-			ltx += 6;
-			lty += 6;
+			int thmbWidth = (int)(THUMBSIZE*screenDensity_+0.5f);
+			int thmbHeight= (int)(THUMBSIZE*screenDensity_+0.5f);
+			ltx += (int)(THUMBPADDING*screenDensity_+0.5f);
+			lty += (int)(THUMBPADDING*screenDensity_+0.5f);
 			thmRect_ = new Rect(ltx,lty,ltx+thmbWidth,lty+thmbHeight);
+			final int txtareaWidth = frmRect_.width()-(int)(thmRect_.width()+THUMBPADDING*screenDensity_+0.5f);
 			paint_ = new Paint();
 			paint_.setAntiAlias(true);
-			paint_.setTextSize(14);
+			paint_.setTextSize(14*screenDensity_);
 			paint_.setTypeface(Typeface.DEFAULT_BOLD);
 			title_ = item_.getTitle();
-			if(title_.length()>24)
-				title_ = title_.substring(0, 23);
+			int breaktxt = paint_.breakText(title_, true, txtareaWidth, null);
+			if(title_.length()>breaktxt)
+				title_ = title_.substring(0, breaktxt-1);
 			subtitle_ = item_.getAuthor();
-			if(subtitle_.length()>25)
-				subtitle_ = subtitle_.substring(0, 24);
+			breaktxt = paint_.breakText(subtitle_, true, txtareaWidth, null);
+			if(subtitle_.length()>breaktxt)
+				subtitle_ = subtitle_.substring(0, breaktxt-1);
 			subtitle_ = "by: "+subtitle_;
 		}
 
@@ -961,12 +978,12 @@ public class PhotSpotActivity extends MapActivity {
 				int r = l + thmRect_.width();
 				int b = t + thmRect_.height();
 				canvas.drawBitmap(thumbnail_, null , new Rect(l,t,r,b),paint_);
-				paint_.setTextSize(14);
+				paint_.setTextSize(14*screenDensity_);
 				paint_.setTypeface(Typeface.DEFAULT_BOLD);
-				int x = r+5;
+				int x = r+(int)(THUMBPADDING*screenDensity_+0.5f);
 				int y = (int) (t+paint_.getTextSize()+3);
 				canvas.drawText(title_,x,y,paint_);
-				paint_.setTextSize(11);
+				paint_.setTextSize(11*screenDensity_);
 				paint_.setTypeface(Typeface.DEFAULT);
 				y += (int) (paint_.getTextSize()+4);
 				canvas.drawText(subtitle_,x,y,paint_);
@@ -997,7 +1014,7 @@ public class PhotSpotActivity extends MapActivity {
 		public void onItemAction(int cmd){
 			switch(cmd){
 				case EXT_ACTION_OPENBROWSER:{
-					String url = item_.getPhotoUrl();
+					String url = item_.getOriginalUrl();
 					Intent i = new Intent(Intent.ACTION_VIEW,Uri.parse(url));
 					context_.startActivity(i);
 					break;
