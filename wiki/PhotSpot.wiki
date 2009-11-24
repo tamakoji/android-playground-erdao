@@ -15,19 +15,19 @@ Clustering the marker is essential for application those want to manage many geo
 = App Download =
 *from Android Market*
  <a href="http://market.android.com/search?q=com.erdao.PhotSpot">click from android browser</a>
-*beta package (apk) download to PC*
- <a href="http://code.google.com/p/android-playground-erdao/downloads/list">goto download page</a><br>
- after download, install using adb. "adb install PhotSpot_1.6.1beta.apk"
 ----
 
 = Info =
 <font color="red">
+*2009/11/24 ver 1.6.1 released*
+  * Support for multiple resolution(e.g. DROID)
+  * Fix some FC bugs.
+</font>
 *2009/10/05 ver 1.5.1 released*
   * Fixing some Out of Memory issue upon opening lots of images.
     try to recycle old bitmaps
   * Support Lazy-Loading Images
    to save memory
-</font>
 *2009/10/03 ver 1.5.0 released*
   * MySpot Search function added.
 *2009/09/23 ver 1.4.2 released*
