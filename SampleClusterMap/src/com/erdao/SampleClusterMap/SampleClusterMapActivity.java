@@ -119,7 +119,8 @@ public class SampleClusterMapActivity extends MapActivity {
 		switch (item.getItemId()) {
 			case 1: {
 				// create clusterer instance
-				GeoClusterer clusterer = new GeoClusterer(mapView_,markerIconBmps_);
+				float screenDensity = this.getResources().getDisplayMetrics().density;
+				GeoClusterer clusterer = new GeoClusterer(mapView_,markerIconBmps_,screenDensity);
 				// add geoitems for clustering
 				for(int i=0; i<geoItems_.length; i++) {
 					clusterer.addItem(geoItems_[i]);
