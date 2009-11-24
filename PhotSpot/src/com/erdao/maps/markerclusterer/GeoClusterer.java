@@ -71,7 +71,7 @@ public class GeoClusterer {
 	/**
 	 * @param mapView MapView object.
 	 * @param markerIconBmps MarkerBitmap objects for icons.
-	 * @param density Screen Density.
+	 * @param screenDensity Screen Density.
 	 */
 	public GeoClusterer(MapView mapView, List<MarkerBitmap> markerIconBmps, float screenDensity){
 		mapView_ = mapView;
