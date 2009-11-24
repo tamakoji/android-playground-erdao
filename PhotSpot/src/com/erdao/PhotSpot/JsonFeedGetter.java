@@ -66,7 +66,7 @@ public class JsonFeedGetter {
 
 	/* variables */
 	private HttpClient httpClient_;
-	private final int connection_Timeout = 10000;
+	private final int connection_Timeout = 20000;
 	private final Context context_;
 	int mode_;
 	private List<PhotoItem> photoItems_ = new ArrayList<PhotoItem>();
@@ -134,17 +134,24 @@ public class JsonFeedGetter {
 
 		String result = strbuilder.toString();
 		JSONObject jsonobj = null;
+		long feedcount = 0;
 		try {
 			JSONArray array = null;
 			switch(mode_){
 				default:
 				case MODE_SPOTSEARCH:{
 					jsonobj = new JSONObject(result);
+					feedcount = jsonobj.getLong("count");
+					if(feedcount==0)
+						return CODE_NORESULT;
 					array = jsonobj.getJSONArray("photo");
 					break;
 				}
 				case MODE_LOCALSEARCH:{
 					jsonobj = new JSONObject(result);
+					feedcount = jsonobj.getLong("count");
+					if(feedcount==0)
+						return CODE_NORESULT;
 					array = jsonobj.getJSONArray("result");
 					break;
 				}
@@ -159,20 +166,18 @@ public class JsonFeedGetter {
 					return CODE_OK; 
 				}
 			}
-			long feedcount = jsonobj.getLong("count");
-			if(feedcount==0)
-				return CODE_NORESULT;
 			int count = array.length();
 			for (int i = 0; i < count; i++) {
 				JSONObject obj = array.getJSONObject(i);
 				long id = 0;
-				String title = null, thumbUrl = null, photoUrl = null, author= null;
+				String title = null, fullThumbUrl = null, cmpThumbUrl = null, origUrl = null, author= null;
 				double lat = 0.0,lng = 0.0;
 				if(mode_==MODE_SPOTSEARCH){
 					id = obj.getLong("id");
 					title = obj.getString("title");
-					thumbUrl = obj.getString("thumbUrl");
-					photoUrl = obj.getString("photoUrl");
+					fullThumbUrl = obj.getString("fullThumbUrl");
+					cmpThumbUrl = obj.getString("cmpThumbUrl");
+					origUrl = obj.getString("origUrl");
 					lat = obj.getDouble("lat");
 					lng = obj.getDouble("lng");
 					author = obj.getString("author");
@@ -180,7 +185,7 @@ public class JsonFeedGetter {
 						title = context_.getString(R.string.no_title);
 					}
 					PhotoItem item =
-						new PhotoItem(id,(int)(lat*1E6),(int)(lng*1E6),title,author,thumbUrl,photoUrl);
+						new PhotoItem(id,(int)(lat*1E6),(int)(lng*1E6),title,author,fullThumbUrl,cmpThumbUrl,origUrl);
 					photoItems_.add(item);
 				}
 				else{

@@ -87,13 +87,14 @@ public class FavoritesGalleryActivity extends Activity {
             long id = c.getLong(PhotSpotDBHelper.Spots.IDX_ID);
 			String title = c.getString(PhotSpotDBHelper.Spots.IDX_TITLE);
 			String author = c.getString(PhotSpotDBHelper.Spots.IDX_AUTHOR);
-			String thumbUrl = c.getString(PhotSpotDBHelper.Spots.IDX_THUMB_URL);
-			String photoUrl = c.getString(PhotSpotDBHelper.Spots.IDX_PHOTO_URL);
+			String fullThumbUrl = c.getString(PhotSpotDBHelper.Spots.IDX_THUMB_URL);
+			String cmpThumbUrl = fullThumbUrl;
+			String origUrl = c.getString(PhotSpotDBHelper.Spots.IDX_ORIGINAL_URL);
 			double lat = c.getDouble(PhotSpotDBHelper.Spots.IDX_LATITUDE);
 			double lng = c.getDouble(PhotSpotDBHelper.Spots.IDX_LONGITUDE);
 			long labelId = c.getLong(PhotSpotDBHelper.Spots.IDX_LABEL);
 			PhotoItem item =
-				new PhotoItem(id,(int)(lat*1E6),(int)(lng*1E6),title,author,thumbUrl,photoUrl);
+				new PhotoItem(id,(int)(lat*1E6),(int)(lng*1E6),title,author,fullThumbUrl,cmpThumbUrl,origUrl);
 			item.setLabelId(labelId);
 			photoItems_.add(item);
  			Bitmap bitmap = null;
@@ -186,7 +187,7 @@ public class FavoritesGalleryActivity extends Activity {
 			}
 			case EXT_ACTION_OPENBROWSER:{
 				PhotoItem item = photoItems_.get(selItem_);
-				String url = item.getPhotoUrl();
+				String url = item.getOriginalUrl();
 				Intent i = new Intent(Intent.ACTION_VIEW,Uri.parse(url));
 				context_.startActivity(i);
 				break;

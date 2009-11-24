@@ -72,7 +72,7 @@ public class PhotSpotDBHelper extends SQLiteOpenHelper {
     	/** INDEX OF THUMB_URL */
         public static final int IDX_THUMB_URL	= 3;
     	/** INDEX OF PHOTO_URL */
-        public static final int IDX_PHOTO_URL	= 4;
+        public static final int IDX_ORIGINAL_URL	= 4;
     	/** INDEX OF LATITUDE */
         public static final int IDX_LATITUDE	= 5;
     	/** INDEX OF LONGITUDE */
@@ -217,7 +217,7 @@ public class PhotSpotDBHelper extends SQLiteOpenHelper {
         spots.title_ = c.getString(Spots.IDX_TITLE);
         spots.author_ = c.getString(Spots.IDX_AUTHOR);
 		spots.thumbUrl = c.getString(Spots.IDX_THUMB_URL);
-		spots.photoUrl = c.getString(Spots.IDX_PHOTO_URL);
+		spots.photoUrl = c.getString(Spots.IDX_ORIGINAL_URL);
 		spots.lat_ = c.getDouble(Spots.IDX_LATITUDE);
 		spots.lng_ = c.getDouble(Spots.IDX_LONGITUDE);
         spots.region_ = c.getString(Spots.IDX_REGIOIN);
@@ -246,7 +246,7 @@ public class PhotSpotDBHelper extends SQLiteOpenHelper {
         spots.title_ = c.getString(Spots.IDX_TITLE);
         spots.author_ = c.getString(Spots.IDX_AUTHOR);
 		spots.thumbUrl = c.getString(Spots.IDX_THUMB_URL);
-		spots.photoUrl = c.getString(Spots.IDX_PHOTO_URL);
+		spots.photoUrl = c.getString(Spots.IDX_ORIGINAL_URL);
 		spots.lat_ = c.getDouble(Spots.IDX_LATITUDE);
 		spots.lng_ = c.getDouble(Spots.IDX_LONGITUDE);
         spots.region_ = c.getString(Spots.IDX_REGIOIN);
@@ -314,7 +314,7 @@ public class PhotSpotDBHelper extends SQLiteOpenHelper {
 			db.close();
 			return DB_FULL;
 		}
-		Spots spots = this.queryItemByThumbURL(db,item.getThumbUrl());
+		Spots spots = this.queryItemByThumbURL(db,item.getFullThumbUrl());
 		if( spots != null ){
 			db.close();
 			return DB_EXISTS;
@@ -341,8 +341,8 @@ public class PhotSpotDBHelper extends SQLiteOpenHelper {
 		ContentValues cv = new ContentValues();
 		cv.put(Spots.TITLE,item.getTitle());
 		cv.put(Spots.AUTHOR,item.getAuthor());
-		cv.put(Spots.THUMB_URL,item.getThumbUrl());
-		cv.put(Spots.PHOTO_URL,item.getPhotoUrl());
+		cv.put(Spots.THUMB_URL,item.getFullThumbUrl());
+		cv.put(Spots.PHOTO_URL,item.getOriginalUrl());
 		cv.put(Spots.LATITUDE,lat);
 		cv.put(Spots.LONGITUDE,lng);
 		cv.put(Spots.THUMBDATA,data);
