@@ -40,9 +40,13 @@ import com.google.android.maps.Projection;
  */
 public class GeoClusterer {
 	
-	/** grid size for clustering. */
+	/** grid size for clustering(dip). */
 	protected int GRIDSIZE = 56;
 
+	/** screen density for multi-resolution
+	 *	get from contenxt.getResources().getDisplayMetrics().density;  */
+	protected float screenDensity_ = 1.0f;
+	
 	/** MapView object. */
 	protected final MapView mapView_;
 	/** GeoItem ArrayList object to be shown. */
@@ -67,10 +71,12 @@ public class GeoClusterer {
 	/**
 	 * @param mapView MapView object.
 	 * @param markerIconBmps MarkerBitmap objects for icons.
+	 * @param screenDensity Screen Density.
 	 */
-	public GeoClusterer(MapView mapView, List<MarkerBitmap> markerIconBmps){
+	public GeoClusterer(MapView mapView, List<MarkerBitmap> markerIconBmps, float screenDensity){
 		mapView_ = mapView;
 		markerIconBmps_ = markerIconBmps;
+		screenDensity_ = screenDensity;
 		handler_ = new Handler();
 		isMoving_ = false;
 	}
@@ -101,8 +107,9 @@ public class GeoClusterer {
 				  continue;
 			  Point ptCenter = proj.toPixels(gpCenter,null);
 			  // find a cluster which contains the marker.
-			  if(pos.x >= ptCenter.x - GRIDSIZE && pos.x <= ptCenter.x + GRIDSIZE &&
-				  pos.y >= ptCenter.y - GRIDSIZE && pos.y <= ptCenter.y + GRIDSIZE) {
+			  final int GridSizePx = (int) (GRIDSIZE * screenDensity_ + 0.5f);
+			  if(pos.x >= ptCenter.x - GridSizePx && pos.x <= ptCenter.x + GridSizePx &&
+				  pos.y >= ptCenter.y - GridSizePx && pos.y <= ptCenter.y + GridSizePx) {
 				  cluster.addItem(item);
 				  return;
 			  }
@@ -406,6 +413,8 @@ public class GeoClusterer {
 		 * @return selected item's location.
 		 */
 		public GeoPoint getSelectedItemLocation(){
+			if(clusterMarker_==null)
+				return null;
 			return clusterMarker_.getSelectedItemLocation();
 		}
 
@@ -485,7 +494,7 @@ public class GeoClusterer {
 				return;
 			}
 			if(clusterMarker_ == null) {
-				clusterMarker_ = new ClusterMarker(this,markerIconBmps_);
+				clusterMarker_ = new ClusterMarker(this,markerIconBmps_,screenDensity_);
 				List<Overlay> mapOverlays = mapView_.getOverlays();
 				mapOverlays.add(clusterMarker_);
 			}
@@ -504,15 +513,15 @@ public class GeoClusterer {
 			Point se = pro.toPixels(bounds.getSouthEast(),null);
 			Point centxy = pro.toPixels(center_,null);
 			boolean inViewport = true;
-			int gridSize = clusterer_.GRIDSIZE;
+			int GridSizePx = (int) (GRIDSIZE * screenDensity_ + 0.5f);
 			if(zoom_ != mapView_.getZoomLevel()) {
 				int diff = mapView_.getZoomLevel() - zoom_;
-				gridSize = (int) (Math.pow(2, diff) * gridSize);
+				GridSizePx = (int) (Math.pow(2, diff) * GridSizePx);
 			}
-			if(nw.x != se.x && (centxy.x + gridSize < nw.x || centxy.x - gridSize > se.x)) {
+			if(nw.x != se.x && (centxy.x + GridSizePx < nw.x || centxy.x - GridSizePx > se.x)) {
 				inViewport = false;
 			}
-			if(inViewport && (centxy.y + gridSize < nw.y || centxy.y - gridSize > se.y)) {
+			if(inViewport && (centxy.y + GridSizePx < nw.y || centxy.y - GridSizePx > se.y)) {
 				inViewport = false;
 			}
 			return inViewport;
