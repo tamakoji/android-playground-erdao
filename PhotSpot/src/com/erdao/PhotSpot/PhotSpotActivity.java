@@ -82,7 +82,7 @@ import com.google.android.maps.Projection;
  * @author Huan Erdao
  */
 public class PhotSpotActivity extends MapActivity {
-	
+
 	/** self object */
 	private PhotSpotActivity me_;
 	/** Context object */
@@ -318,7 +318,7 @@ public class PhotSpotActivity extends MapActivity {
 			doSearchQuery(intent);
 		}
 		if (Intent.ACTION_VIEW.equals(action)) {
-			mylocationEnabled_ = true;
+			mylocationEnabled_ = false;
 			mylocationSetFocus_ = false;
 			favoriteOverlayed_ = true;
 			PhotoItem item = intent.getParcelableExtra(PhotoItem.EXT_PHOTOITEM);
@@ -328,7 +328,7 @@ public class PhotSpotActivity extends MapActivity {
 			mapView_.invalidate();
 		}
 		else{
-			mylocationEnabled_ = true;
+			mylocationEnabled_ = false;
 			mylocationSetFocus_ = true;
 			favoriteOverlayed_ = false;
 		}

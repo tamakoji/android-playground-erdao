@@ -20,7 +20,7 @@
 	<string name="flickr_apikey">YOUR-FLICKR-API-KEY</string>
 					
 	<!-- COMMON strings -->
-	<string name="app_ver">1.6.1</string>
+	<string name="app_ver">1.6.3</string>
 	<string name="legal_ver">1.0.0</string>
 	<string name="no_title">NO TITLE</string>
 	<string name="search_invoke">App/Search/Invoke Search</string>
@@ -124,19 +124,18 @@
 	<string name="InitialMessage">
 		PhotSpot by Huan Erdao\n\n
 		Updates:\n
-		v1.6.1:\n
-		- support multi screen resolution.\n
-		- some bugfixes to prevent FC.\n
-		- image lazy-load tweek again.\n
-		v1.5.1:\n
-		- bugfix: OutOfMemoey FC issue on loading many images.\n
-		- improvement on bitmap loading sequence.\n
+		v1.6.3:\n
+		- Add French Translation\n
+		- Bugfix:crash after \"open with browser\"\n
+		v1.6.2:\n
+		- workaround for Moto-Cliq, auto startup of MyLocation is disabled.\n
+		- Please select from Menu to enable it(Moto-Cliq currently not supported)\n
 		\n
 		For more instructions, please see help from\n
 		[menu]->[Settings]->[View Help]\n\n
 	</string>
 	<string name="AboutDlgContent">
-		PhotSpot Version 1.6.1 by Huan Erdao\n\n
+		PhotSpot Version 1.6.3 by Huan Erdao\n\n
 		PhotSpot will let you easily find out the popular spot at location of your choice.\n
 		It will retrieve public geotagged contents on the map screen and show them in clustered balloons.\n
 		the each number on the balloon shows the number of contents within the cluster, so that

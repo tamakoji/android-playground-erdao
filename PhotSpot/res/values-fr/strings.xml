@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) 2009 Huan Erdao
+
+	 Licensed under the Apache License, Version 2.0 (the "License");
+	 you may not use this file except in compliance with the License.
+	 You may obtain a copy of the License at
+  
+		  http://www.apache.org/licenses/LICENSE-2.0
+  
+	 Unless required by applicable law or agreed to in writing, software
+	 distributed under the License is distributed on an "AS IS" BASIS,
+	 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+	 See the License for the specific language governing permissions and
+	 limitations under the License.
+-->
+<resources>
+	<!-- activity titles -->
+	<string name="app_name">PhotSpot</string>
+	<string name="help_title">PhotSpot Aide</string>
+	<string name="favorite_title">Favoris</string>
+	<string name="settings_title">Réglages PhotSpot</string>
+
+	<!-- menu strings -->
+	<string name="menu_SearchSpots">Chercher Spots</string>
+	<string name="menu_SearchMySpots">Mes Spots</string>
+	<string name="menu_RefreshPhotSpot">Raffraîchir</string>
+	<string name="menu_SearchPlace">Chercher Lieu</string>
+	<string name="menu_MyLocation">Ma Position</string>
+	<string name="menu_Favorites">Favoris</string>
+	<string name="menu_Preferences">Réglages</string>
+	<string name="menu_MapMode">Mode carte</string>
+	<string name="menu_Revert">Retour</string>
+	<string name="menu_GalleryView">Voir Galerie</string>
+	<string name="menu_DeleteAll">Supprimer tous les articles</string>
+
+	<!-- message strings -->
+	<string name="QuerySearching">Recherche...</string>
+	<string name="QueryConfirm">Confirmation...</string>
+	<string name="httpErrorMsg">Il y a un problème de connexion. Veuillez svp vérifier votre connexion.</string>
+	<string name="noResultErrorMsg">Aucun Spot n\'a été trouvé.</string>
+	<string name="jsonErrorMsg">Il y a un problème dans la recherche. Veuillez svp essayer à nouveau.</string>
+	<string name="jsonErrorMsgConfirmUser">Impossible de trouver l\'utilisateur. Veuillez svp vérifier le nom d\'utilisateur.</string>
+	<string name="search_label">Rechercher un lieu</string>
+	<string name="search_hint">Entrez le nom du lieu</string>
+	<string name="ReverseGeoResult">Vouliez-vous dire</string>
+	<string name="ToastRevGeoCodeRun">Recherche du lieu...</string>
+	<string name="ToastRevGeoCodeFail">Aucun lieu n\'a été trouvé.</string>
+	<string name="ToastLocalSearchFail">Aucune liste locale trouvée.</string>
+	<string name="ToastInstructionNav">Appuyez sur Menu pour démarrer</string>
+	<string name="ToastSavedFavorites">Sauvegarder dans les favoris</string>
+	<string name="ToastRemovedFavorites">Article retiré des favoris</string>
+	<string name="ToastAlreadyExistFavorites">Existe déjà dans les favoris</string>
+	<string name="ToastFavoritesFull">Favoris pleins</string>
+	<string name="ToastUserConfirmSuccess">Utilisateur confirmé.</string>
+	<string name="noFavorites">Aucun favori n\'a été trouvé.</string>
+	<string name="Distance">Distance approximative</string>
+	<string name="FavFooter">La localisation des spots peut ne pas être exacte.\nLes photos sont sous le copyright de leurs propriétaires.\n</string>
+	<string name="DeleteAllConfirm">Tous les articles des favoris vont être supprimés.</string>
+	<string name="EditLabel">Editer le nom</string>
+	<string name="UndefinedFavLabel">Indeterminé</string>
+	<string name="Delete">Supprimer</string>
+	<string name="DeleteFavoriteConfirm">Cet article sera supprimé.</string>
+	<string name="ClearHistoryConfirm">L\'historique de recherche sera vidé.</string>
+
+	<!-- Dialog Title&Messages strings -->
+	<string name="ExtActionDlgTitle">Sélectionnez une action</string>
+	<string name="LocalSearchDlgTitle">Sélectionner dans la recherche Google</string>
+	<string name="MapModeDlgTitle">Sélectionner le mode</string>
+	<string name="PicasaUserDlgTitle">Entrez votre nom d\'utilisateur Picasa</string>
+	<string name="FlickrUserDlgTitle">Entrez votre nom d\'utilisateur Flickr</string>
+	<string name="PrivacyAgreementDlgTitle">Accord de politique de confidentialité</string>
+	<string name="Dlg_Close">Fermer</string>
+	<string name="Dlg_Agree">J\'accepte</string>
+	<string name="Dlg_Disagree">Je refuse</string>
+
+	<!-- strings for Settings -->
+	<string name="setting_svcprov">Fournisseurs de service</string>
+	<string name="setting_svcprov_summary">Sélectionnez le fournisseur Panoramio, Picasa ou Flickr</string>
+	<string name="setting_clearhistory">Vider l\'historique</string>
+	<string name="setting_clearhistory_summary">Vider l\'historique de \"Chercher Lieu\"</string>
+	<string name="setting_category_account">Paramètres de compte</string>
+	<string name="setting_picasauser">Compte Picasa</string>
+	<string name="setting_picasauser_summary">Entrez votre nom d\'utilisateur Picasa</string>
+	<string name="setting_flickruser">Compte Flickr</string>
+	<string name="setting_flickruser_summary">Entrez votre nom d\'utilisateur Flickr</string>
+	<string name="setting_category_other">Autres</string>
+	<string name="setting_help">Voir l\'Aide</string>
+	<string name="setting_about">A propos</string>
+
+	<!-- strings for AboutDialog -->
+	<string name="AboutDlgTitle">A propos de PhotSpot</string>
+	<string name="PrivacyAgreement">
+		Politique de confidentialité PhotSpot :\n\n
+		En utilisant ce logiciel, vous allez soumettre l\'affichage de votre emplacement actuel à notre serveur.\n
+		Votre localisation actuelle ne sera PAS soumise.\n
+		En utilisant également la fonction de recherche \"Mes Spots\", vous soumettrez l\'information de votre nom d\'utilisateur à notre serveur.\n
+		La fonction recherche \"Mes Spots\" récupère seulement les photos réglées sur \"public\", un mot de passe n\'est pas nécessaire et ne sera pas soumis.\n
+		Le serveur s\'exécute comme proxy pour optimiser la taille des données, il filtre également les données redondantes.\n
+		Les renseignements fournis au serveur ne seront jamais utilisés autrement que pour cette application.\n
+ 	</string>
+	<string name="InitialMessage">
+		PhotSpot par Huan Erdao\n\n
+		Mises à jour :\n
+		v1.6.3 :\n
+		- Ajouté localisation Française\n
+		- Correction d'un problème:Un arrêt forcé après l'appel de \"Ouvrir avec le navigateur\"
+		v1.6.2 :\n
+		- La fonction Ma Position au démarrage est désactivée. Veuillez svp la sélectionner dans le menu pour l\'activer.\n
+		- ne pas utiliser \"Ma Position\" avec Moto-Cliq tant que ce problème n\'est pas résolu.
+		\n
+		Pour plus d\'informations, veuillez svp consulter l\'aide dans\n
+		[menu]->[Réglages]->[Voir l\'aide]\n\n
+	</string>
+	<string name="AboutDlgContent">
+		PhotSpot Version 1.6.3 par Huan Erdao\n\n
+		PhotSpot vous permettra de trouver facilement un lieu populaire selon l\'emplacement de votre choix.\n
+		Il vous permettra de récupérer des contenus publics géo marqués sur la carte et qui seront affichés sous la forme de ballons.\n
+		Le nombre indiqué sur chaque ballon correspond au contenu, plus le nombre est grand plus il y a de photos prises par des utilisateurs dans cette zone.\n\n
+		Panoramio et Picasa Albums Web sont des marques commerciales de Google Inc.\n
+		Flickr est une marque commerciale de Yahoo! Inc.\n\n
+		Tous les autres noms et produits peuvent être des marques commerciales de leurs sociétés respectives auxquelles ils sont associés.\n
+		Ce produit utilise les API des services cités ci-dessus mais n\'est pas approuvé par les sociétés citées ci-dessus.\n\n
+		Les photos fournies par les services ci-dessus sont sous le copyright de leurs propriétaires.\n
+		La localisation des photos peut ne pas être exacte.\n\n
+	</string>
+
+	<!-- strings for Copyright -->
+	<string name="copyrightLabel">Les photos sont sous le copyright de leurs propriétaires.</string>
+
+	<!-- strings for Help -->
+	<string name="helpcontent">
+		&lt;h2&gt;Qu\'est-ce que PhotSpot?&lt;/h2&gt;
+			PhotSpot vous permet de trouver facilement des endroits populaires où vous le souhaitez.
+			Il permet de récupérer des contenus publics géo marqués sur la carte et de les afficher sous la forme de ballons.
+			Le nombre indiqué sur chaque ballon correspond au contenu,
+			plus le nombre est grand plus il y a de photos prises par des utilisateurs dans cette zone.
+		&lt;hr&gt;
+		&lt;h2&gt;Instructions&lt;/h2&gt;
+			&lt;h3&gt;Ecran initial&lt;/h3&gt;
+				L\'affichage initial indique votre emplacement actuel sur la carte. Appuyez sur \"Menu\" pour continuer.
+			&lt;h3&gt;Recherche de Spots&lt;/h3&gt;
+				Sélectionnez \"Recherche Spots\" pour obtenir le contenu public disponible et afficher les
+				résultats sur la carte.
+				Un maximum de 100 spots sera affiché par recherche.
+			&lt;h3&gt;Recherche Mes Spots&lt;/h3&gt;
+				Sélectionnez \"Mes Spots\" pour obtenir votre contenu d\'utilisateur,
+				le résultat sera affiché sur la carte. Pour activer cette fonction,
+				vous devez définir un nom d\'utilisateur dans \"Paramètres du compte\"
+				puis sélectionnez un fournisseur de services.
+				Un maximum de 200 emplacements sera affiché par recherche.
+				Panoramio n\'est pas supporté.
+			&lt;h3&gt;Chercher Lieu&lt;/h3&gt;
+				Sélectionnez \"Chercher Lieu\" ou appuyez sur le bouton de recherche de votre appareil pour lancer une recherche de lieux.
+			&lt;h3&gt;Ma Position&lt;/h3&gt;
+				Si vous souhaitez afficher votre localisation actuelle sur la carte,
+				sélectionnez cette option. Il faudra activer votre GPS.
+			&lt;h3&gt;Favoris&lt;/h3&gt;
+				Vous pouvez enregistrer des lieux favoris et les consulter ultérieurement.
+				Vous pourrez parcourir les favoris même si vous êtes en mode hors connexion.
+				Pour ajouter des spots favoris, appuyez sur une des miniatures de la galerie qui s\'affiche en haut de l\'écran et choisissez \"Ajouter aux Favoris\" dans
+				le menu pop-up.
+				Vous pouvez enregistrer jusqu'à 256 favoris.
+				Les favoris peuvent également être renommés.
+				Après la sauvegarde des favoris, sélectionnez l\'élément de votre choix en cliquant dessus puis effectuez l\'action \"Editer le nom\".
+			&lt;h3&gt;Mode Carte&lt;/h3&gt;
+				Vous pouvez choisir un affichage \"Carte\" ou \"Satellite\" (par défaut : Carte)
+			&lt;h3&gt;Réglages&lt;/h3&gt;
+				&lt;h4&gt;- Choix du fournisseur de service&lt;/h4&gt;
+				Vous pouvez sélectionner votre fournisseur de contenu pour extraire des géo localisation (par défaut : Panoramio).
+				Les fournisseurs de contenu actuellement supportés sont :
+				&lt;ul&gt;
+					&lt;li&gt;&lt;b&gt;Panoramio&lt;/b&gt;&lt;/li&gt;
+					&lt;li&gt;&lt;b&gt;Picasa Web Album&lt;/b&gt;&lt;/li&gt;
+					&lt;li&gt;&lt;b&gt;Flickr&lt;/b&gt;&lt;/li&gt;
+				&lt;/ul&gt;
+				&lt;h4&gt;- Vider l\'historique&lt;/h4&gt;
+				Cette fonction vous permet de vider l\'historique de \"Chercher Lieu\".
+				&lt;h4&gt;- Paramètres de compte&lt;/h4&gt;
+				Dans cette version, \"Mes Spots\" recherche uniquement les photos définies dans la rubrique \"Public\", un mot de passe N\'EST PAS nécessaire.
+				La fonction \"Mes Spots\" ne sera cependant pas pleinement fonctionnelle sauf si un nom d\'utilisateur est indiqué.
+				Pour valider, une connexion est nécessaire.
+				&lt;ul&gt;
+				&lt;li&gt;&lt;b&gt;Compte Picasa&lt;/b&gt;&lt;/li&gt;
+					Entrez votre nom d\'utilisateur Picasa pour la recherche Mes Spots.
+					L\'application confirmera ensuite votre nom d\'utilisateur à Picasa.
+				&lt;li&gt;&lt;b&gt;Compte Flickr&lt;/b&gt;&lt;/li&gt;
+					Entrez votre nom d\'utilisateur Flickr pour la recherche Mes Spots.
+					L\'application confirmera ensuite votre nom d\'utilisateur à Flickr.
+				&lt;/ul&gt;
+				&lt;h4&gt;- Aide&lt;/h4&gt;
+					Consulter cette rubrique d\'aide.
+		&lt;hr&gt;
+		&lt;h2&gt;Visualisation des résultats&lt;/h2&gt;
+			&lt;h3&gt;Ouverture de la galerie&lt;/h3&gt;
+				En cliquant sur un ballon, la galerie photos s\'affichera en haut de l\'écran.
+				Vous pouvez faire défiler les photos avec votre doigt et parcourir le contenu.
+			&lt;h3&gt;Effectuez un double-clic pour zoomer sur carte&lt;/h3&gt;
+				Vous pouvez effectuer un zoom avant/arrière en utilisant la commande de zoom,
+				vous pouvez aussi zoomer en double-cliquant sur un ballon.
+				Un agrandissement sera effectué sur l\'emplacement de la recherche en cours.
+			&lt;h3&gt;Zoom avant/arrière pour en découvrir plus&lt;/h3&gt;
+				Zoom avant/arrière permet de fusionner/diviser en fonction du niveau de zoom.
+				Mais le contenu lui-même est fondé sur le résultat que vous obtenez avec la commande \"Recherche Spots\".
+				Si vous avez besoin de rafraîchir la vue, sélectionnez \"Raffraîchir\" dans le menu.
+			&lt;h3&gt;Appui sur les vignettes&lt;/h3&gt;
+				En effectuant un appui sur les photos miniatures en haut de votre écran, une fenêtre vous proposant des options s\'affichera.
+			&lt;h3&gt;Changer la taille des images de la galerie&lt;/h3&gt;
+				En effectuant un geste de balayage avec votre doigt, vous pouvez changer la taille des vignettes.
+				Glissez vers le haut pour rétrécir et glissez vers le bas pour agrandir.
+				Vous pouvez glisser jusqu\'à la limite de la trame.
+		&lt;hr&gt;
+		&lt;h2&gt;Astuces&lt;/h2&gt;
+			&lt;h3&gt;Sélection du fournisseur de contenu&lt;/h3&gt;
+				Les contenus que vous pouvez obtenir diffèrent en fonction des fournisseurs,
+				Panoramio fournira par exemple des photos de beaux paysages et il est donc utile de
+				trouver des repères et des lieux historiques.
+				Picasa Albums Web et Flickr peuvent proposer du contenu plus vaste et plus diversifié,
+				mais ils peuvent récupérer plus souvent des mises à jour de contenu par rapport à Panoramio.
+		&lt;hr&gt;
+		&lt;h2&gt;Par ailleurs&lt;/h2&gt;
+			&lt;h3&gt;Contribution à PhotSpot&lt;/h3&gt;
+				Si vous souhaitez apporter votre contribution à PhotSpot, rien de plus facile.
+				Uploadez des photos avec un géo tag auprès de l\'un des fournisseurs de contenu pris en charge par PhotSpot,
+				assurez-vous de les mettre en affichage \"Public\", de sorte que les photos soient disponibles pour la diffusion.
+				Plus les utilisateurs enverront des photos à ces services, plus l\'application sera riche.
+		&lt;hr&gt;
+		&lt;h2&gt;Mentions légales&lt;/h2&gt;
+			Panoramio et Picasa Web Albums sont des marques commerciales de Google Inc.&lt;br&gt;
+			Flickr est une marque commerciale de Yahoo! Inc.&lt;br&gt;
+			Tous les autres noms et produits peuvent être des marques commerciales de leurs sociétés respectives auxquelles ils sont associés.&lt;br&gt;
+			Ce produit utilise les API des services cités ci-dessus mais n\'est pas approuvé par les sociétés citées ci-dessus.&lt;br&gt;
+			Les photos fournies par les services ci-dessus sont sous le copyright de leurs propriétaires.&lt;br&gt;
+			La localisation des photos peut ne pas être exacte.&lt;br&gt;
+		&lt;hr&gt;
+		&lt;h2&gt;Commentaires&lt;/h2&gt;
+			Veuillez svp envoyer vos suggestions, remarques, questions à &lt;a href=\"mailto:Huan.Erdao@gmail.com\"&gt;Huan.Erdao@gmail.com&lt;/a&gt;&lt;br&gt;
+			Langages acceptés : Anglais, Chinois, Japonais
+		&lt;hr&gt;
+		&lt;h2&gt;Remerciements&lt;/h2&gt;
+			Traduction française fournie par &lt;a href=\"http://www.android-software.fr/\"&gt;android-software.fr&lt;/a&gt;&lt;br&gt;
+	</string>
+
+
+</resources>
