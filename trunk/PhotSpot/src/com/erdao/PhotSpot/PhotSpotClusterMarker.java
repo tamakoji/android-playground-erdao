@@ -317,7 +317,7 @@ public class PhotSpotClusterMarker extends ClusterMarker {
 	public void onItemAction(int cmd){
 		switch(cmd){
 			case EXT_ACTION_OPENBROWSER:{
-				clearSelect();
+				//clearSelect();
 				String url = ((PhotoItem)GeoItems_.get(selItem_)).getOriginalUrl();
 				Intent i = new Intent(Intent.ACTION_VIEW,Uri.parse(url));
 				context_.startActivity(i);

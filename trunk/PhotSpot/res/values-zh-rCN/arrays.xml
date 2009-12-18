@@ -1,47 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Copyright (C) 2009 Huan Erdao
 
-     Licensed under the Apache License, Version 2.0 (the "License");
-     you may not use this file except in compliance with the License.
-     You may obtain a copy of the License at
-  
-          http://www.apache.org/licenses/LICENSE-2.0
-  
-     Unless required by applicable law or agreed to in writing, software
-     distributed under the License is distributed on an "AS IS" BASIS,
-     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-     See the License for the specific language governing permissions and
-     limitations under the License.
+	 Licensed under the Apache License, Version 2.0 (the "License");
+	 you may not use this file except in compliance with the License.
+	 You may obtain a copy of the License at
+
+		  http://www.apache.org/licenses/LICENSE-2.0
+
+	 Unless required by applicable law or agreed to in writing, software
+	 distributed under the License is distributed on an "AS IS" BASIS,
+	 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+	 See the License for the specific language governing permissions and
+	 limitations under the License.
 -->
 <resources>
 	<string-array name="select_map_mode">
-        <item>地图</item>
-        <item>卫星</item>
-    </string-array>
+		<item>地图</item>
+		<item>卫星</item>
+	</string-array>
 
 	<string-array name="gallery_extaction">
-        <item>加入收藏夹</item>
-        <item>这儿有什么?</item>
-        <item>这儿怎么走?</item>
-        <item>用浏览器打开</item>
-    </string-array>
+		<item>加入收藏夹</item>
+		<item>这儿有什么?</item>
+		<item>这儿怎么走?</item>
+		<item>用浏览器打开</item>
+	</string-array>
 
 	<string-array name="favorite_extaction">
-        <item>用地图看</item>
-        <item>这儿怎么走?</item>
-        <item>分类项目</item>
-        <item>删除项目</item>
-        <item>用浏览器打开</item>
-    </string-array>
+		<item>用地图看</item>
+		<item>这儿怎么走?</item>
+		<item>分类项目</item>
+		<item>删除项目</item>
+		<item>用浏览器打开</item>
+	</string-array>
 
 	<string-array name="favorite_gallery_action">
-        <item>用地图看</item>
-        <item>这儿怎么走?</item>
-        <item>用浏览器打开</item>
-    </string-array>
-    
-    <string-array name="showmap_extaction">
-        <item>这儿怎么走?</item>
-        <item>用浏览器打开</item>
-    </string-array>
+		<item>用地图看</item>
+		<item>这儿怎么走?</item>
+		<item>用浏览器打开</item>
+	</string-array>
+	
+	<string-array name="showmap_extaction">
+		<item>这儿怎么走?</item>
+		<item>用浏览器打开</item>
+	</string-array>
 </resources>
