@@ -72,3 +72,4 @@ I am not sure if I would really implement below functions:
   * Thanks to all users who upload geotagged photo content to public
   * Thanks to Dr. Andreas Paepcke at Stanford Univ. for mentoring
   * Thanks to Google for providing ION phone :-)
+  * This project was done under affiliation with Stanford HCI Group until Jan/10
