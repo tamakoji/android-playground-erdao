@@ -3,10 +3,10 @@
 = Clustering Code and Samples =
 Clustering Modules are now available.
 == Module Source ==
-http://android-playground-erdao.googlecode.com/svn/trunk/mapsutility_android
+http://android-playground-erdao.googlecode.com/svn/trunk/SampleClusterMap/src/com/erdao/android/mapviewutil/
 == Javadoc ==
-http://android-playground-erdao.googlecode.com/svn/trunk/mapsutility_android/doc/index.html
-== Sample Codes ==
+http://android-playground-erdao.googlecode.com/svn/trunk/SampleClusterMap/doc/index.html
+== Full Sample Codes ==
 http://android-playground-erdao.googlecode.com/svn/trunk/SampleClusterMap
 
 *<font color="red">NOTICE:You need to obtain YOUR API KEYs to run the application</font>*
