@@ -26,7 +26,7 @@
   + after that, just compile library by typing:
     make APP=LaughingMan
 
-  it will automatically builds .so file and all you nee is to
+  it will automatically builds .so file and all you need is to
   build android application from workspace.
 
 
