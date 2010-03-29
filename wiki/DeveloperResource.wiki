@@ -2,11 +2,11 @@
 [PhotSpot back to PhotSpot]
 = Clustering Code and Samples =
 Clustering Modules are now available.
-== Module Source ==
+== Module Source for com.erdao.android.mapviewutil ==
 http://android-playground-erdao.googlecode.com/svn/trunk/SampleClusterMap/src/com/erdao/android/mapviewutil/
-== Javadoc ==
+== Javadoc for com.erdao.android.mapviewutil ==
 http://android-playground-erdao.googlecode.com/svn/trunk/SampleClusterMap/doc/index.html
-== Full Sample Codes ==
+== Full Sample Codes to use this classlib ==
 http://android-playground-erdao.googlecode.com/svn/trunk/SampleClusterMap
 
 *<font color="red">NOTICE:You need to obtain YOUR API KEYs to run the application</font>*
