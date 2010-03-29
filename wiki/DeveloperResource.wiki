@@ -1,4 +1,5 @@
 #summary PhotSpot implementation notes
+#labels Featured,Phase-Design
 [PhotSpot back to PhotSpot]
 = Clustering Code and Samples =
 Clustering Modules are now available.
