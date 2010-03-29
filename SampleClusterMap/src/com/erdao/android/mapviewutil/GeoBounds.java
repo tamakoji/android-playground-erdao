@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.erdao.maps;
+package com.erdao.android.mapviewutil;
 
 import com.google.android.maps.GeoPoint;
 

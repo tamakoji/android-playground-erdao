@@ -15,7 +15,7 @@
  */
 
 
-package com.erdao.maps;
+package com.erdao.android.mapviewutil;
 
 import android.os.Parcel;
 import android.os.Parcelable;

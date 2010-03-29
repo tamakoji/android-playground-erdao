@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.erdao.maps.markerclusterer;
+package com.erdao.android.mapviewutil.markerclusterer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,8 +24,8 @@ import java.util.TimerTask;
 import android.graphics.Point;
 import android.os.Handler;
 
-import com.erdao.maps.GeoBounds;
-import com.erdao.maps.GeoItem;
+import com.erdao.android.mapviewutil.GeoBounds;
+import com.erdao.android.mapviewutil.GeoItem;
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapView;
 import com.google.android.maps.Overlay;
