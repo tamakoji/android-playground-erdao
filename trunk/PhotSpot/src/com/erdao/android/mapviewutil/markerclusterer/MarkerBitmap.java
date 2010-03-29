@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.erdao.maps.markerclusterer;
+package com.erdao.android.mapviewutil.markerclusterer;
 
 import android.graphics.Bitmap;
 import android.graphics.Point;

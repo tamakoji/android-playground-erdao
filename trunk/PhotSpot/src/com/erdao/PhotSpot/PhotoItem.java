@@ -21,7 +21,7 @@ import android.graphics.Bitmap;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.erdao.maps.GeoItem;
+import com.erdao.android.mapviewutil.GeoItem;
 
 /**
  * Class for managing Photo item

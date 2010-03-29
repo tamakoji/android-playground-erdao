@@ -77,7 +77,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:clickable="true"
-        android:apiKey="@string/gmap_apikey_rel"
+        android:apiKey="@string/gmap_apikey_dbg"
         android:layout_below="@id/imageframe"
     />
 	<LinearLayout

@@ -47,9 +47,9 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
 
 import com.erdao.PhotSpot.PhotSpotClusterer.PhotSpotGeoCluster;
-import com.erdao.maps.GeoItem;
-import com.erdao.maps.markerclusterer.ClusterMarker;
-import com.erdao.maps.markerclusterer.MarkerBitmap;
+import com.erdao.android.mapviewutil.GeoItem;
+import com.erdao.android.mapviewutil.markerclusterer.ClusterMarker;
+import com.erdao.android.mapviewutil.markerclusterer.MarkerBitmap;
 import com.erdao.utils.LazyLoadBitmap;
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapController;

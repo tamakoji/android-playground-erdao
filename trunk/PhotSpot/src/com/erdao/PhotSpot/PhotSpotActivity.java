@@ -67,8 +67,8 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.erdao.maps.GeoItem;
-import com.erdao.maps.markerclusterer.MarkerBitmap;
+import com.erdao.android.mapviewutil.GeoItem;
+import com.erdao.android.mapviewutil.markerclusterer.MarkerBitmap;
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapActivity;
 import com.google.android.maps.MapController;
