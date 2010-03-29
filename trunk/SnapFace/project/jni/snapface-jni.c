@@ -1,8 +1,8 @@
-#include "../imgutils/imgutils.h"
+#include "./imgutils/imgutils.h"
 #include <jni.h>
 
 void
-Java_com_erdao_SnapFace_PreviewView_grayToRgb( JNIEnv*  env,
+Java_com_erdao_android_SnapFace_PreviewView_grayToRgb( JNIEnv*  env,
                                       jobject  this,
                                       jbyteArray src,
                                       jintArray  dst )

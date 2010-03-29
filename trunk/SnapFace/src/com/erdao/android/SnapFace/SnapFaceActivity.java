@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.erdao.SnapFace;
+package com.erdao.android.SnapFace;
 
 import android.app.Activity;
 import android.app.AlertDialog;

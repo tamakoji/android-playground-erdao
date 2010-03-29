@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.erdao.SnapFace;
+package com.erdao.android.SnapFace;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -303,12 +303,10 @@ class PreviewView extends SurfaceView implements SurfaceHolder.Callback, Preview
 			prevSettingHeight_ = previewHeightNorm;
 			fdtmodeBitmap_ = BitmapFactory.decodeResource(context_.getResources(), R.drawable.fdt_norm);
 		}
- 		if(strCapSizesVals!=null){
- 			String capTokens1[] = strCapSizesVals.split(",");
- 			String capTokens2[] = capTokens1[capTokens1.length-1].split("x");
- 	 		captureWidth_ = Integer.parseInt(capTokens2[0]);
- 	 		captureHeight_ = Integer.parseInt(capTokens2[1]);
- 		}
+ 		String capTokens1[] = strCapSizesVals.split(",");
+ 		String capTokens2[] = capTokens1[capTokens1.length-1].split("x");
+ 		captureWidth_ = Integer.parseInt(capTokens2[0]);
+ 		captureHeight_ = Integer.parseInt(capTokens2[1]);
  		/* set preview size small for fast analysis. let say QQVGA
  		 * by setting smaller image size, small faces will not be detected. */
  		if(prevSettingHeight_!=0)
