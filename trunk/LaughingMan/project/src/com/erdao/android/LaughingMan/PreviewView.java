@@ -14,16 +14,12 @@
  * limitations under the License.
  */
 
-package com.erdao.LaughingMan;
+package com.erdao.android.LaughingMan;
 
 import java.io.IOException;
-import java.io.OutputStream;
 import java.nio.ByteBuffer;
-import java.util.Calendar;
 
-import android.content.ContentValues;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -33,20 +29,15 @@ import android.graphics.PointF;
 import android.graphics.Rect;
 import android.hardware.Camera;
 import android.hardware.Camera.AutoFocusCallback;
-import android.hardware.Camera.PictureCallback;
 import android.hardware.Camera.PreviewCallback;
 import android.hardware.Camera.Size;
 import android.media.FaceDetector;
-import android.net.Uri;
 import android.os.Handler;
-import android.provider.MediaStore;
-import android.provider.MediaStore.Images.Media;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
-import android.widget.Toast;
 
 
 /* Class PreviewView for camera surface

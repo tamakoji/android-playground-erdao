@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.erdao.LaughingMan;
+package com.erdao.android.LaughingMan;
 
 import android.app.Activity;
 import android.os.Bundle;

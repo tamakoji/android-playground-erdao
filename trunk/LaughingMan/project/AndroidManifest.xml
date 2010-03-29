@@ -14,7 +14,7 @@
      limitations under the License.
 -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-      package="com.erdao.LaughingMan"
+      package="com.erdao.android.LaughingMan"
       android:versionCode="1"
       android:versionName="0.1">
 	<uses-permission android:name="android.permission.CAMERA"/>
