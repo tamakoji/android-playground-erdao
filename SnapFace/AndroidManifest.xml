@@ -14,7 +14,7 @@
      limitations under the License.
 -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-      package="com.erdao.SnapFace"
+      package="com.erdao.android.SnapFace"
       android:versionCode="5"
       android:versionName="1.2.1">
 	<uses-permission android:name="android.permission.CAMERA"/>
