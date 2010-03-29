@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 Huan Erdao
+ * Copyright (C) 2010 Huan Erdao
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,22 +22,39 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.ViewGroup.LayoutParams;
 
+import com.google.android.apps.analytics.GoogleAnalyticsTracker;
+
 /* Activity Class
  */
 public class SnapFaceActivity extends Activity {
-	private PreviewView camPreview_;
+
+    private static final String TAG = "SnapFace";
+
+    private PreviewView camPreview_;
 	private int fdetLevel_;
 	private int appMode_;
+	private GoogleAnalyticsTracker tracker_;
+
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
+		/* GoogleAnalyticsTracker */
+		Log.i(TAG,"GoogleAnalytics Setup");
+		tracker_ = GoogleAnalyticsTracker.getInstance();
+		tracker_.start(getString(R.string.GoogleAnalyticsUA), this);
+		tracker_.trackPageView("/SnapFaceScreen");
+		tracker_.dispatch();
+
 		/* set Full Screen */
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);  
 		/* set window with no title bar */
@@ -49,7 +66,7 @@ public class SnapFaceActivity extends Activity {
 		fdetLevel_ = settings.getInt(getString(R.string.menu_Preferences), 1);
 		
 		/* create camera view */
-		camPreview_ = new PreviewView(this);
+		camPreview_ = new PreviewView(this,tracker_);
 		camPreview_.setAppMode(appMode_);
 		camPreview_.setfdetLevel(fdetLevel_,true);
 		setContentView(camPreview_);
@@ -58,6 +75,15 @@ public class SnapFaceActivity extends Activity {
 				(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
 	}
 	
+	/* onDestroy */
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		// Stop the tracker when it is no longer needed.
+		tracker_.dispatch();
+		tracker_.stop();
+	}
+
 	/* create Menu */
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -74,10 +100,16 @@ public class SnapFaceActivity extends Activity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.menu_Preferences:{
+				Log.i(TAG,"GoogleAnalytics trackEvent Menu-Preference");
+		        tracker_.trackEvent("Menu", "Preference", "clicked", 1);
+				tracker_.dispatch();
 				showDialog(R.id.PreferencesDlg);
 				break;
 			}
 			case R.id.menu_AppMode:{
+				Log.i(TAG,"GoogleAnalytics trackEvent Menu-AppMode");
+		        tracker_.trackEvent("Menu", "AppMode", "clicked", 1);
+				tracker_.dispatch();
 				showDialog(R.id.AppModeDlg);
 				break;
 			}
@@ -102,6 +134,7 @@ public class SnapFaceActivity extends Activity {
 						editor.putInt(getString(R.string.menu_Preferences), whichButton);
 						editor.commit();
 						dismissDialog(R.id.PreferencesDlg);
+				        tracker_.trackEvent("Preference", "Fdetlevel", "changed", whichButton);
 					}
 				})
 				.create();
@@ -117,12 +150,24 @@ public class SnapFaceActivity extends Activity {
 						editor.putInt(getString(R.string.menu_AppMode), whichButton);
 						editor.commit();
 						dismissDialog(R.id.AppModeDlg);
+				        tracker_.trackEvent("Preference", "AppMode", "changed", whichButton);
 					}
 				})
 				.create();
 			}
 		}
 		return null;
+	}
+
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		// TODO Auto-generated method stub
+		if(keyCode==KeyEvent.KEYCODE_BACK){
+			Log.i(TAG,"GoogleAnalytics trackEvent Key-Back");
+	        tracker_.trackEvent("Key", "Back", "clicked", 1);
+			return false;
+		} 
+		return super.onKeyDown(keyCode, event);
 	}
 }
 
