@@ -23,6 +23,7 @@ Hope apis will get richer in the future.
   In javascript version of google maps, it can register event handler such as "moveend" and "zoomend" but not in android. for that I needed to hook the draw event of the marker to check the current screen projection (bounds) to know if it is moving or staying still.
   * ItemizedOverlay are easy but not customizable well enough
   there are plenty sample sources use ItemizedOverlay but I don't think this class is useful if you need to do many things with markers.
+  ItemizedOverlay is good to overlay several "same-image" icons on the map, but like showing individual information like how many items within the cluster, needed to use Overlay class for this implementation. 
   * Built-in zoom control can't hook events
   built-in zoom control are easy but can't hook press event, as well it only zoom to center of current screen so sometime marker in focus will get out of bounds. For that, I needed to implement zoom control as button and zoom manually.
   * Can't set zoom level directly
