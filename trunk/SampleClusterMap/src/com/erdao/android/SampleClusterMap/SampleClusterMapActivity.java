@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.erdao.SampleClusterMap;
+package com.erdao.android.SampleClusterMap;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,9 +25,9 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.erdao.maps.GeoItem;
-import com.erdao.maps.markerclusterer.GeoClusterer;
-import com.erdao.maps.markerclusterer.MarkerBitmap;
+import com.erdao.android.mapviewutil.GeoItem;
+import com.erdao.android.mapviewutil.markerclusterer.GeoClusterer;
+import com.erdao.android.mapviewutil.markerclusterer.MarkerBitmap;
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapActivity;
 import com.google.android.maps.MapController;
