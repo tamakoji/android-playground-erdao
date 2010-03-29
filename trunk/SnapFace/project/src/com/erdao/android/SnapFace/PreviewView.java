@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 Huan Erdao
+ * Copyright (C) 2010 Huan Erdao
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.ByteBuffer;
 import java.util.Calendar;
+
+import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -94,9 +96,11 @@ class PreviewView extends SurfaceView implements SurfaceHolder.Callback, Preview
 	private byte[] grayBuff_;
 	private int bufflen_;
 	private int[] rgbs_;
+	
+	private GoogleAnalyticsTracker tracker_;
 
 	/* Constructor */
-	public PreviewView(Context context) {
+	public PreviewView(Context context, GoogleAnalyticsTracker tracker) {
 		super(context);
 		context_ = context;
 		previewWidth_ = previewHeight_ = 1;
@@ -108,10 +112,14 @@ class PreviewView extends SurfaceView implements SurfaceHolder.Callback, Preview
 		surfacehldr_.addCallback(this);
 		surfacehldr_.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
 		handler_ = new Handler();
-		System.loadLibrary("snapface-jni");
+//		System.loadLibrary("snapface-jni");
 		isSDCardPresent_ = android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED);
+		tracker_ = tracker;
 	}
 
+	/* Jni entry point */
+//	private native int grayToRgb(byte src[],int dst[]);
+	
 	/* Overlay instance access method for Activity */
 	public OverlayLayer getOverlay(){
 		return overlayLayer_;
@@ -438,6 +446,8 @@ class PreviewView extends SurfaceView implements SurfaceHolder.Callback, Preview
 			outStream.flush();
 			outStream.close();
 			Toast.makeText(context_, context_.getString(R.string.SaveImageSuccessAlert)+absFilePath, Toast.LENGTH_SHORT).show();
+			tracker_.trackEvent("Picture", "SaveBitmap", "Saved", 1);
+			tracker_.dispatch();
 			return uri;
 		} catch (IOException e) {
 			Toast.makeText(context_, R.string.SaveImageFailureAlert, Toast.LENGTH_SHORT).show();
@@ -453,7 +463,7 @@ class PreviewView extends SurfaceView implements SurfaceHolder.Callback, Preview
 		if( detectThread_.isAlive() ){
 			try {
 				detectThread_.join();
-				Log.i(TAG,"thread deleted.");
+//				Log.i(TAG,"thread deleted.");
 				detectThread_ = null;
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
@@ -461,9 +471,6 @@ class PreviewView extends SurfaceView implements SurfaceHolder.Callback, Preview
 			}
 		}
 	}
-	
-	/* Jni entry point */
-	private native int grayToRgb(byte src[],int dst[]);
 	
 	/* Overlay Layer class */
 	public class OverlayLayer extends View { 
@@ -529,8 +536,8 @@ class PreviewView extends SurfaceView implements SurfaceHolder.Callback, Preview
 		@Override
 		public void run() {
 			/* face detector only needs grayscale image */
-			grayToRgb(graybuff_,rgbs_);										// jni method
-//			gray8toRGB32(graybuff_,previewWidth_,previewHeight_,rgbs);		// java method
+//			grayToRgb(graybuff_,rgbs_);										// jni method
+			gray8toRGB32(graybuff_,previewWidth_,previewHeight_,rgbs_);		// java method
 			float aspect = (float)previewHeight_/(float)previewWidth_;
 			int w = prevSettingWidth_;
 			int h = (int)(prevSettingWidth_*aspect);

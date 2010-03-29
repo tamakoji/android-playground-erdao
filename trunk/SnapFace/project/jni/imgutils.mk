@@ -13,16 +13,11 @@
 
 LOCAL_PATH:= $(call my-dir)
 
-include $(LOCAL_PATH)/imgutils.mk
-
-# this module
+# imgutils
 #
 include $(CLEAR_VARS)
 
-LOCAL_MODULE    := snapface-jni
-LOCAL_SRC_FILES := snapface-jni.c
-LOCAL_C_INCLUDES := $(LOCAL_PATH)/imgutils
+LOCAL_MODULE    := imgutils
+LOCAL_SRC_FILES := ./imgutils/imgutils.c
 
-LOCAL_STATIC_LIBRARIES := imgutils
-
-include $(BUILD_SHARED_LIBRARY)
+include $(BUILD_STATIC_LIBRARY)

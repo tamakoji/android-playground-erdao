@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Copyright (C) 2009 Huan Erdao
+<!-- Copyright (C) 2010 Huan Erdao
 
      Licensed under the Apache License, Version 2.0 (the "License");
      you may not use this file except in compliance with the License.
@@ -34,5 +34,9 @@
 	<string name="delete_alert">The picture will be deleted</string>
 	<string name="delete_alert_ok">OK</string>
 	<string name="delete_alert_cancel">Cancel</string>
+	
+	
+	<string name="GoogleAnalyticsUA">UA-YOUR-ACCOUNT-HERE</string>
+	
 
 </resources>
