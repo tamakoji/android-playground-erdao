@@ -335,8 +335,8 @@ public class PhotSpotCloudServlet extends HttpServlet {
 				case MODE_PICASA:
 				case MODE_PICASA_WUSER:{
 					jsonobj = new JSONObject(srcJson);
-					totalFeedSize_ += jsonobj.getInt("itemsPerPage");
-					srcArray = jsonobj.getJSONArray("photos");
+					totalFeedSize_ += jsonobj.getJSONObject("data").getInt("itemsPerPage");
+					srcArray = jsonobj.getJSONObject("data").getJSONArray("photos");
 					break;
 				}
 				case MODE_FLICKR:
