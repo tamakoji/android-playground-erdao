@@ -16,6 +16,12 @@
   + Android SDK 1.5 or higher
   + Android NDK r1 or higer
 
+- SOURCE CHECKOUT and Project Import
+
+  After checkout the root folder, you need to import project
+  to eclipse from LaughingMan/project folder. root folder contain Application.mk
+  which is root for NDK and it is not root for Android Project.
+
 - BEFORE BUILD NDK LIB:
   + Make sure you have properly installed Android NDK and set $NDKROOT.
   + make symbolic link at $NDKROOT/apps with name LaughingMan, directing
