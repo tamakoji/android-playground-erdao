@@ -9,8 +9,11 @@ http://android-playground-erdao.googlecode.com/svn/trunk/SampleClusterMap/doc/in
 == Full Sample Codes to use this classlib ==
 http://android-playground-erdao.googlecode.com/svn/trunk/SampleClusterMap
 
-*<font color="red">NOTICE:You need to obtain YOUR API KEYs to run the application</font>*
-*<font color="red">NOTICE:You have to press menu key and select "Display GeoItems" to invoke clustering, since there is no onReady kind of event for MapView.</font>*
+*<font color="red">
+NOTICE:<br/>
+You need to obtain YOUR API KEYs to run the application<br/>
+You have to press menu key and select "Display GeoItems" to invoke clustering, since there is no onReady kind of event for MapView.<br/>
+</font>*
 
 
 = Implementation Notes =
