@@ -58,7 +58,7 @@ public class PhotSpotClusterer extends GeoClusterer {
 		mapView_ = mapView;
 		imageFrame_ = imageFrame;
 		// override GRIDSIZE
-		GRIDSIZE = (int)(74*screenDensity);
+		GRIDSIZE_ = 74;
 	}
 
 	/**

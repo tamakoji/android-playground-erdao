@@ -41,7 +41,7 @@ import com.google.android.maps.Projection;
 public class GeoClusterer {
 	
 	/** grid size for clustering(dip). */
-	protected int GRIDSIZE = 56;
+	protected int GRIDSIZE_ = 56;
 
 	/** screen density for multi-resolution
 	 *	get from contenxt.getResources().getDisplayMetrics().density;  */
@@ -107,7 +107,7 @@ public class GeoClusterer {
 				  continue;
 			  Point ptCenter = proj.toPixels(gpCenter,null);
 			  // find a cluster which contains the marker.
-			  final int GridSizePx = (int) (GRIDSIZE * screenDensity_ + 0.5f);
+			  final int GridSizePx = (int) (GRIDSIZE_ * screenDensity_ + 0.5f);
 			  if(pos.x >= ptCenter.x - GridSizePx && pos.x <= ptCenter.x + GridSizePx &&
 				  pos.y >= ptCenter.y - GridSizePx && pos.y <= ptCenter.y + GridSizePx) {
 				  cluster.addItem(item);
@@ -513,7 +513,7 @@ public class GeoClusterer {
 			Point se = pro.toPixels(bounds.getSouthEast(),null);
 			Point centxy = pro.toPixels(center_,null);
 			boolean inViewport = true;
-			int GridSizePx = (int) (GRIDSIZE * screenDensity_ + 0.5f);
+			int GridSizePx = (int) (GRIDSIZE_ * screenDensity_ + 0.5f);
 			if(zoom_ != mapView_.getZoomLevel()) {
 				int diff = mapView_.getZoomLevel() - zoom_;
 				GridSizePx = (int) (Math.pow(2, diff) * GridSizePx);
