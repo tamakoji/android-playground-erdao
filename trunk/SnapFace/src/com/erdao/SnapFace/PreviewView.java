@@ -41,6 +41,7 @@ import android.net.Uri;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.provider.MediaStore.Images.Media;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -52,19 +53,22 @@ import android.widget.Toast;
  */
 class PreviewView extends SurfaceView implements SurfaceHolder.Callback, PreviewCallback, AutoFocusCallback {
 	
+    private static final String TAG = "SnapFace";
+    
+	private final static int PREVIEW_WIDTH_FINE		= 320;
+	private final static int PREVIEW_WIDTH_NORMAL	= 240;
+
 	/* local members */
 	private Context context_;
 	private SurfaceHolder surfacehldr_;
 	private Camera camera_;
 	private boolean lockPreview_ = true;
-	private final int PREVIEW_WIDTH_FINE = 320;
-	private final int PREVIEW_HEIGHT_FINE = 240;
-	private final int PREVIEW_WIDTH_NORMAL = 240;
-	private final int PREVIEW_HEIGHT_NORMAL= 180;
 	private int prevSettingWidth_;
 	private int prevSettingHeight_;
 	private int previewWidth_;
 	private int previewHeight_;
+	private int captureWidth_ = 0;
+	private int captureHeight_ = 0;
 	private boolean takingPicture_ = false;
 	private Bitmap fdtmodeBitmap_ = null;
 	private boolean isSDCardPresent_ = false;
@@ -73,11 +77,11 @@ class PreviewView extends SurfaceView implements SurfaceHolder.Callback, Preview
 
 	/* Overlay Layer for additional graphics overlay */
 	private Bitmap overlayBitmap_;
-	private OverlayLayer layer_;
+	private OverlayLayer overlayLayer_;
 
 	/* Face Detection */
 	private FaceResult faces_[];
-	private final int MAX_FACE = 5;
+	private static final int MAX_FACE = 5;
 	private FaceDetector fdet_;
 	private PointF selFacePt_ = null;
 
@@ -99,7 +103,7 @@ class PreviewView extends SurfaceView implements SurfaceHolder.Callback, Preview
 		faces_ = new FaceResult[MAX_FACE];
 		for(int i=0;i<MAX_FACE;i++)
 			faces_[i] = new FaceResult();
-		layer_ = new OverlayLayer(context);
+		overlayLayer_ = new OverlayLayer(context);
 		surfacehldr_ = getHolder();
 		surfacehldr_.addCallback(this);
 		surfacehldr_.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
@@ -110,12 +114,11 @@ class PreviewView extends SurfaceView implements SurfaceHolder.Callback, Preview
 
 	/* Overlay instance access method for Activity */
 	public OverlayLayer getOverlay(){
-		return layer_;
+		return overlayLayer_;
 	}
 
 	/* surfaceCreated */
 	public void surfaceCreated(SurfaceHolder holder) {
-//		Log.i("DEBUG","surfaceCreated");
 		setKeepScreenOn(true);
 		setupCamera();
 		if(!isSDCardPresent_)
@@ -126,29 +129,27 @@ class PreviewView extends SurfaceView implements SurfaceHolder.Callback, Preview
 
 	/* surfaceDestroyed */
 	public void surfaceDestroyed(SurfaceHolder holder) {
-//		Log.i("DEBUG","surfaceDestroyed");
 		setKeepScreenOn(false);
 		releaseCamera();
 	}
 
 	/* onAutoFocus */
 	public void onAutoFocus(boolean success, Camera camera){
-		if(success&&takingPicture_)
+		if(takingPicture_)//&&success)
 			takePicture();
 	}
 
 	/* surfaceChanged */
 	public void surfaceChanged(SurfaceHolder holder, int format, int w, int h) {
-//		Log.i("DEBUG","surfaceChanged");
 		resetCameraSettings();
-		startPreview();
+		camera_.setPreviewCallback(this);
+		camera_.startPreview();
 	}
 
 	/* onPreviewFrame */
 	public void onPreviewFrame(byte[] _data, Camera _camera) {
 		if(lockPreview_||takingPicture_)
 			return;
-//		Log.i("DEBUG","_data.length, bufflen_="+_data.length+","+bufflen_);
 		if(_data.length < bufflen_)
 			return;
 		// run only one analysis thread at one time
@@ -174,7 +175,6 @@ class PreviewView extends SurfaceView implements SurfaceHolder.Callback, Preview
 			return false;
 		/* detect touch down */
 		if(event.getAction()==MotionEvent.ACTION_DOWN){
-//			Log.i("DEBUG","onTouchDown");
 			/* CAUTION : touch point need to be same aspect to jpeg bitmap size */
 			int w = this.getWidth();
 			int h = this.getHeight();
@@ -217,10 +217,9 @@ class PreviewView extends SurfaceView implements SurfaceHolder.Callback, Preview
 		fdetLevel_ = level;
 		if(silent)
 			return;
-		releaseCamera();
-		setupCamera();
+		camera_.stopPreview();
 		resetCameraSettings();
-		startPreview();
+		camera_.startPreview();
 	}
 
 	/* setAppMode */
@@ -259,7 +258,9 @@ class PreviewView extends SurfaceView implements SurfaceHolder.Callback, Preview
 	/* releaseCamera */
 	private void releaseCamera(){
 		/* release camera object */
+ 		Log.i(TAG,"releaseCamera");
 		lockPreview_ = true;
+		camera_.setPreviewCallback(null);
 		camera_.stopPreview();
 		waitForFdetThreadComplete();
 		camera_.release();
@@ -272,46 +273,65 @@ class PreviewView extends SurfaceView implements SurfaceHolder.Callback, Preview
 		waitForFdetThreadComplete();
 		for(int i=0;i<MAX_FACE;i++)
 			faces_[i].clear();
+		/* set parameters for onPreviewFrame */
+ 		Camera.Parameters params = camera_.getParameters();
+// 		Log.i(TAG,"camera params"+params.flatten());
+		String strPrevSizesVals = params.get("preview-size-values");
+ 		String strCapSizesVals = params.get("picture-size-values");
+ 		int previewHeightFine = 0;
+ 		int previewHeightNorm = 0;
+ 		if(strPrevSizesVals!=null){
+	 		String tokens[] = strPrevSizesVals.split(",");
+	 		for( int i=0; i < tokens.length; i++ ){
+	 	 		String tokens2[] = tokens[i].split("x");
+	 			if( tokens[i].contains(Integer.toString(PREVIEW_WIDTH_FINE)) )
+	 				previewHeightFine = Integer.parseInt(tokens2[1]);
+	 			if( tokens[i].contains(Integer.toString(PREVIEW_WIDTH_NORMAL)) )
+	 				previewHeightNorm = Integer.parseInt(tokens2[1]);
+	 		}
+ 		}
+ 		else{
+ 			previewHeightFine = 240;
+ 			previewHeightNorm = 160;
+ 		}
 		if( fdetLevel_ == 0 ){
 			prevSettingWidth_ = PREVIEW_WIDTH_FINE;
-			prevSettingHeight_ = PREVIEW_HEIGHT_FINE;
+			prevSettingHeight_ = previewHeightFine;
 			fdtmodeBitmap_ = BitmapFactory.decodeResource(context_.getResources(), R.drawable.fdt_fine);
 		}else{
 			prevSettingWidth_ = PREVIEW_WIDTH_NORMAL;
-			prevSettingHeight_ = PREVIEW_HEIGHT_NORMAL;
+			prevSettingHeight_ = previewHeightNorm;
 			fdtmodeBitmap_ = BitmapFactory.decodeResource(context_.getResources(), R.drawable.fdt_norm);
 		}
-		/* set parameters for onPreviewFrame */
- 		Camera.Parameters params = camera_.getParameters();
+ 		String capTokens1[] = strCapSizesVals.split(",");
+ 		String capTokens2[] = capTokens1[capTokens1.length-1].split("x");
+ 		captureWidth_ = Integer.parseInt(capTokens2[0]);
+ 		captureHeight_ = Integer.parseInt(capTokens2[1]);
  		/* set preview size small for fast analysis. let say QQVGA
  		 * by setting smaller image size, small faces will not be detected. */
- 		params.setPreviewSize(prevSettingWidth_, prevSettingHeight_);
- 		params.setPictureSize(640, 480);
+ 		if(prevSettingHeight_!=0)
+ 			params.setPreviewSize(prevSettingWidth_, prevSettingHeight_);
+ 		if(captureWidth_!=0)
+ 			params.setPictureSize(captureWidth_, captureHeight_);
+// 		params.setPreviewFrameRate(5);
 		camera_.setParameters(params);
-		/* need to re-get for real size if set to 160x120... why?
-		 * (actual preview size will be 176x144 wich is 11:9) */
+		/* setParameters do not work well */
  		params = camera_.getParameters();
  		Size size = params.getPreviewSize();
 		previewWidth_ = size.width;
 		previewHeight_ = size.height;
-//		Log.i("DEBUG","preview size, w:"+previewWidth_+",h:"+previewHeight_);
+		Log.i(TAG,"preview size, w:"+previewWidth_+",h:"+previewHeight_);
+ 		size = params.getPictureSize();
+		Log.i(TAG,"picture size, w:"+size.width+",h:"+size.height);
 		// allocate work memory for analysis
 		bufflen_ = previewWidth_*previewHeight_;
 		grayBuff_ = new byte[bufflen_];
 		rgbs_ = new int[bufflen_];
-		fdet_ = new FaceDetector( previewWidth_,previewHeight_, MAX_FACE ); 
+		float aspect = (float)previewHeight_/(float)previewWidth_;
+		fdet_ = new FaceDetector( prevSettingWidth_,(int)(prevSettingWidth_*aspect), MAX_FACE ); 
 		lockPreview_ = false;
 	}
 	
-	/* startPreview */
-	private void startPreview(){
-		/* start Preview */
-		camera_.setPreviewCallback(this);
-		camera_.startPreview();
-		/* one-shot autofoucs */
-		camera_.autoFocus(this);
-	}
-
 	/* takePicture */
 	private void takePicture() {
 		waitForFdetThreadComplete();
@@ -322,12 +342,22 @@ class PreviewView extends SurfaceView implements SurfaceHolder.Callback, Preview
 	/* jpegCallback */
 	private PictureCallback pictureCallbackJpeg = new PictureCallback() {
 		public void onPictureTaken(byte[] _data, Camera _camera) {
-//			Log.i("DEBUG","jpegCallback:"+_data);
+//			Log.i(TAG,"jpegCallback:"+_data);
 			takingPicture_ = false;
 			/* convert jpeg buffer to Bitmap */
-			Bitmap fullbmp = BitmapFactory.decodeByteArray(_data, 0, _data.length);
-			int w = fullbmp.getWidth();
-			int h = fullbmp.getHeight();
+			BitmapFactory.Options opts = new BitmapFactory.Options();
+			opts.inJustDecodeBounds = true;
+			Bitmap fullbmp = BitmapFactory.decodeByteArray(_data, 0, _data.length, opts);
+			int w = opts.outWidth;
+			int h = opts.outHeight;
+			Log.i(TAG,"fullbitmap raw: w="+w+",h="+h);
+			opts.inJustDecodeBounds = false;
+			opts.inSampleSize = (int)(w/captureWidth_);
+			// resample
+			fullbmp = BitmapFactory.decodeByteArray(_data, 0, _data.length,opts);
+			w = fullbmp.getWidth();
+			h = fullbmp.getHeight();
+			Log.i(TAG,"fullbitmap mod: w="+w+",h="+h);
 			/* CAUTION
 			 * takepicture callback image may differs not just aspect
 			 * but also the view angle. need to fix them.
@@ -407,10 +437,10 @@ class PreviewView extends SurfaceView implements SurfaceHolder.Callback, Preview
 			bmp.compress(Bitmap.CompressFormat.JPEG, 90, outStream);
 			outStream.flush();
 			outStream.close();
-			Toast.makeText(context_, context_.getString(R.string.SaveImageSuccessAlert)+absFilePath, Toast.LENGTH_LONG).show();
+			Toast.makeText(context_, context_.getString(R.string.SaveImageSuccessAlert)+absFilePath, Toast.LENGTH_SHORT).show();
 			return uri;
 		} catch (IOException e) {
-			Toast.makeText(context_, R.string.SaveImageFailureAlert, Toast.LENGTH_LONG).show();
+			Toast.makeText(context_, R.string.SaveImageFailureAlert, Toast.LENGTH_SHORT).show();
 			e.printStackTrace();
 		}
 		return null;
@@ -423,6 +453,8 @@ class PreviewView extends SurfaceView implements SurfaceHolder.Callback, Preview
 		if( detectThread_.isAlive() ){
 			try {
 				detectThread_.join();
+				Log.i(TAG,"thread deleted.");
+				detectThread_ = null;
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -496,13 +528,18 @@ class PreviewView extends SurfaceView implements SurfaceHolder.Callback, Preview
 		/* run the thread */
 		@Override
 		public void run() {
-//			long t1 = System.currentTimeMillis();
 			/* face detector only needs grayscale image */
 			grayToRgb(graybuff_,rgbs_);										// jni method
 //			gray8toRGB32(graybuff_,previewWidth_,previewHeight_,rgbs);		// java method
-//			Log.i("DEBUG","decode time:"+(System.currentTimeMillis()-t1));
-			Bitmap bmp = Bitmap.createBitmap(rgbs_,previewWidth_,previewHeight_,Bitmap.Config.RGB_565);
-//			Log.i("DEBUG","bmp w:"+bmp.getWidth()+",h:"+bmp.getHeight());
+			float aspect = (float)previewHeight_/(float)previewWidth_;
+			int w = prevSettingWidth_;
+			int h = (int)(prevSettingWidth_*aspect);
+			float xScale = (float)previewWidth_/(float)prevSettingWidth_;
+			float yScale = (float)previewHeight_/(float)prevSettingHeight_;
+			Bitmap bmp = Bitmap.createScaledBitmap(
+						Bitmap.createBitmap(rgbs_,previewWidth_,previewHeight_,Bitmap.Config.RGB_565),
+						w,h,false);
+//			Log.i(TAG,"downscale w="+bmp.getWidth()+",h="+bmp.getHeight());
 			int prevfound=0,trackfound=0;
 			for(int i=0; i<MAX_FACE; i++){
 				FaceResult face = faces_[i];
@@ -516,9 +553,11 @@ class PreviewView extends SurfaceView implements SurfaceHolder.Callback, Preview
 				Rect rect = new Rect((int)(lt.x),(int)(lt.y),(int)(lt.x+eyedist*5.0f),(int)(lt.y+eyedist*5.0f));
 				/* fix to fit */
 				rect.left = rect.left < 0 ? 0 : rect.left;
-				rect.right = rect.right > previewWidth_ ? previewWidth_ : rect.right;
+				rect.right = rect.right > w ? w : rect.right;
 				rect.top = rect.top < 0 ? 0 : rect.top;
-				rect.bottom = rect.bottom > previewHeight_ ? previewHeight_ : rect.bottom;
+				rect.bottom = rect.bottom > h ? h : rect.bottom;
+				if(rect.left >= rect.right || rect.top >= rect.bottom )
+					continue;
 				/* crop */
 				Bitmap facebmp = Bitmap.createBitmap(bmp,rect.left,rect.top,rect.width(),rect.height());
 				FaceDetector.Face[] trackface = new FaceDetector.Face[1];
@@ -529,29 +568,34 @@ class PreviewView extends SurfaceView implements SurfaceHolder.Callback, Preview
 					trackface[0].getMidPoint(ptTrack);
 					ptTrack.x += (float)rect.left;
 					ptTrack.y += (float)rect.top;
-					faces_[i].setFace(ptTrack,trackface[0].eyesDistance());
+					ptTrack.x *= xScale;
+					ptTrack.y *= yScale;
+					float trkEyedist = trackface[0].eyesDistance()*xScale;
+					faces_[i].setFace(ptTrack,trkEyedist);
 					trackfound++;
 				}
 			}
-//			Log.i("DEBUG","prevfound:trackfound="+prevfound+","+trackfound);
 			if(prevfound==0||prevfound!=trackfound){
 				FaceDetector.Face[] fullResults = new FaceDetector.Face[MAX_FACE];
-//				t1 = System.currentTimeMillis();
 				fdet_.findFaces(bmp, fullResults);
 				/* copy result */
 				for(int i=0; i<MAX_FACE; i++){
 					if(fullResults[i]==null)
 						faces_[i].clear();
 					else{
-						faces_[i].setFace(fullResults[i]);
+						PointF mid = new PointF();
+						fullResults[i].getMidPoint(mid);
+						mid.x *= xScale;
+						mid.y *= yScale;
+						float eyedist = fullResults[i].eyesDistance()*xScale;
+						faces_[i].setFace(mid,eyedist);
 					}
 				}
 			}
-//			Log.i("DEBUG","loop time:"+(System.currentTimeMillis()-t1));
 			/* post message to UI */
 			handler_.post(new Runnable() {
 				public void run() {
-					layer_.postInvalidate();
+					overlayLayer_.postInvalidate();
 					// turn off thread lock
 					isThreadWorking_ = false;
 				}
@@ -584,11 +628,6 @@ class PreviewView extends SurfaceView implements SurfaceHolder.Callback, Preview
 		}
 		public void setFace(PointF midEye, float eyeDist){
 			set_(midEye,eyeDist);
-		}
-		public void setFace(FaceDetector.Face src){
-			PointF midEye = new PointF();
-			src.getMidPoint(midEye);
-			set_(midEye,src.eyesDistance());
 		}
 		public void clear(){
 			set_(new PointF(0.0f,0.0f),0.0f);
