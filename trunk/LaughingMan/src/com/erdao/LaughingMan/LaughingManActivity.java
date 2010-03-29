@@ -35,7 +35,8 @@ public class LaughingManActivity extends Activity {
 		/* set window with no title bar */
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		/* create camera view */
-		camPreview_ = new PreviewView(this,1);
+		camPreview_ = new PreviewView(this);
+		camPreview_.setAppMode(2);
 		setContentView(camPreview_);
 		/* append Overlay */
 		addContentView(camPreview_.getOverlay(), new LayoutParams 
