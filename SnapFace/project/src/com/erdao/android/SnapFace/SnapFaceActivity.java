@@ -16,11 +16,16 @@
 
 package com.erdao.android.SnapFace;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -42,18 +47,18 @@ public class SnapFaceActivity extends Activity {
 	private int fdetLevel_;
 	private int appMode_;
 	private GoogleAnalyticsTracker tracker_;
-
+	private boolean calledACTION_GET_CONTENT_ = false;
+	private long startTimeMills_ = 0;
+	
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
-		/* GoogleAnalyticsTracker */
+      
+        /* GoogleAnalyticsTracker */
 		Log.i(TAG,"GoogleAnalytics Setup");
 		tracker_ = GoogleAnalyticsTracker.getInstance();
 		tracker_.start(getString(R.string.GoogleAnalyticsUA), this);
-		tracker_.trackPageView("/SnapFaceScreen");
-		tracker_.dispatch();
 
 		/* set Full Screen */
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);  
@@ -64,9 +69,16 @@ public class SnapFaceActivity extends Activity {
 		SharedPreferences settings = getSharedPreferences(getString(R.string.SnapFacePreference), 0);
 		appMode_ = settings.getInt(getString(R.string.menu_AppMode), 0);
 		fdetLevel_ = settings.getInt(getString(R.string.menu_Preferences), 1);
+
+		//implicit intent receiver(GET_CONTENT will be invoked to add contact thumbnail)
+        if(Intent.ACTION_GET_CONTENT.equals(getIntent().getAction())) {
+            Log.i(TAG,"implicit intent:ACTION_GET_CONTENT");
+            calledACTION_GET_CONTENT_ = true;
+            appMode_ = 0;
+        }
 		
 		/* create camera view */
-		camPreview_ = new PreviewView(this,tracker_);
+		camPreview_ = new PreviewView(this,calledACTION_GET_CONTENT_,tracker_);
 		camPreview_.setAppMode(appMode_);
 		camPreview_.setfdetLevel(fdetLevel_,true);
 		setContentView(camPreview_);
@@ -78,10 +90,40 @@ public class SnapFaceActivity extends Activity {
 	/* onDestroy */
 	@Override
 	protected void onDestroy() {
-		super.onDestroy();
 		// Stop the tracker when it is no longer needed.
+		long curTimeMills = System.currentTimeMillis();
+		Date date = new Date(curTimeMills);
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+		tracker_.trackEvent(getString(R.string.GA_CAT_SYS),getString(R.string.GA_ACT_STOP), simpleDateFormat.format(date), 0);
 		tracker_.dispatch();
 		tracker_.stop();
+		super.onDestroy();
+	}
+
+	/* onStart */
+	@Override
+	protected void onStart() {
+        if(calledACTION_GET_CONTENT_)
+        	tracker_.trackPageView("/SnapFaceGetContent");
+        else
+        	tracker_.trackPageView("/SnapFaceStandAlone");
+		startTimeMills_ = System.currentTimeMillis();
+		Date date = new Date(startTimeMills_);
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+		tracker_.trackEvent(getString(R.string.GA_CAT_SYS),getString(R.string.GA_ACT_START), simpleDateFormat.format(date), 0);
+		tracker_.dispatch();
+		super.onStart();
+	}
+
+	/* onPause */
+	@Override
+	protected void onPause() {
+		long durationTimeMills = System.currentTimeMillis()-startTimeMills_;
+		Date date = new Date(durationTimeMills);
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm:ss.SSS");
+		tracker_.trackEvent(getString(R.string.GA_CAT_SYS),getString(R.string.GA_ACT_PAUSE), simpleDateFormat.format(date), 0);
+		tracker_.dispatch();
+		super.onPause();
 	}
 
 	/* create Menu */
@@ -101,15 +143,13 @@ public class SnapFaceActivity extends Activity {
 		switch (item.getItemId()) {
 			case R.id.menu_Preferences:{
 				Log.i(TAG,"GoogleAnalytics trackEvent Menu-Preference");
-		        tracker_.trackEvent("Menu", "Preference", "clicked", 1);
-				tracker_.dispatch();
+				tracker_.trackEvent(getString(R.string.GA_CAT_ACT),getString(R.string.GA_ACT_FDETMODE), getString(R.string.GA_LBL_CLICKED) , 1);
 				showDialog(R.id.PreferencesDlg);
 				break;
 			}
 			case R.id.menu_AppMode:{
 				Log.i(TAG,"GoogleAnalytics trackEvent Menu-AppMode");
-		        tracker_.trackEvent("Menu", "AppMode", "clicked", 1);
-				tracker_.dispatch();
+				tracker_.trackEvent(getString(R.string.GA_CAT_ACT),getString(R.string.GA_ACT_APPMODE), getString(R.string.GA_LBL_CLICKED) , 1);
 				showDialog(R.id.AppModeDlg);
 				break;
 			}
@@ -134,7 +174,7 @@ public class SnapFaceActivity extends Activity {
 						editor.putInt(getString(R.string.menu_Preferences), whichButton);
 						editor.commit();
 						dismissDialog(R.id.PreferencesDlg);
-				        tracker_.trackEvent("Preference", "Fdetlevel", "changed", whichButton);
+						tracker_.trackEvent(getString(R.string.GA_CAT_ACT),getString(R.string.GA_ACT_FDETMODE), Integer.toString(whichButton) , 1);
 					}
 				})
 				.create();
@@ -150,7 +190,7 @@ public class SnapFaceActivity extends Activity {
 						editor.putInt(getString(R.string.menu_AppMode), whichButton);
 						editor.commit();
 						dismissDialog(R.id.AppModeDlg);
-				        tracker_.trackEvent("Preference", "AppMode", "changed", whichButton);
+						tracker_.trackEvent(getString(R.string.GA_CAT_ACT),getString(R.string.GA_ACT_APPMODE), Integer.toString(whichButton) , 1);
 					}
 				})
 				.create();
@@ -163,11 +203,32 @@ public class SnapFaceActivity extends Activity {
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		// TODO Auto-generated method stub
 		if(keyCode==KeyEvent.KEYCODE_BACK){
-			Log.i(TAG,"GoogleAnalytics trackEvent Key-Back");
-	        tracker_.trackEvent("Key", "Back", "clicked", 1);
-			return false;
+	        if(calledACTION_GET_CONTENT_){
+	        	setResult(RESULT_CANCELED);
+				tracker_.trackEvent(getString(R.string.GA_CAT_ACT), getString(R.string.GA_ACT_GET_CONTENT), getString(R.string.GA_LBL_CANCEL) , 1);
+	        	finish();
+	        }
 		} 
 		return super.onKeyDown(keyCode, event);
 	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		// TODO Auto-generated method stub
+		if(calledACTION_GET_CONTENT_){
+			if(resultCode == RESULT_OK && data != null ){
+				Uri uri = data.getData();
+				Intent intent = new Intent();
+				intent.setData(uri);
+				setResult(RESULT_OK,intent);
+				tracker_.trackEvent(getString(R.string.GA_CAT_ACT), getString(R.string.GA_ACT_GET_CONTENT), getString(R.string.GA_LBL_SUCCEED) , 1);
+			}
+        	setResult(resultCode);
+        	finish();
+		}
+		super.onActivityResult(requestCode, resultCode, data);
+	}
+	
+
 }
 

@@ -21,14 +21,14 @@ import java.io.OutputStream;
 import java.nio.ByteBuffer;
 import java.util.Calendar;
 
-import com.google.android.apps.analytics.GoogleAnalyticsTracker;
-
+import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.PointF;
@@ -40,6 +40,7 @@ import android.hardware.Camera.PreviewCallback;
 import android.hardware.Camera.Size;
 import android.media.FaceDetector;
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.provider.MediaStore.Images.Media;
@@ -50,6 +51,8 @@ import android.view.SurfaceView;
 import android.view.View;
 import android.widget.Toast;
 
+import com.google.android.apps.analytics.GoogleAnalyticsTracker;
+
 
 /* Class PreviewView for camera surface
  */
@@ -59,6 +62,11 @@ class PreviewView extends SurfaceView implements SurfaceHolder.Callback, Preview
     
 	private final static int PREVIEW_WIDTH_FINE		= 320;
 	private final static int PREVIEW_WIDTH_NORMAL	= 240;
+	
+	// mag ratio for eye-distant to face region
+	private final static float MAG_EYEDIST_FACE		= 3.0f;
+	// pixel len for contact icon
+	private final static int CONTACT_ICON_PIXLEN	= 60;
 
 	/* local members */
 	private Context context_;
@@ -97,10 +105,11 @@ class PreviewView extends SurfaceView implements SurfaceHolder.Callback, Preview
 	private int bufflen_;
 	private int[] rgbs_;
 	
-	private GoogleAnalyticsTracker tracker_;
+	private GoogleAnalyticsTracker tracker_ = null;
+	private boolean calledACTION_GET_CONTENT_ = false;
 
 	/* Constructor */
-	public PreviewView(Context context, GoogleAnalyticsTracker tracker) {
+	public PreviewView(Context context, boolean calledACTION_GET_CONTENT, GoogleAnalyticsTracker tracker) {
 		super(context);
 		context_ = context;
 		previewWidth_ = previewHeight_ = 1;
@@ -115,6 +124,7 @@ class PreviewView extends SurfaceView implements SurfaceHolder.Callback, Preview
 //		System.loadLibrary("snapface-jni");
 		isSDCardPresent_ = android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED);
 		tracker_ = tracker;
+		calledACTION_GET_CONTENT_ = calledACTION_GET_CONTENT;
 	}
 
 	/* Jni entry point */
@@ -383,14 +393,14 @@ class PreviewView extends SurfaceView implements SurfaceHolder.Callback, Preview
 					continue;
 				PointF midEyes = new PointF(); 
 				face.getMidPoint(midEyes);
-				/* don't want region to be overlapped, assume face region is x3 eyedist */
-				PointF lt = new PointF(midEyes.x*xRatio-eyedist*1.5f+offset_w,midEyes.y*yRatio-eyedist*1.5f);
-				Rect rect = new Rect((int)(lt.x),(int)(lt.y),(int)(lt.x+eyedist*3.0f),(int)(lt.y+eyedist*3.0f));
+				/* don't want region to be overlapped */
+				PointF lt = new PointF(midEyes.x*xRatio-eyedist*MAG_EYEDIST_FACE*0.5f+offset_w,midEyes.y*yRatio-eyedist*MAG_EYEDIST_FACE*0.5f);
+				Rect rect = new Rect((int)(lt.x),(int)(lt.y),(int)(lt.x+eyedist*MAG_EYEDIST_FACE),(int)(lt.y+eyedist*MAG_EYEDIST_FACE));
 				if(!rect.contains(touchPt.x,touchPt.y))
 					continue;
 				/* expand region for cropping face */
-				lt = new PointF(midEyes.x*xRatio-eyedist*2.0f+offset_w,midEyes.y*yRatio-eyedist*2.0f);
-				rect = new Rect((int)(lt.x),(int)(lt.y),(int)(lt.x+eyedist*4.0f),(int)(lt.y+eyedist*4.0f));
+				lt = new PointF(midEyes.x*xRatio-eyedist*MAG_EYEDIST_FACE*0.5f+offset_w,midEyes.y*yRatio-eyedist*MAG_EYEDIST_FACE*0.5f);
+				rect = new Rect((int)(lt.x),(int)(lt.y),(int)(lt.x+eyedist*MAG_EYEDIST_FACE),(int)(lt.y+eyedist*MAG_EYEDIST_FACE));
 				/* fix to fit within bitmap */
 				rect.left = rect.left < 0 ? 0 : rect.left;
 				rect.right = rect.right > w ? w : rect.right;
@@ -402,16 +412,28 @@ class PreviewView extends SurfaceView implements SurfaceHolder.Callback, Preview
 					//todo: merge bitmap
 					Canvas c = new Canvas(facebmp);
 		            Paint p = new Paint();
-		            float len = eyedist*3.5f;
+		            float len = eyedist*MAG_EYEDIST_FACE;
 					PointF lt_mask = new PointF((facebmp.getWidth()-len)/2.0f,(facebmp.getHeight()-len)/2.0f);
 	        		c.drawBitmap(overlayBitmap_, null , new Rect((int)lt_mask.x, (int)lt_mask.y,(int)(lt_mask.x+len),(int)(lt_mask.y+len)),p);
 				}
-				/* Save bitmap to file */
-				Uri uri = SaveBitmapToFile(facebmp);
-				if(uri!=null){
-					Intent intent = new Intent(Intent.ACTION_VIEW, uri, context_, ImageViewActivity.class);
-					context_.startActivity(intent);
-					return;
+				if(calledACTION_GET_CONTENT_){
+					// scale to contact icon
+					boolean scaleUp = facebmp.getWidth() < CONTACT_ICON_PIXLEN ? true : false;
+					facebmp = Util.transform(new Matrix(), facebmp, CONTACT_ICON_PIXLEN, CONTACT_ICON_PIXLEN, scaleUp);
+					Activity curAct = (Activity)context_;
+					Bundle extras = new Bundle();
+					extras.putParcelable("data", facebmp);
+					curAct.setResult(Activity.RESULT_OK, (new Intent()).setAction("inline-data").putExtras(extras));
+					curAct.finish();
+				}
+				else{
+					/* Save bitmap to file */
+					Uri uri = SaveBitmapToFile(facebmp);
+					if(uri!=null){
+						Intent intent = new Intent(Intent.ACTION_VIEW, uri, context_, ImageViewActivity.class);
+						context_.startActivity(intent);
+						return;
+					}
 				}
 				break;
 			}
@@ -446,8 +468,7 @@ class PreviewView extends SurfaceView implements SurfaceHolder.Callback, Preview
 			outStream.flush();
 			outStream.close();
 			Toast.makeText(context_, context_.getString(R.string.SaveImageSuccessAlert)+absFilePath, Toast.LENGTH_SHORT).show();
-			tracker_.trackEvent("Picture", "SaveBitmap", "Saved", 1);
-			tracker_.dispatch();
+			tracker_.trackEvent(context_.getString(R.string.GA_CAT_ACT),context_.getString(R.string.GA_ACT_PICTURESAVE), context_.getString(R.string.GA_LBL_SUCCEED), 1);
 			return uri;
 		} catch (IOException e) {
 			Toast.makeText(context_, R.string.SaveImageFailureAlert, Toast.LENGTH_SHORT).show();
@@ -505,12 +526,12 @@ class PreviewView extends SurfaceView implements SurfaceHolder.Callback, Preview
 				PointF midEyes = new PointF();
 				face.getMidPoint(midEyes);
 				if(appMode_==0){
-					PointF lt = new PointF(midEyes.x*xRatio-eyedist*1.5f,midEyes.y*yRatio-eyedist*1.5f);
-					canvas.drawRect((int)(lt.x),(int)(lt.y),(int)(lt.x+eyedist*3.0f),(int)(lt.y+eyedist*3.0f), paint_); 
+					PointF lt = new PointF(midEyes.x*xRatio-eyedist*MAG_EYEDIST_FACE*0.5f,midEyes.y*yRatio-eyedist*MAG_EYEDIST_FACE*0.5f);
+					canvas.drawRect((int)(lt.x),(int)(lt.y),(int)(lt.x+eyedist*MAG_EYEDIST_FACE),(int)(lt.y+eyedist*MAG_EYEDIST_FACE), paint_); 
 				}
 				else if(overlayBitmap_!=null){
-					PointF lt = new PointF(midEyes.x*xRatio-eyedist*1.75f,midEyes.y*yRatio-eyedist*1.75f);
-	        		canvas.drawBitmap(overlayBitmap_, null , new Rect((int)lt.x, (int)lt.y,(int)(lt.x+eyedist*3.5f),(int)(lt.y+eyedist*3.5f)),paint_);
+					PointF lt = new PointF(midEyes.x*xRatio-eyedist*MAG_EYEDIST_FACE*0.5f,midEyes.y*yRatio-eyedist*MAG_EYEDIST_FACE*0.5f);
+	        		canvas.drawBitmap(overlayBitmap_, null , new Rect((int)lt.x, (int)lt.y,(int)(lt.x+eyedist*MAG_EYEDIST_FACE),(int)(lt.y+eyedist*MAG_EYEDIST_FACE)),paint_);
 				}
 			}
 		}
@@ -623,6 +644,7 @@ class PreviewView extends SurfaceView implements SurfaceHolder.Callback, Preview
 				ptr++;
 			}
 		}
+	
 	};
 
 	/* Face Result Class */
@@ -648,6 +670,58 @@ class PreviewView extends SurfaceView implements SurfaceHolder.Callback, Preview
 		}
 		public void getMidPoint(PointF pt){
 			pt.set(midEye_);
+		}
+	};
+	
+	private static class Util{
+		public static Bitmap transform(Matrix scaler, Bitmap source, int targetWidth, int targetHeight, boolean scaleUp) {
+			int deltaX = source.getWidth() - targetWidth;
+			int deltaY = source.getHeight() - targetHeight;
+			if (!scaleUp && (deltaX < 0 || deltaY < 0)) {
+				Bitmap b2 = Bitmap.createBitmap(targetWidth, targetHeight, Bitmap.Config.ARGB_8888);
+				Canvas c = new Canvas(b2);
+				int deltaXHalf = Math.max(0, deltaX / 2);
+				int deltaYHalf = Math.max(0, deltaY / 2);
+				Rect src = new Rect(deltaXHalf, deltaYHalf, deltaXHalf + Math.min(targetWidth, source.getWidth()), deltaYHalf
+							+ Math.min(targetHeight, source.getHeight()));
+				int dstX = (targetWidth - src.width()) / 2;
+				int dstY = (targetHeight - src.height()) / 2;
+				Rect dst = new Rect(dstX, dstY, targetWidth - dstX, targetHeight - dstY);
+	    	    c.drawBitmap(source, src, dst, null);
+	    	    return b2;
+	    	 }
+	    	 float bitmapWidthF = source.getWidth();
+	    	 float bitmapHeightF = source.getHeight();
+	    	 float bitmapAspect = bitmapWidthF / bitmapHeightF;
+	    	 float viewAspect = (float) targetWidth / targetHeight;
+	    	 if (bitmapAspect > viewAspect) {
+	    		 float scale = targetHeight / bitmapHeightF;
+	    	     if (scale < .9F || scale > 1F) {
+	    	    	 scaler.setScale(scale, scale);
+	    	     } else {
+	    	    	 scaler = null;
+	    	     }
+	    	 } else {
+	    		 float scale = targetWidth / bitmapWidthF;
+	    		 if (scale < .9F || scale > 1F) {
+	    			 scaler.setScale(scale, scale);
+	    		 } else {
+	    			 scaler = null;
+	    		 }
+	    	 }
+	    	 Bitmap b1;
+	    	 if (scaler != null) {
+	    		 b1 = Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), scaler, true);
+	    	 } else {
+	    		 b1 = source;
+	    	 }
+	    	 int dx1 = Math.max(0, b1.getWidth() - targetWidth);
+	    	 int dy1 = Math.max(0, b1.getHeight() - targetHeight);
+	    	 Bitmap b2 = Bitmap.createBitmap(b1, dx1 / 2, dy1 / 2, targetWidth, targetHeight);
+	    	 if (b1 != source) {
+	    		 b1.recycle();
+	    	 }
+	    	 return b2;
 		}
 	};
 }

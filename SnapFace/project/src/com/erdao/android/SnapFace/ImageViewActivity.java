@@ -34,6 +34,7 @@ public class ImageViewActivity extends Activity {
 	
 	private Uri uri_;
 	private Context context_;
+	private Intent parentIntent_ = null;
 	
 	/** Called when the activity is first created. */
 	@Override
@@ -46,8 +47,8 @@ public class ImageViewActivity extends Activity {
 		setContentView(R.layout.image_view);
 		context_ = (Context)this;
 		ImageView imgView = (ImageView)findViewById(R.id.imageview);
-        Intent i = getIntent();
-        uri_ = i.getData();
+		parentIntent_ = getIntent();
+        uri_ = parentIntent_.getData();
         imgView.setImageURI(uri_);
 	}
 	
@@ -57,10 +58,8 @@ public class ImageViewActivity extends Activity {
 		super.onCreateOptionsMenu(menu);
 		MenuItem menu_SetAs = menu.add(0,R.id.menu_SetAs,0,R.string.menu_SetAs);
 		menu_SetAs.setIcon(android.R.drawable.ic_menu_set_as);
-		MenuItem menu_Delete = menu.add(0,R.id.menu_Delete,0,R.string.menu_Delete);
-		menu_Delete.setIcon(android.R.drawable.ic_menu_delete);
-		MenuItem menu_Return = menu.add(0,R.id.menu_Return,0,R.string.menu_Return);
-		menu_Return.setIcon(android.R.drawable.ic_menu_revert);
+		MenuItem menu_Delete = menu.add(0,R.id.menu_Undo,0,R.string.menu_Undo);
+		menu_Delete.setIcon(android.R.drawable.ic_menu_revert);
 		return true;
 	}
 
@@ -69,6 +68,7 @@ public class ImageViewActivity extends Activity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.menu_SetAs:{
+				// for standalone operation
 				Intent intent = new Intent(Intent.ACTION_ATTACH_DATA, uri_);
 				try {
 					startActivity(Intent.createChooser(intent,getString(R.string.SetPictureAsIntent_Name)));
@@ -77,13 +77,14 @@ public class ImageViewActivity extends Activity {
 				}
 				break;
 			}
-			case R.id.menu_Delete:{
+			case R.id.menu_Undo:{
 				new AlertDialog.Builder(this)
-				.setTitle(R.string.menu_Delete)
+				.setTitle(R.string.menu_Undo)
 				.setMessage(R.string.delete_alert)
                 .setPositiveButton(R.string.delete_alert_ok, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
                     	context_.getContentResolver().delete(uri_, null, null);
+    					setResult(RESULT_CANCELED);
                     	finish();
                     }
                 })
@@ -93,10 +94,6 @@ public class ImageViewActivity extends Activity {
                 })
 				.create()
 				.show();
-				break;
-			}
-			case R.id.menu_Return:{
-				finish();
 				break;
 			}
 		}
