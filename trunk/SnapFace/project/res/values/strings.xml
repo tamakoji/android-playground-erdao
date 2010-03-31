@@ -29,14 +29,27 @@
 
     <string name="imgview">Captured Image</string>
 	<string name="menu_SetAs">Set As</string>
-	<string name="menu_Delete">Delete</string>
-	<string name="menu_Return">Return</string>
+	<string name="menu_Undo">Undo</string>
 	<string name="delete_alert">The picture will be deleted</string>
 	<string name="delete_alert_ok">OK</string>
 	<string name="delete_alert_cancel">Cancel</string>
 	
+	<string name="GoogleAnalyticsUA">>UA-YOUR-ACCOUNT-HERE</string>
 	
-	<string name="GoogleAnalyticsUA">UA-YOUR-ACCOUNT-HERE</string>
-	
+	<string name="GA_CAT_SYS">System Event</string>
+	<string name="GA_CAT_ACT">Action Event</string>
+
+	<string name="GA_ACT_FDETMODE">Change FdetMode</string>
+	<string name="GA_ACT_APPMODE">Change AppMode</string>
+	<string name="GA_ACT_START">Start</string>
+	<string name="GA_ACT_PAUSE">Pause</string>
+	<string name="GA_ACT_STOP">Stop</string>
+	<string name="GA_ACT_GET_CONTENT">GET_CONTENT</string>
+	<string name="GA_ACT_PICTURESAVE">Save Picture</string>
+
+	<string name="GA_LBL_CLICKED">Clicked</string>
+	<string name="GA_LBL_SUCCEED">Succeed</string>
+	<string name="GA_LBL_CANCEL">Cancel</string>
+
 
 </resources>

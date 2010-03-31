@@ -26,8 +26,7 @@
 	<string name="SaveImageFailureAlert">照片保存失敗</string> 
 
 	<string name="menu_SetAs">圖片設為</string> 
-	<string name="menu_Delete">刪除圖片</string> 
-	<string name="menu_Return">返回</string> 
+	<string name="menu_Undo">復原返回</string> 
 	<string name="delete_alert">刪除該圖片嗎？ </string> 
 	<string name="delete_alert_ok">好</string> 
 	<string name="delete_alert_cancel">不</string>

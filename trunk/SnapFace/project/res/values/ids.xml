@@ -20,7 +20,6 @@
 	<item type="id" name="AppModeDlg" />
 
 	<item type="id" name="menu_SetAs" />
-	<item type="id" name="menu_Delete" />
-	<item type="id" name="menu_Return" />
+	<item type="id" name="menu_Undo" />
 
 </resources>

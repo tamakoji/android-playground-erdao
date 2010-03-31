@@ -26,8 +26,7 @@
 	<string name="SaveImageFailureAlert">保存に失敗しました</string>
 
 	<string name="menu_SetAs">設定</string>
-	<string name="menu_Delete">削除</string>
-	<string name="menu_Return">戻る</string>
+	<string name="menu_Undo">削除</string>
 	<string name="delete_alert">この写真を削除します</string>
 
 </resources>
